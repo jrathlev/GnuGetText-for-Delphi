@@ -1,4 +1,4 @@
-### Gnu GetText for Delphi 
+### Gnu GetText Tools for Delphi 
 
 [based on **DxGetText** by Lars B.Dybdahl](http://sourceforge.net/projects/dxgettext/)
 
