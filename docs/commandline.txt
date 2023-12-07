@@ -1,1 +1,59 @@
+Gnu GetText for Delphi - Command line reference
+===============================================
+
+ggdxgettext
+-----------
+calling: ggdxgettext.exe <name> [options]
+     <name>        - Name of the base directory (*.dpr, *.pas, *.dfm)  or file, 
+                     to be scanned
+     /dom:<domain> - Use another text domain (instead of default) 
+  
+ggmerge
+-------  
+calling: ggmerge.exe <filename> [options]
+     <filename>  - Name of po file with translation to be merged with template
+     /noedit     - Do not start the associated editor. 
+  
+ggfmt
+-----  
+calling: ggfmt.exe <filename> [options]
+    <filename>   - Name of file to be converted
+                   Default: Generate binary message catalog (mo file) from textual 
+                   translation description (po file).
+                   Default extension of output file: .mo
+    /u           - Convert binary message catalog (mo file) to po file
+                   Default extension of output file: .po
+    /e:<ext>     - Extension of output file (without leading period) if other 
+                   than default
+
+ggassemble
+----------
+calling: ggassemble.exe <filename> [options] 
+    <filename>   - Name of exe file where the mo files are to be embedded
+    /lang:<list> - List of languages to be embedded 
+                   <list> comma separated list of language codes (ISO 639)
+                   Example: /lang:de,fr,es
+    /dom:<list>  - List of additional domains (other than default)
+                   <list> comma separated list of domain names
+                   Example: /dom:delphi10,dialogs,units
+    /force       - No interactive window, start embedding immediately
+
+Note:            All options can be abbreviated.
+
+Examples: 
+  ggassemble.exe e:\Test\MyProgram.exe /l:de,nl,fr
+                 This will select the files "default.mo" for German, Dutch
+                 and French for embedding and open the interactive window
+                 
+  ggassemble.exe e:\Test\MyProgram.exe /l:de,nl /d:delphi10,dialogs /f
+                 This will select the files "default.mo", "delph10.mo" and 
+                 "dialogs.mo" for German and Dutch and start the embedding
+                 immediately 
+                 
+     
+November 2023
+J. Rathlev
+Mail: kontakt(a)rathlev-home.de
+
+       
 
