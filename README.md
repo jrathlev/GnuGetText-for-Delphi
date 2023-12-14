@@ -1,6 +1,6 @@
 ### Gnu GetText Tools for Delphi 
 
-[based on **DxGetText** by Lars B.Dybdahl](http://sourceforge.net/projects/dxgettext/)
+[based on **DxGetText** by Lars B. Dybdahl](http://sourceforge.net/projects/dxgettext/)
 
 In addition to the revised original programs, some auxiliary programs with 
 Windows GUI are provided.
