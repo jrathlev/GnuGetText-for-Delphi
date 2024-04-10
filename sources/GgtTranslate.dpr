@@ -36,7 +36,6 @@ begin
   Application.CreateForm(TFileListDialog, FileListDialog);
   Application.CreateForm(TSelectDialog, SelectDialog);
   Application.CreateForm(TShowtextDialog, ShowtextDialog);
-  Application.CreateForm(TEditHistListDialog, EditHistListDialog);
   Application.CreateForm(TListSelectDialog, ListSelectDialog);
   Application.CreateForm(TPoStatDialog, PoStatDialog);
   Application.Run;

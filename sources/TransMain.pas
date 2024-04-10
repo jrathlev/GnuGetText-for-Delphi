@@ -1,10 +1,9 @@
-
 (* Process translations using GunGetText for Delphi
    replaces context menu startable programs
    - ggdxgettext
    - ggmerge
 
-   © 2015 - 2023 Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
+   © 2015 - 2024 Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
 
    The contents of this file may be used under the terms of the
    Mozilla Public License ("MPL") or
@@ -22,7 +21,8 @@
        https://mlocati.github.io/articles/gettext-iconv-windows.html
    Vers. 3.1   - August 2023: enhanced po header management
                               highlighting of languages which need revision
-   last modified: September 2023
+               - April 2024:  TMemInFile instead aof TIniFile
+   last modified: April 2024
    *)
 
 unit TransMain;
@@ -33,7 +33,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.ComCtrls, Vcl.Buttons, System.ImageList, Vcl.ImgList, Vcl.Menus,
-  GgtConsts, HListBox, xgettext;
+  GgtConsts, xgettext;
 
 const
   ProgName = 'Process GnuGetText translations';
@@ -46,7 +46,6 @@ const
 type
   TfrmTransMain = class(TForm)
     Label1: TLabel;
-    cbProjDir: THistoryCombo;
     btProjDir: TSpeedButton;
     edLangSubDir: TLabeledEdit;
     cbLanguage: TComboBox;
@@ -85,7 +84,6 @@ type
     pcMode: TPageControl;
     tsMask: TTabSheet;
     tsFiles: TTabSheet;
-    cbFiles: THistoryCombo;
     Label2: TLabel;
     btnNew: TBitBtn;
     btnEdit: TBitBtn;
@@ -118,6 +116,8 @@ type
     rgEncoding: TRadioGroup;
     btnHelp: TBitBtn;
     btnManual: TBitBtn;
+    cbProjDir: TComboBox;
+    cbFiles: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -187,7 +187,7 @@ type
     procedure RemoveBOM(const PoName : string);
     function CompileToMo (const PoFile,MergePath : string) : boolean;
     procedure Merge (AIndex : integer);
-    procedure CopyMo (AIndex : integer);
+    procedure CopyMo (AIndex : integer; var FCount,ECount : integer);
     procedure Progress (const CurrentTask,CurrentFileName:string; LineNumber:Integer);
     procedure Warning (WarningType:TWarningType; const Msg,Line,Filename:string;LineNumber:Integer);
     procedure OverwriteQuestion (sender: TObject; const aFileName: string; var Overwrite: boolean);
@@ -229,7 +229,7 @@ const
 
 procedure TfrmTransMain.FormCreate(Sender: TObject);
 var
-  IniFile  : TIniFile;
+  IniFile  : TMemIniFile;
   n        : integer;
 begin
   TranslateComponent(self);
@@ -238,7 +238,7 @@ begin
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
-  IniFile:=TIniFile.Create(IniName);
+  IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
     edLangSubdir.Text:=ReadString(CfgSekt,iniLangDir,'languages');
     with cbLanguage do begin
@@ -251,9 +251,10 @@ begin
     ClientWidth:=ReadInteger (CfgSekt,IniWidth,ClientWidth);
     ClientHeight:=ReadInteger (CfgSekt,IniHeight,ClientHeight);
     TextEditor:=ReadString(CfgSekt,IniEditor,'');
+    LoadHistory(IniFile,DirSekt,cbProjDir);
+    LoadHistory(IniFile,FileSekt,cbFiles);
     Free;
     end;
-  cbProjDir.LoadFromIni(IniName,DirSekt);
   lbLang.Items.NameValueSeparator:='-';
   ErrorOutput:=TStringList.Create;
   end;
@@ -273,8 +274,11 @@ begin
   end;
 
 procedure TfrmTransMain.FormDestroy(Sender: TObject);
+var
+  IniFile  : TMemIniFile;
 begin
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     WriteString(CfgSekt,iniLangDir,edLangSubdir.Text);
     WriteInteger(CfgSekt,iniLanguage,cbLanguage.ItemIndex);
     WriteString(CfgSekt,IniLast,cbProjDir.Text);
@@ -283,6 +287,9 @@ begin
     WriteInteger (CfgSekt,IniWidth,ClientWidth);
     WriteInteger (CfgSekt,IniHeight,ClientHeight);
     WriteString(CfgSekt,IniEditor,TextEditor);
+    SaveHistory(IniFile,DirSekt,true,cbProjDir);
+    SaveHistory(IniFile,FileSekt,true,cbFiles);
+    UpdateFile;
     Free;
     end;
   ErrorOutput.Free;
@@ -338,19 +345,21 @@ begin
       else btEditIgnore.Enabled:=false;
       end;
     end;
-  with cbProjDir do begin
-    if not DirectoryExists(LastDir) then begin
+  if not DirectoryExists(LastDir) then begin
+    with cbProjDir do begin
       for i:=0 to Items.Count-1 do if DirectoryExists(Items[i]) then Break;
       if i<Items.Count then LastDir:=Items[i]
       else begin
         LastDir:='';
         if not ShellDirDialog.Execute(_('Select project directory'),true,true,false,UserPath,LastDir) then Close
-        else AddItem(LastDir);
+        else AddToHistory(cbProjDir,LastDir);
         end;
       end;
-    ItemIndex:=Items.IndexOf(LastDir);
-    if ItemIndex<0 then ItemIndex:=Items.Add(LastDir);
-    LoadGetTextSettings(Text);
+    end
+  else begin
+    with cbProjDir do ItemIndex:=Items.IndexOf(LastDir);
+    if cbProjDir.ItemIndex<0 then AddToHistory(cbProjDir,LastDir);
+    LoadGetTextSettings(LastDir);
     end;
   end;
 
@@ -380,7 +389,7 @@ begin
 procedure TfrmTransMain.pmiClearClick(Sender: TObject);
 begin
   if ConfirmDialog(CursorPos,'Clear whole directory list?') then with cbProjDir do begin
-    HistoryList.ClearAll; UpdateList;
+    Clear; Style:=csSimple;
     end;
   end;
 
@@ -388,8 +397,7 @@ procedure TfrmTransMain.pmiEditClick(Sender: TObject);
 var
   n : integer;
 begin
-  with cbProjDir do if EditHistListDialog.Execute(CursorPos,'',_('Project directories'),HistoryList,true,true,n)
-    then UpdateList;
+  EditHistList(CursorPos,'',_('Project directories'),cbProjDir,true,true,n);
   end;
 
 procedure TfrmTransMain.btnInfoClick(Sender: TObject);
@@ -431,7 +439,7 @@ var
   s : string;
 begin
   // dxgettext.ini einlesen
-  with TIniFile.Create(IncludeTrailingPathDelimiter(ADir)+DxGetTextIni) do begin
+  with TMemIniFile.Create(IncludeTrailingPathDelimiter(ADir)+DxGetTextIni) do begin
     cbRecurse.Checked:=ReadBool(ggtSect,iniRecurse,false);
     ExcludeDirs.Enabled:=cbRecurse.Checked;
     ExcludeDirs.Text:=ReadString(ggtSect,iniExclude,'');
@@ -497,7 +505,7 @@ var
   i : integer;
 begin
   // dxgettext.ini schreiben
-  with TIniFile.Create(IncludeTrailingPathDelimiter(cbProjDir.Text)+DxGetTextIni) do begin
+  with TMemIniFile.Create(IncludeTrailingPathDelimiter(cbProjDir.Text)+DxGetTextIni) do begin
     WriteBool(ggtSect,iniRecurse,cbRecurse.Checked);
     WriteString(ggtSect,iniExclude,ExcludeDirs.Text);
     WriteBool(ggtSect,iniUseMask,rbMask.checked);
@@ -520,6 +528,7 @@ begin
     WriteBool(trSect,iniPoedit,cbPoedit.Checked);
     WriteBool(trSect,iniMulti,rbMulti.Checked);
     WriteString(trSect,iniCopyPath,edTargetDir.Text);
+    UpdateFile;
     Free;
     end;
   end;
@@ -532,7 +541,7 @@ const
 
 procedure TfrmTransMain.LoadMergeSettings(const AFilename : string);
 begin
-  with TIniFile.Create(NewExt(AFilename,IniExt)) do begin
+  with TMemIniFile.Create(NewExt(AFilename,IniExt)) do begin
 //    TemplPath:=ReadString(ggmSect,iniTemplate,NewExt(IncludeTrailingPathDelimiter(cbProjDir.Text)+GetTemplName,PoExt));
 //    TemplPath:=ExtractRelativePath(ExtractFilePath(AFilename),TemplPath);
     cbBackup.Checked:=ReadBool(ggmSect,iniBackup,true);
@@ -542,9 +551,10 @@ begin
 
 procedure TfrmTransMain.SaveMergeSettings(const AFilename : string);
 begin
-  with TIniFile.Create(NewExt(AFilename,IniExt)) do begin
+  with TMemIniFile.Create(NewExt(AFilename,IniExt)) do begin
 //    WriteString(ggmSect,iniTemplate,TemplPath);
     WriteBool(ggmSect,iniBackup,cbBackup.Checked);
+    UpdateFile;
     Free;
     end;
   end;
@@ -654,11 +664,8 @@ begin
   s:=cbProjDir.Text;
   if ShellDirDialog.Execute(_('Select project source directory'),false,true,false,'',s) then begin
     SaveGetTextSettings;
-    with cbProjDir do begin
-      AddItem(s);
-      ItemIndex:=0;
-      LoadGetTextSettings(Text);
-      end;
+    AddToHistory(cbProjDir,s);
+    LoadGetTextSettings(s);
     end;
   end;
 
@@ -691,10 +698,12 @@ var
 begin
   s:=FileListDialog.Execute(_('Create new file list'),GetFileFilter,
        cbProjDir.Text,'','','',false);
-  if length(s)>0 then with cbFiles do begin
-    Text:=s; AddItem(s);
-    if Canvas.TextWidth(Text)<=Width then Hint:=_('Insert filenames separated by commas')
-    else Hint:=Text;
+  if length(s)>0 then begin
+    AddToHistory(cbFiles,s);
+    with cbFiles do begin
+      if Canvas.TextWidth(Text)<=Width then Hint:=_('Insert filenames separated by commas')
+      else Hint:=Text;
+      end;
     SaveGetTextSettings;
     end;
   end;
@@ -707,10 +716,12 @@ begin
   else st:=_('Edit file list');
   s:=FileListDialog.Execute(st,GetFileFilter,
        cbProjDir.Text,cbFiles.Text,'','',false);
-  if length(s)>0 then with cbFiles do begin
-    Text:=s; AddItem(s);
-    if Canvas.TextWidth(Text)<=Width then Hint:=_('Insert filenames separated by commas')
-    else Hint:=Text;
+  if length(s)>0 then begin
+    AddToHistory(cbFiles,s);
+    with cbFiles do begin
+      if Canvas.TextWidth(Text)<=Width then Hint:=_('Insert filenames separated by commas')
+      else Hint:=Text;
+      end;
     SaveGetTextSettings;
     end;
   end;
@@ -1158,21 +1169,21 @@ begin
 procedure TfrmTransMain.btCopyClick(Sender: TObject);
 var
   s    : string;
-  i,n  : integer;
+  i,n,nf,ne : integer;
 begin
   if length(edTargetDir.Text)=0 then btCopyDirClick(Sender);
   if DirectoryExists(edTargetDir.Text) then with lbLang do begin
-    n:=0;
+    n:=0; nf:=0; ne:=0;
     s:=GetLangSubDir(ItemIndex);
     if SelCount=1 then begin
-      CopyMo(ItemIndex);
+      CopyMo(ItemIndex,nf,ne);
       inc(n);
       end
     else for i:=0 to Count-1 do if Selected[i] then begin
-      CopyMo(i);
+      CopyMo(i,nf,ne);
       inc(n);
       end;
-    if n>0 then laProgress.Caption:=Format(_('%u files processed'),[n])
+    if n>0 then laProgress.Caption:=Format(_('%u files processed (%u copies - %u errors)'),[n,nf,ne])
     else laProgress.Caption:=_('No files processed');
     end
   else ErrorDialog(Format(_('Folder for executables not found: '),[edTargetDir.Text]));
@@ -1180,13 +1191,13 @@ begin
   SaveGetTextSettings;
   end;
 
-procedure TfrmTransMain.CopyMo (AIndex : integer);
+procedure TfrmTransMain.CopyMo (AIndex : integer; var FCount,ECount : integer);
 var
   MergePath,PoFile,
   sm,sd : string;
   ok    : boolean;
 
-  function CopyToDirs (const Dir,SubFolder,Filename : string) : boolean;
+  function CopyToDirs (const Dir,SubFolder,Filename : string; var fc,ec : integer) : boolean;
   var
     DirInfo    : TSearchRec;
     Findresult : integer;
@@ -1197,7 +1208,7 @@ var
     while FindResult=0 do with DirInfo do begin
       if NotSpecialDir(Name) then begin
         if((Attr and faDirectory)<>0) then
-          Result:=CopyToDirs(Erweiter(Dir,Name,''),SubFolder,Filename) and Result;
+          Result:=CopyToDirs(Erweiter(Dir,Name,''),SubFolder,Filename,fc,ec) and Result;
         end;
       FindResult:=FindNext (DirInfo);
       end;
@@ -1208,8 +1219,10 @@ var
       if not CopyFile(pchar(sm),pchar(s),false) then begin
         meProgress.Lines.Add(_('  *** Error copying file:'));
         meProgress.Lines.Add  ('      '+s);
+        inc(ec);
         Result:=false;
-        end;
+        end
+      else inc(fc);
       end;
     end;
 
@@ -1231,11 +1244,13 @@ begin
         try
           meProgress.Lines.Add('  ==> '+sd);
           CopyFileTS(sm,sd);
+          inc(FCount);
           ok:=true;
         except
           on E:EInOutError do begin
             meProgress.Lines.Add(_('  *** Error copying file:'));
             meProgress.Lines.Add('  '+E.Message);
+            inc(ECount);
             ok:=false;
             end;
           end;
@@ -1247,7 +1262,7 @@ begin
         end;
       end
     else begin  // multi copy
-      ok:=CopyToDirs(edTargetDir.Text,sd,sm);
+      ok:=CopyToDirs(edTargetDir.Text,sd,sm,FCount,ECount);
       end;
     end;
   if ok then laProgress.Caption:=_('MO file was copied')

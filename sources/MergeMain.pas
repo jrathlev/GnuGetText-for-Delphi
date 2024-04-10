@@ -92,7 +92,7 @@ implementation
 
 uses
   gnugettext, Winapi.shellapi, System.IniFiles, poparser, ExecuteApp, GgtConsts, GgtUtils,
-  FileCopy, ShowStringList;
+  FileCopy;
 
 {$R *.dfm}
 
@@ -184,7 +184,7 @@ procedure TfrmMerge.LoadFromIni (const IniName : string);
 begin
   CheckBoxSaveSettings.Checked:=FileExists(ininame);
   if CheckBoxSaveSettings.Checked then begin
-    with TIniFile.Create (ininame) do begin
+    with TMemIniFile.Create (ininame) do begin
       Left:=ReadInteger(ggmSect,iniLeft,Left);       // JR
       Top:=ReadInteger(ggmSect,iniTop,Top);
       EditTemplate.Text:=ExpandFileName(ReadString(ggmSect,iniTempl,''));
@@ -396,7 +396,7 @@ begin
         ShellExecute (Application.Handle,'open',PChar(translation),nil,nil,SW_RESTORE);
       end;
     if CheckBoxSaveSettings.Checked then begin
-      with TIniFile.Create (ChangeFileExt(translation,'.ini')) do begin
+      with TMemIniFile.Create (ChangeFileExt(translation,'.ini')) do begin
         WriteInteger(ggmSect,iniLeft,Left);       // JR
         WriteInteger(ggmSect,iniTop,Top);
         WriteString(ggmSect,iniTempl,ExtractRelativePath(IncludeTrailingPathDelimiter(GetCurrentDir),template));
@@ -406,6 +406,7 @@ begin
 //          WriteBool(ggmSect,iniSAscii,ItemIndex<>1);
 //          WriteBool(ggmSect,iniCode,ItemIndex=0);
 //          end;
+        UpdateFile;
         Free;
         end;
       end;

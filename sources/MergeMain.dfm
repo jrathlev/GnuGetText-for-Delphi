@@ -205,7 +205,7 @@ object frmMerge: TfrmMerge
     Top = 220
     Width = 129
     Height = 31
-    Anchors = [akLeft, akBottom]
+    Anchors = [akRight, akBottom]
     Caption = 'Merge'
     Default = True
     Glyph.Data = {
@@ -334,7 +334,7 @@ object frmMerge: TfrmMerge
     Top = 219
     Width = 81
     Height = 31
-    Anchors = [akLeft, akBottom]
+    Anchors = [akRight, akBottom]
     Cancel = True
     Caption = 'Close'
     Glyph.Data = {

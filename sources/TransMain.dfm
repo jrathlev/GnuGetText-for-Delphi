@@ -104,18 +104,6 @@ object frmTransMain: TfrmTransMain
         ShowHint = True
         OnClick = btProjDirClick
       end
-      object cbProjDir: THistoryCombo
-        Left = 10
-        Top = 25
-        Width = 301
-        Height = 21
-        DropDownCount = 20
-        PopupMenu = pmDirectorytList
-        TabOrder = 0
-        OnCloseUp = cbProjDirCloseUp
-        MaxItems = 50
-        EraseSection = True
-      end
       object rbMask: TRadioButton
         Left = 10
         Top = 55
@@ -141,7 +129,7 @@ object frmTransMain: TfrmTransMain
         Top = 75
         Width = 346
         Height = 131
-        ActivePage = tsMask
+        ActivePage = tsFiles
         Style = tsButtons
         TabOrder = 3
         object tsMask: TTabSheet
@@ -314,17 +302,6 @@ object frmTransMain: TfrmTransMain
             Height = 13
             Caption = 'Files to be scanned:'
           end
-          object cbFiles: THistoryCombo
-            Left = 0
-            Top = 25
-            Width = 336
-            Height = 21
-            Hint = 'Insert filenames separated by commas'
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 0
-            MaxItems = 15
-          end
           object btnNew: TBitBtn
             Left = 270
             Top = 50
@@ -451,7 +428,27 @@ object frmTransMain: TfrmTransMain
             TabOrder = 2
             OnClick = btnEditClick
           end
+          object cbFiles: TComboBox
+            Left = 0
+            Top = 25
+            Width = 336
+            Height = 21
+            Hint = 'Insert filenames separated by commas'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 0
+          end
         end
+      end
+      object cbProjDir: TComboBox
+        Left = 10
+        Top = 25
+        Width = 301
+        Height = 21
+        DropDownCount = 20
+        PopupMenu = pmDirectorytList
+        TabOrder = 0
+        OnCloseUp = cbProjDirCloseUp
       end
     end
     object gbDomain: TGroupBox
@@ -601,7 +598,7 @@ object frmTransMain: TfrmTransMain
       Top = 115
       Width = 454
       Height = 176
-      ActivePage = tsSaveOptions
+      ActivePage = tsLang
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
       object tsLang: TTabSheet
@@ -1382,6 +1379,10 @@ object frmTransMain: TfrmTransMain
       object tsSaveOptions: TTabSheet
         Caption = 'Saving'
         ImageIndex = 2
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object cbBackup: TCheckBox
           Left = 20
           Top = 65
@@ -2458,7 +2459,7 @@ object frmTransMain: TfrmTransMain
     Left = 680
     Top = 25
     Bitmap = {
-      494C01010200A4005C0128001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010200A4006C0128001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000A00000001400000001002000000000000032
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

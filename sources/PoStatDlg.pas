@@ -23,7 +23,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  HListBox, PoParser, Vcl.ComCtrls;
+  PoParser, Vcl.ComCtrls;
 
 type
   TPoStatDialog = class(TForm)
@@ -109,7 +109,7 @@ const
 procedure TPoStatDialog.LoadFromIni (const IniName, Section : string);
 begin
   FIniName:=IniName; FIniSection:=Section;
-  with TIniFile.Create(FIniName) do begin
+  with TMemIniFile.Create(FIniName) do begin
     Top:=ReadInteger(FIniSection,iniTop,Top);
     Left:=ReadInteger(FIniSection,iniLeft,Left);
     ClientWidth:=ReadInteger (FIniSection,IniWidth,ClientWidth);
@@ -121,11 +121,12 @@ begin
 procedure TPoStatDialog.SaveToIni;
 begin
   if (length(FIniName)>0) and (length(FIniSection)>0) then
-      with TIniFile.Create(FIniName) do begin
+      with TMemIniFile.Create(FIniName) do begin
     WriteInteger(FIniSection,iniTop,Top);
     WriteInteger(FIniSection,iniLeft,Left);
     WriteInteger (FIniSection,IniWidth,ClientWidth);
     WriteInteger (FIniSection,IniHeight,ClientHeight);
+    UpdateFile;
     Free;
     end;
   end;

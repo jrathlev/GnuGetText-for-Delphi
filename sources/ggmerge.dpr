@@ -19,8 +19,7 @@ program ggmerge;
 uses
   GnuGetText in 'units\GnuGetText.pas',
   Vcl.Forms,
-  MergeMain in 'MergeMain.pas' {frmMerge},
-  ShowStringList in 'units\ShowStringList.pas' {ShowStringListDialog};
+  MergeMain in 'MergeMain.pas' {frmMerge};
 
 {$R *.res}
 {$IFDEF WIN32}
@@ -35,6 +34,5 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmMerge, frmMerge);
-  Application.CreateForm(TShowStringListDialog, ShowStringListDialog);
   Application.Run;
 end.
