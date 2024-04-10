@@ -13,7 +13,7 @@ BEGIN
      VALUE "FileDescription",  "GnuGetText Collect\0\0"
      VALUE "FileVersion",  "3.1.0.0\0\0"
      VALUE "InternalName",  "GnuGetText Collect\0\0"
-     VALUE "LegalCopyright",  "© 2010-2023 J. Rathlev, 24222 Schwentinental\0\0"
+     VALUE "LegalCopyright",  "© 2010-2024 J. Rathlev, 24222 Schwentinental\0\0"
      VALUE "ProductName",  "Gnu Get Text for Delphi (32-bit)\0\0"
      VALUE "ProductVersion",  "3.1\0\0"
      VALUE "Author",  "Dr. J. Rathlev\0\0"
