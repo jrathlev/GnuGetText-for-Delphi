@@ -2298,7 +2298,7 @@ object ShellFileDialog: TShellFileDialog
     AutoNavigate = False
     ObjectTypes = [otFolders, otNonFolders]
     Root = 'rfDesktop'
-    ShellComboBox = ShellComboBox
+    ShellComboBox = ShellFileDialog.ShellComboBox
     Sorted = True
     OnAddFolder = ShellListViewAddFolder
     Align = alClient
@@ -2306,7 +2306,7 @@ object ShellFileDialog: TShellFileDialog
     OnDblClick = ShellListViewDblClick
     ReadOnly = False
     HideSelection = False
-    PopupMenu = PopupMenu
+    PopupMenu = ShellFileDialog.PopupMenu
     TabOrder = 3
     ViewStyle = vsReport
   end

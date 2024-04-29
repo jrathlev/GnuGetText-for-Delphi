@@ -4,7 +4,7 @@
    Design ähnlich wie Datei-Dialog unter Windows 2000/XP
    aber mit automatischer Vorauswahl einer Datei
 
-   © 2009-2017 J. Rathlev 24222 Schwentinental
+   © 2009-2024 J. Rathlev 24222 Schwentinental
       Web:  www.rathlev-home.de
       Mail: kontakt(a)rathlev-home.de
 
@@ -16,8 +16,8 @@
    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
    the specific language governing rights and limitations under the License.
 
-   last updated: May 2017
-   last modified: February 2023
+
+   last modified: April 2024
    *)
 
 unit ShellFileDlg;
@@ -155,13 +155,13 @@ const
 procedure TShellFileDialog.LoadFromIni(IniName,Section : string);
 var
   i       : integer;
-  IniFile : TIniFile;
+  IniFile : TMemIniFile;
   s       : string;
 begin
   FIniName:=IniName; FIniSection:=Section;
   cbSelectedFile.Items.Clear;
   if (length(FIniName)>0) and (length(FIniSection)>0) then begin
-    IniFile:=TIniFile.Create(IniName);
+    IniFile:=TMemIniFile.Create(IniName);
     for i:=0 to FMaxLen-1 do begin
       s:=IniFile.ReadString(FIniSection,iniHistory+IntToStr(i),'');
       if s<>'' then cbSelectedFile.AddItem(s,nil);
@@ -187,14 +187,20 @@ var
   i       : integer;
 begin
   if (length(FIniName)>0) and (length(FIniSection)>0) then begin
-    EraseSectionFromIniFile(FIniName,FIniSection);
-    with cbSelectedFile.Items do for i:=0 to Count-1 do
-      WriteStringToIniFile(FIniName,FIniSection,iniHistory+IntToStr(i),Strings[i]);
-    WriteIntegerToIniFile(FIniName,FIniSection,iniTop,Top);
-    WriteIntegerToIniFile(FIniName,FIniSection,iniLeft,Left);
-    WriteIntegerToIniFile(FIniName,FIniSection,IniWidth,ClientWidth);
-    WriteIntegerToIniFile(FIniName,FIniSection,IniHeight,ClientHeight);
-    UpdateIniFile(FIniName);
+    with TMemIniFile.Create(FIniName) do begin
+      try
+        EraseSection(FIniSection);
+        with cbSelectedFile.Items do for i:=0 to Count-1 do
+          WriteString(FIniSection,iniHistory+IntToStr(i),Strings[i]);
+        WriteInteger(FIniSection,iniTop,Top);
+        WriteInteger(FIniSection,iniLeft,Left);
+        WriteInteger(FIniSection,IniWidth,ClientWidth);
+        WriteInteger(FIniSection,IniHeight,ClientHeight);
+        UpdateFile;
+      finally
+        Free;
+        end;
+      end;
     end;
   FLastPaths.Free;
   end;
