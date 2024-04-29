@@ -283,7 +283,7 @@ begin
           fs:=TFileStream.Create (outputfilename,fmCreate);
           try
             while true do begin
-              pe:=parser.ReadNextEntry(tf);
+              pe:=parser.ReadNextEntry(tf);  // template
               if pe=nil then break;
               if pe.MsgId.IsEmpty then with PoHeader do begin
                 GetFromString(pe.MsgStr);
@@ -304,6 +304,12 @@ begin
                   end;
                 end;
               pe.WriteToStream(fs);
+              end;
+          // copy history comments
+            petr:=translist.FindFirst;
+            while (petr<>nil) do begin
+              if (copy(petr.MsgId,1,2)='##') then petr.WriteToStream(fs);
+              petr:=translist.FindNext(petr);
               end;
           finally
             FreeAndNil (fs);

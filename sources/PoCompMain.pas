@@ -2,7 +2,7 @@
    Compare two po-files for differences in "msgstr"
    and update translation file with new id's
 
-   © 2015-2019 Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
+   © 2015-2024 Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
    based on the "dxgettext" programs by Lars B. Dybdahl
 
    The contents of this file may be used under the terms of the
@@ -14,7 +14,7 @@
    the specific language governing rights and limitations under the License.
 
    Feb. 2014
-   last modified: February 2023
+   last modified: April 2024
    *)
 
 unit PoCompMain;
@@ -24,7 +24,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  HListBox, Vcl.ExtCtrls, Vcl.Menus, PoParser;
+  Vcl.ExtCtrls, Vcl.Menus, PoParser;
 
 const
   Vers = ' - Vers. 3.2';
@@ -60,7 +60,6 @@ type
     bbCopyId: TBitBtn;
     bbSave: TBitBtn;
     Label2: TLabel;
-    edComp: THistoryCombo;
     Label5: TLabel;
     OpenDialog: TOpenDialog;
     bbCopyAll: TBitBtn;
@@ -76,6 +75,7 @@ type
     bbComp: TBitBtn;
     bbCopyName: TBitBtn;
     btnHelp: TBitBtn;
+    edComp: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure bbExitClick(Sender: TObject);
     procedure bbInfoClick(Sender: TObject);
@@ -159,11 +159,12 @@ const
   (* INI-Variables *)
   iniLast = 'LastName';
   iniCount = 'FileCount';
-  iniFile = 'FileName';
+  iniFilename = 'FileName';
   iniComp = 'CompareName';
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
+  IniFile  : TMemIniFile;
   i,n : integer;
   s,t : string;
 begin
@@ -174,22 +175,23 @@ begin
   Caption:=ProgVersName;
   CompFile:='';
   IniName:=Erweiter(AppPath,PrgName,IniExt);
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     Top:=ReadInteger(CfGSekt,iniTop,Top);
     Left:=ReadInteger(CfGSekt,iniLeft,Left);
     EditFile:=ReadString(CfGSekt,iniLast,'');
     ElWidth:=ReadInteger(CfgSekt,iniWidth,0);
     n:=ReadInteger(FileSekt,iniCount,0);
     for i:=0 to n-1 do begin
-      s:=ReadString(FileSekt,iniFile+IntToStr(i),'');
+      s:=ReadString(FileSekt,iniFilename+IntToStr(i),'');
       if (length(s)>0) and FileExists(s) then begin
         t:=ReadString(FileSekt,iniComp+IntToStr(i),'');
         cbEdit.AddItem(s,TText.Create(t));
         end;
       end;
+    LoadHistory(IniFile,CompSekt,edComp);
     Free;
     end;
-  edComp.LoadFromIni(IniName,CompSekt);
   if ParamCount>0 then begin
     EditFile:=ParamStr(1);
     if ParamCount>1 then CompFile:=ParamStr(2);
@@ -198,7 +200,9 @@ begin
     if Items.Count>0 then ItemIndex:=0;
     if Items.Count<=1 then Style:=csSimple else Style:=csDropDown;
     end;
-  if length(EditFile)=0 then EditFile:=cbEdit.Text;
+  with cbEdit do if length(EditFile)=0 then EditFile:=Text
+  else if Items.IndexOf(EditFile)>=0 then AddToHistory(cbEdit,EditFile)
+  else Items.InsertObject(0,EditFile,TText.Create(''));
   GetCompFile(false);
   edComp.Text:=CompFile;
   LastMsg:='';
@@ -231,9 +235,12 @@ begin
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
 var
+  IniFile  : TMemIniFile;
   i : integer;
 begin
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
+    Clear; Encoding:=TEncoding.UTF8;
     WriteInteger(CfGSekt,iniTop,Top);
     WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniLast,EditFile);
@@ -242,10 +249,12 @@ begin
     with cbEdit.Items do begin
       WriteInteger(FileSekt,iniCount,Count);
       for i:=0 to Count-1 do begin
-        WriteString(FileSekt,iniFile+IntToStr(i),Strings[i]);
+        WriteString(FileSekt,iniFilename+IntToStr(i),Strings[i]);
         WriteString(FileSekt,iniComp+IntToStr(i),(Objects[i] as TText).Text);
         end;
       end;
+    SaveHistory(IniFile,CompSekt,true,edComp);
+    UpdateFile;
     Free;
     end;
   try HtmlHelp(0,nil,HH_CLOSE_ALL,0); except end;
@@ -352,15 +361,15 @@ begin
   with OpenDialog do begin
     if length(AFilename)>0 then begin
       InitialDir:=ExtractFilePath(AFilename);
-      if not DirectoryExists(InitialDir) then InitialDir:=UserPath;
       end
-    else InitialDir:=UserPath;
+    else InitialDir:=ExtractFilePath(EditFile);
+    if not DirectoryExists(InitialDir) then InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file used for comparison with '+EditFile);
     Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
-    if Execute then with edComp do begin
+    if Execute then begin
       CompFile:=Filename;
-      Text:=Filename; AddItem(Filename);
+      Text:=Filename; AddToHistory(edComp,Filename);
       SetCompFile;
       Result:=true;
       end
@@ -385,7 +394,11 @@ begin
     Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
     if Execute then with cbEdit do begin
       EditFile:=FileName;
-      Text:=Filename; AddItem(Filename,TText.Create(''));
+      if Items.IndexOf(EditFile)>=0 then AddToHistory(cbEdit,EditFile)
+      else begin
+        Items.InsertObject(0,EditFile,TText.Create(''));
+        ItemIndex:=0;
+        end;
       GetCompFile;
       end
     end;
@@ -405,6 +418,7 @@ procedure TfrmMain.cbEditCloseUp(Sender: TObject);
 begin
   with cbEdit do begin
     EditFile:=Items[ItemIndex];
+    AddToHistory(cbEdit,EditFile);
     GetCompFile;
     if FileExists(CompFile) or SelectComp(EditFile) then LoadFiles(true)
     else laEntry.Caption:=_('No file for comparison specified!');

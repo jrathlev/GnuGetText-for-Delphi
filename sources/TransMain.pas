@@ -1116,6 +1116,12 @@ begin
                 end;
               pe.WriteToStream(fs);
               end;
+          // copy history comments
+            petr:=translist.FindFirst;
+            while (petr<>nil) do begin
+              if (copy(petr.MsgId,1,2)='##') then petr.WriteToStream(fs);
+              petr:=translist.FindNext(petr);
+              end;
           finally
             FreeAndNil (fs);
             end;
