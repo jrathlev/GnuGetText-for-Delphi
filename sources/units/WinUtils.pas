@@ -37,6 +37,7 @@ const
     Umrechnung verwendet werden:
     n:=MulDiv(n(96),Screen.PixelsPerInch,PixelsPerInchOnDesign)
   }
+  MinScale = 120;  // scale icons if MonDpi/DesignDpi>1.2
 
 type
   TBoolFunction = function : boolean of object;
@@ -117,16 +118,21 @@ procedure AdjustFormPosition (AScreen : TScreen; AForm : TForm;
 // Get position of TopLeft to fit the window on the specified monitor
 function FitToMonitor (Mon : TMonitor; BoundsRect : TRect) : TPoint;
 
+{ ---------------------------------------------------------------- }
 // Calculate the maximum text width for multiline text
 function MaxTextWidth(const Text : string; Canvas : TCanvas) : integer;
 
 // calculate text width for given font
 function GetTextWidth(const Text : string; AFont : TFont) : integer;
-function GetMaxTextWidth(const Text : string; AFont : TFont) : integer;
+function GetMaxTextWidth(sl : TStrings; AFont : TFont) : integer; overload;
+function GetMaxTextWidth(const Text : string; AFont : TFont) : integer; overload;
 function GetMaxTextExtent(const Text : string; AFont : TFont) : TSize;
 
 // Count number of lines in Text separated by sLineBreak
 function TextLineCount(const Text : string) : integer;
+
+// Shorten string to specified width
+function StripString (const s : string; Canvas : TCanvas; MaxWidth : Integer) : string;
 
 { ---------------------------------------------------------------- }
 // Scale button glyphs, images and image lists for High DPI awareness
@@ -142,7 +148,8 @@ procedure SetSpeedButtonGlyphs (AControl : TWinControl; BaseIndex : integer; Img
 procedure ScaleScreenFonts (OldDPI,NewDPI : integer);
 
 // Scale absolute pixel value
-function PixelScale (Value : integer; AForm : TForm) : integer;
+function PixelScale (Value : integer; AForm : TForm) : integer; overload;
+function PixelScale (Value : integer; mo : TMonitor) : integer; overload;
 
 // adjust Itemheight of owner drawn comboboxes
 procedure AdjustComboBoxes(AControl : TWinControl; OldDPI,NewDPI : integer);
@@ -191,9 +198,11 @@ procedure AdjustClientWidth (AForm : TForm; AControl : TControl; Dist : integer 
 
 { ---------------------------------------------------------------- }
 // History list management
-procedure LoadHistory (IniFile : TIniFile; const Section,Ident : string;
+procedure LoadHistory (IniFile : TCustomIniFile; const Section,Ident : string;
                        History : TStrings; MaxCount : integer; CvQuote : boolean = false); overload;
-procedure LoadHistory (IniFile : TIniFile; const Section,Ident : string;
+procedure LoadHistory (IniFile : TCustomIniFile; const Section,Ident : string;
+                       History : TStrings; CvQuote : boolean = false); overload;
+procedure LoadHistory (IniFile : TCustomIniFile; const Section : string;
                        History : TStrings; CvQuote : boolean = false); overload;
 procedure LoadHistory (const IniName,Section,Ident : string;
                        History : TStrings; MaxCount : integer; CvQuote : boolean = false); overload;
@@ -201,15 +210,25 @@ procedure LoadHistory (const IniName,Section,Ident : string;
                        History : TStrings; CvQuote : boolean = false); overload;
 procedure LoadHistory (const IniName,Section : string;
                        Combo : TComboBox; MaxHist : integer = 0; CvQuote : boolean = false); overload;
+procedure LoadHistory (IniFile : TCustomIniFile; const Section : string;
+                       Combo : TComboBox; MaxHist : integer = 0; CvQuote : boolean = false); overload;
 
-procedure SaveHistory (IniFile : TIniFile; const Section,Ident : string;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section,Ident : string;
                        Erase : boolean; History : TStrings; MaxCount : integer; CvQuote : boolean = false); overload;
-procedure SaveHistory (IniFile : TIniFile; const Section,Ident : string;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section,Ident : string;
                        Erase : boolean; History : TStrings; CvQuote : boolean = false); overload;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section : string;
+                       Erase : boolean; History : TStrings; CvQuote : boolean = false); overload;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section : string;
+                       History : TStrings; CvQuote : boolean = false); overload;
 procedure SaveHistory (const IniName,Section,Ident : string;
                        Erase : boolean; History : TStrings; MaxCount : integer; CvQuote : boolean = false); overload;
 procedure SaveHistory (const IniName,Section,Ident : string;
                        Erase : boolean; History : TStrings; CvQuote : boolean = false); overload;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section : string; Erase : boolean;
+                       Combo : TComboBox; MaxHist : integer = 0; CvQuote : boolean = false); overload;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section : string;
+                       Combo : TComboBox; MaxHist : integer = 0; CvQuote : boolean = false); overload;
 procedure SaveHistory (const IniName,Section : string; Erase : boolean;
                        Combo : TComboBox; MaxHist : integer = 0; CvQuote : boolean = false); overload;
 
@@ -249,12 +268,12 @@ function ClearKeyboardBuffer : Integer;
 
 { ---------------------------------------------------------------- }
 // Liste der auf dem System vorhandenen Codepages erstellen
-function GetCodePageList (sl : TStrings) : boolean;
+function GetCodePageList (sl : TStrings; Default : string = '') : boolean;
 
 { =================================================================== }
 implementation
 
-uses WinApi.WinSpool, Winapi.Messages,  Winapi.CommCtrl, System.StrUtils, System.Math,
+uses WinApi.WinSpool, Winapi.Messages, Winapi.CommCtrl, System.StrUtils, System.Math,
   WinApiUtils, StringUtils, UnitConsts;
 
 const
@@ -442,10 +461,10 @@ begin
     mo:=MonitorFromPoint(Point(ALeft,ATop));
 //    mo:=MonitorFromRect(Rect(ALeft,ATop,ALeft+AWidth,ATop+AHeight));
     with mo.WorkareaRect do begin
-      if ALeft+AWidth>Right then ALeft:=Right-AWidth-20;
-      if ALeft<Left then ALeft:=Left+20;
-      if ATop+AHeight>Bottom then ATop:=Bottom-AHeight-30;
-      if ATop<Top then ATop:=Top+20;
+      if ALeft+AWidth>Right then ALeft:=Right-AWidth-PixelScale(20,mo);
+      if ALeft<Left then ALeft:=Left+PixelScale(20,mo);
+      if ATop+AHeight>Bottom then ATop:=Bottom-AHeight-PixelScale(30,mo);
+      if ATop<Top then ATop:=Top+PixelScale(20,mo);
       end;
     end;
   end;
@@ -466,7 +485,7 @@ procedure AdjustFormPosition (AScreen : TScreen; AForm : TForm;
           APos : TPoint; AtBottom : boolean = false);
 begin
   with AForm,APos do begin
-    if (Y < 0) or (X < 0) then Position:=poScreenCenter
+    if (Y < 0) or (X < 0) then Position:=poMainFormCenter // poScreenCenter
     else begin
       Position:=poDesigned;
       if X<0 then X:=Left;
@@ -482,12 +501,12 @@ begin
 function FitToMonitor (Mon : TMonitor; BoundsRect : TRect) : TPoint;
 begin
   with Result,Mon.WorkareaRect do begin
-    if BoundsRect.Right>Right then x:=Right-BoundsRect.Width-50
+    if BoundsRect.Right>Right then x:=Right-BoundsRect.Width-PixelScale(50,Mon)
     else x:=BoundsRect.Left;
-    if x<=Left then x:=Left+50;
-    if BoundsRect.Bottom>Bottom then y:=Bottom-BoundsRect.Height-50
+    if x<=Left then x:=Left+PixelScale(50,Mon);
+    if BoundsRect.Bottom>Bottom then y:=Bottom-BoundsRect.Height-PixelScale(50,Mon)
     else y:=BoundsRect.Top;
-    if y<=Top then y:=Top+50;
+    if y<=Top then y:=Top+PixelScale(50,Mon);
     end;
   end;
 
@@ -517,8 +536,8 @@ begin
   with bm.Canvas do begin
     Font.Assign(AFont);
     Result:=TextWidth(Text);
-    Free;
     end;
+  bm.Free;
   end;
 
 function GetMaxTextWidth(const Text : string; AFont : TFont) : integer;
@@ -540,9 +559,22 @@ begin
   bm.Free;
   end;
 
+function GetMaxTextWidth(sl : TStrings; AFont : TFont) : integer;
+var
+  i : integer;
+  bm  : TBitmap;
+begin
+  Result:=0;
+  bm:=TBitmap.Create;                      // prepare temp. canvas
+  bm.Canvas.Font.Assign(AFont);
+  with sl do for i:=0 to Count-1 do begin
+    Result:=Max(Result,bm.Canvas.TextWidth(Strings[i]));
+    end;
+  bm.Free;
+  end;
+
 function GetMaxTextExtent(const Text : string; AFont : TFont) : TSize;
 var
-  w,h : integer;
   bm  : TBitmap;
 begin
   bm:=TBitmap.Create;                      // prepare temp. canvas
@@ -566,6 +598,24 @@ begin
     until (n=0) or (n>=length(Text));
   end;
 
+// Shorten string to specified width
+function StripString (const s : string; Canvas : TCanvas; MaxWidth : Integer) : string;
+var
+  sw : string;
+begin
+  Result:=s;
+  if (length(Result)>3) then begin
+    sw:=copy(Result,1,3)+'...';
+    if (MaxWidth>Canvas.TextWidth(sw)) then begin
+      if (Canvas.TextWidth(Result)>MaxWidth) then begin
+        while Canvas.TextWidth(Result+'...')>MaxWidth do Delete(Result,length(Result),1);
+        Result:=Result+'...';
+        end
+      end
+    else Result:=sw;
+    end
+  end;
+
 { ------------------------------------------------------------------- }
 // procedures to adjust visible components for High DPI awareness
 // Scale button glyphs
@@ -573,7 +623,7 @@ procedure ScaleGlyph (AControl : TControl; OldDPI,NewDPI : integer);
 var
   bm,bms,gl : TBitmap;
 begin
-  if MulDiv(100,NewDPI,OldDPI)<130 then Exit;
+  if MulDiv(100,NewDPI,OldDPI)<MinScale then Exit;
   bm:=TBitmap.Create;
   if AControl is TBitBtn then begin
     gl:=(AControl as TBitBtn).Glyph; bm.Assign(gl);
@@ -605,7 +655,7 @@ procedure ScaleButtonGlyphs (AControl : TWinControl; OldDPI,NewDPI : integer);
 var
   i : integer;
 begin
-  if MulDiv(100,NewDPI,OldDPI)<120 then Exit;
+  if MulDiv(100,NewDPI,OldDPI)<MinScale then Exit;
 //  if MulDiv(NewDPI,100,OldDPI)<=150 then Exit;
   with AControl do for i := 0 to ControlCount-1 do begin
     ScaleGlyph(Controls[i],OldDPI,NewDPI);
@@ -619,7 +669,7 @@ procedure ScaleImage (AImage : TImage; OldDPI,NewDPI : integer);
 var
   bm : TBitmap;
 begin
-  if MulDiv(100,NewDPI,OldDPI)<130 then Exit;
+  if MulDiv(100,NewDPI,OldDPI)<MinScale then Exit;
   bm:=TBitmap.Create;
   try
     with AIMage do begin
@@ -645,7 +695,7 @@ var
   mb,ib,sib,smb   : TBitmap;
   til             : TImageList;
 begin
-  if MulDiv(100,NewDPI,OldDPI)<120 then Exit;
+  if MulDiv(100,NewDPI,OldDPI)<MinScale then Exit;
   with imgList do OldSize.Create(Width,Height);
   til:=TImageList.Create(nil);  //create temporary list
   try
@@ -753,7 +803,7 @@ begin
     end;
   end;
 
-// scale Screen fonts - only to called from main form
+// scale Screen fonts - only to be called from main form
 procedure ScaleScreenFonts (OldDPI,NewDPI : integer);
 begin
   with Screen do begin
@@ -767,6 +817,11 @@ begin
 function PixelScale (Value : integer; AForm : TForm) : integer;
 begin
   Result:=MulDiv(Value,AForm.Monitor.PixelsPerInch,PixelsPerInchOnDesign);
+  end;
+
+function PixelScale (Value : integer; mo : TMonitor) : integer;
+begin
+  Result:=MulDiv(Value,mo.PixelsPerInch,PixelsPerInchOnDesign);
   end;
 
 { --------------------------------------------------------------- }
@@ -962,7 +1017,7 @@ begin
 const
   iniHist = 'History';
 
-procedure LoadHistory (IniFile : TIniFile; const Section,Ident : string;
+procedure LoadHistory (IniFile : TCustomIniFile; const Section,Ident : string;
                        History : TStrings; MaxCount : integer; CvQuote : boolean);
 var
   i : integer;
@@ -983,40 +1038,61 @@ begin
     end;
   end;
 
-procedure LoadHistory (IniFile : TIniFile; const Section,Ident : string;
+procedure LoadHistory (IniFile : TCustomIniFile; const Section,Ident : string;
                        History : TStrings; CvQuote : boolean);
 begin
   LoadHistory(IniFile,Section,Ident,History,defMaxHist,CvQuote);
   end;
 
+procedure LoadHistory (IniFile : TCustomIniFile; const Section : string;
+                       History : TStrings; CvQuote : boolean);
+begin
+  LoadHistory(IniFile,Section,'',History,defMaxHist,CvQuote);
+  end;
+
 procedure LoadHistory (const IniName,Section,Ident : string;
                        History : TStrings; MaxCount : integer; CvQuote : boolean);
 var
-  IniFile : TIniFile;
+  IniFile : TMemIniFile;
 begin
-  IniFile:=TIniFile.Create(IniName);
+  IniFile:=TMemIniFile.Create(IniName);
   LoadHistory(IniFile,Section,Ident,History,MaxCount,CvQuote);
   IniFile.Free;
   end;
 
 procedure LoadHistory (const IniName,Section,Ident : string;
-                       History : TStrings; CvQuote : boolean); overload;
+                       History : TStrings; CvQuote : boolean);
 begin
   LoadHistory(IniName,Section,Ident,History,defMaxHist,CvQuote);
   end;
 
+procedure LoadHistory (IniFile : TCustomIniFile; const Section : string;
+                       Combo : TComboBox; MaxHist : integer = 0; CvQuote : boolean = false);
+var
+  n : integer;
+begin
+  with Combo do begin
+    if MaxHist=0 then n:=DropDownCount else n:=MaxHist;
+    LoadHistory(IniFile,Section,'',Items,n,CvQuote);
+    if Items.Count>0 then ItemIndex:=0;
+    if (Items.Count<=1) then Style:=csSimple else Style:=csDropDown;
+    end;
+  end;
+
 procedure LoadHistory (const IniName,Section : string;
-                       Combo : TComboBox; MaxHist : integer; CvQuote : boolean); overload;
+                       Combo : TComboBox; MaxHist : integer; CvQuote : boolean);
 var
   n : integer;
 begin
   with Combo do begin
     if MaxHist=0 then n:=DropDownCount else n:=MaxHist;
     LoadHistory(IniName,Section,'',Items,n,CvQuote);
+    if Items.Count>0 then ItemIndex:=0;
+    if (Items.Count<=1) then Style:=csSimple else Style:=csDropDown;
     end;
   end;
 
-procedure SaveHistory (IniFile : TIniFile; const Section,Ident : string;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section,Ident : string;
                        Erase : boolean; History : TStrings; MaxCount : integer; CvQuote : boolean);
 var
   i,n : integer;
@@ -1036,26 +1112,59 @@ begin
     end;
   end;
 
-procedure SaveHistory (IniFile : TIniFile; const Section,Ident : string;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section,Ident : string;
                        Erase : boolean; History : TStrings; CvQuote : boolean);
 begin
   SaveHistory(IniFile,Section,Ident,Erase,History,defMaxHist,CvQuote);
   end;
 
+procedure SaveHistory (IniFile : TCustomIniFile; const Section : string;
+                       Erase : boolean; History : TStrings; CvQuote : boolean);
+begin
+  SaveHistory(IniFile,Section,'',Erase,History,defMaxHist,CvQuote);
+  end;
+
+procedure SaveHistory (IniFile : TCustomIniFile; const Section : string;
+                       History : TStrings; CvQuote : boolean = false);
+begin
+  SaveHistory(IniFile,Section,'',true,History,defMaxHist,CvQuote);
+  end;
+
 procedure SaveHistory (const IniName,Section,Ident : string;
                        Erase : boolean; History : TStrings; MaxCount : integer; CvQuote : boolean);
 var
-  IniFile : TIniFile;
+  IniFile : TMemIniFile;
 begin
-  IniFile:=TIniFile.Create(IniName);
+  IniFile:=TMemIniFile.Create(IniName);
   SaveHistory(IniFile,Section,Ident,Erase,History,defMaxHist,CvQuote);
-  IniFile.Free;
+  try
+    IniFile.UpdateFile;
+  finally
+    IniFile.Free;
+    end;
   end;
 
 procedure SaveHistory (const IniName,Section,Ident : string;
                        Erase : boolean; History : TStrings; CvQuote : boolean);
 begin
   SaveHistory(IniName,Section,Ident,Erase,History,defMaxHist,CvQuote);
+  end;
+
+procedure SaveHistory (IniFile : TCustomIniFile; const Section : string; Erase : boolean;
+                       Combo : TComboBox; MaxHist : integer = 0; CvQuote : boolean = false);
+var
+  n : integer;
+begin
+  with Combo do begin
+    if MaxHist=0 then n:=DropDownCount else n:=MaxHist;
+    SaveHistory(IniFile,Section,'',Erase,Items,n,CvQuote);
+    end;
+  end;
+
+procedure SaveHistory (IniFile : TCustomIniFile; const Section : string;
+                       Combo : TComboBox; MaxHist : integer = 0; CvQuote : boolean = false); overload;
+begin
+  SaveHistory (IniFile,Section,true,Combo,MaxHist,CvQuote);
   end;
 
 procedure SaveHistory (const IniName,Section : string; Erase : boolean;
@@ -1097,6 +1206,7 @@ begin
   with Combo do begin
     AddToHistory (Items,hs,DropDownCount);
     if Items.Count>0 then ItemIndex:=0;
+    if (Items.Count<=1) then Style:=csSimple else Style:=csDropDown;
     end;
   end;
 
@@ -1268,10 +1378,11 @@ begin
   Result := 1;
   end;
 
-function GetCodePageList (sl : TStrings) : boolean;
+function GetCodePageList (sl : TStrings; Default : string) : boolean;
 begin
   CodePageList:=TStringList.Create;
   CodePageList.Sorted:=true;
+  if length(Default)>0 then CodePageList.AddObject(Space+Default,nil);
   Result:=false;
   try
     Result:=EnumSystemCodePages(@CpEnumProc, CP_SUPPORTED);

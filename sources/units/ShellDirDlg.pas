@@ -26,8 +26,10 @@
    Vers. 3.0 - Apr. 2012 : Delphi XE2
    Vers. 3.1 - Nov. 2015 : Delphi 10, adaption to new shell control components
    Vers. 3.2 - July 2022 : define compiler switch "ACCESSIBLE" to make dialog
-                        messages accessible to screenreaders
-   last modified: September 2023
+                           messages accessible to screenreaders
+   Vers. 3.3 - Mar. 2024 : changed to TMemIniFile
+
+   last modified: March 2024
    *)
 
 unit ShellDirDlg;
@@ -140,9 +142,6 @@ const
 var
   IniFileName,SectionName   : string;
 
-const
-  MaxHist = 15;
-
 { ------------------------------------------------------------------- }
 procedure TShellDirDialog.FormCreate(Sender: TObject);
 begin
@@ -153,7 +152,7 @@ begin
   FIniName:=''; FIniSection:='';
   FDefaultDir:='';
   DirList:=TStringList.Create;
-  cbxSelectedDir.MaxLength:=MaxHist;
+  cbxSelectedDir.DropDownCount:=FMaxLen;
   panRoot.ParentBackground:=false;
   Top:=(Screen.Height-Height) div 2;
   Left:=(Screen.Width-Width) div 2;
@@ -232,13 +231,13 @@ const
 procedure TShellDirDialog.LoadFromIni(const IniName, Section : string);
 var
   i       : integer;
-  IniFile : TIniFile;
+  IniFile : TMemIniFile;
   s       : string;
 begin
   FIniName:=IniName; FIniSection:=Section;
   if FileExists(FIniName) and (length(FIniSection)>0) then begin
     DirList.Clear;
-    IniFile:=TIniFile.Create(IniName);
+    IniFile:=TMemIniFile.Create(IniName);
     for i:=0 to FMaxLen-1 do begin
       s:=IniFile.ReadString(FIniSection,iniHistory+IntToStr(i),'');
       if s<>'' then DirList.Add(s);
@@ -265,7 +264,7 @@ var
   i : integer;
 begin
   if (length(FIniName)>0) and (length(FIniSection)>0) then begin
-    with TIniFile.Create(FIniName) do begin
+    with TMemIniFile.Create(FIniName) do begin
       try
         EraseSection(FIniSection);
         with DirList do for i:=0 to Count-1 do
@@ -276,6 +275,7 @@ begin
         WriteInteger(FIniSection,iniLWidth,PanelLeft.Width);
         WriteInteger(FIniSection,iniRWidth,PanelRight.Width);
         WriteBool(FIniSection,iniFileView,cbxFiles.Checked);
+        UpdateFile;
       finally
         Free;
         end;
@@ -302,15 +302,15 @@ begin
   if length(ADir)>0 then with DirList do begin
     n:=IndexOf(ADir);
     if n<0 then begin
-      if Count>=MaxHist then Delete (Count-1);
+      if Count>=FMaxLen then Delete (Count-1);
       Insert (0,ADir);
       end
     else begin
       if n>0 then Move (n,0);
       Strings[0]:=ADir;  // update string anyway, e.g. if case was changed
       end;
+    cbxSelectedDir.Items.Assign(DirList);
     end;
-  cbxSelectedDir.Items.Assign(DirList);
   end;
 
 (* delete directory from history list *)
@@ -622,6 +622,7 @@ begin
 
 procedure TShellDirDialog.cbxSelectedDirChange(Sender: TObject);
 begin
+  SelectDir(cbxSelectedDir.Text);
   btbOk.Enabled:=DirectoryExists(cbxSelectedDir.Text);
   end;
 
@@ -636,25 +637,32 @@ var
 begin
   s:=ADir;
   if length(s)=0 then s:=FDefaultDir;
-  spbComputer.Down:=true;
-  if (length(s)=0) or not DirectoryExists(s)then begin
-    s:=GetDesktopFolder(CSIDL_PERSONAL);
-    r:='rfMyComputer';
-//    r:='rfPersonal';
-    if length(s)=0 then s:=GetCurrentDir;
+  if length(s)=0 then begin  // no default
+    spbDesktop.Down:=true;
+    r:='rfDesktop';
     end
   else begin
-    if copy(s,1,2)='\\' then begin
-      r:='rfNetwork';
-//      r:='rfDesktop';
-      spbNetwork.Down:=true;
+    spbComputer.Down:=true;
+    if (length(s)=0) or not DirectoryExists(s)then begin
+      s:=GetDesktopFolder(CSIDL_PERSONAL);
+      r:='rfMyComputer';
+  //    r:='rfPersonal';
+      if length(s)=0 then s:=GetCurrentDir;
       end
-    else r:='rfMyComputer';
+    else begin
+      if copy(s,1,2)='\\' then begin
+        r:='rfNetwork';
+  //      r:='rfDesktop';
+        spbNetwork.Down:=true;
+        end
+      else r:='rfMyComputer';
+      end;
     end;
   with ShellTreeView do begin
     Root:=r;
     sleep(500);    // new Feb. 2021
-    Path:=s;
+    if length(s)>0 then Path:=s
+    else Selected:=nil;
     if assigned(Selected) then try Selected.Expand(false); except end;
     end;
   end;
@@ -677,12 +685,12 @@ begin
 //    SelectDir(HomeDir);
 //    Exit;
 //    end
-  SelectDir(Dir);
   with ShellListView do begin
     if Hidden then ObjectTypes:=ObjectTypes+[otHidden,otHiddenSystem]
     else ObjectTypes:=ObjectTypes-[otHidden,otHiddenSystem];
     ShowZip:=ZipAsFiles;
     end;
+  SelectDir(Dir);
   cbxSelectedDir.Text:=ShellTreeView.Path;
   laVolHint.Caption:=GetDiskInfo(cbxSelectedDir.Text);
   cbxFiles.Visible:=FileView;

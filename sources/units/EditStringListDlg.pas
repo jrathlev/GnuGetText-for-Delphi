@@ -80,9 +80,9 @@ procedure TEditStringListDialog.UpBtnClick(Sender: TObject);
 var
   n : integer;
 begin
-  with lbxStringList,Items do if (Count>0) and (ItemIndex>0) then begin
+  with lbxStringList do if (Count>0) and (ItemIndex>0) then begin
     n:=ItemIndex;
-    Exchange(n,n-1);
+    Items.Exchange(n,n-1);
     ItemIndex:=n-1;
     end;
   end;
@@ -127,9 +127,9 @@ procedure TEditStringListDialog.DownBtnClick(Sender: TObject);
 var
   n : integer;
 begin
-  with lbxStringList,Items do if (Count>0) and (ItemIndex<Count-1) then begin
+  with lbxStringList do if (Count>0) and (ItemIndex<Count-1) then begin
     n:=ItemIndex;
-    Exchange(n,n+1);
+    Items.Exchange(n,n+1);
     ItemIndex:=n+1;
     end;
   end;

@@ -21,10 +21,18 @@ interface
 
 resourcestring
 
-
 { ------------------------------------------------------------------- }
 // Strings from ExtSysUtils
   rsFormatError  = 'Format error: ';
+  rsUnknownError = 'Unknown system error code';
+  rsErrorCode = 'Error code';
+  rsWindowsError = 'Windows error';
+  rsStorageError = 'Storage error';
+  rsRpcError = 'Remote procedure call error';
+  rsInterfaceError = 'Interface error';
+  rsDispatchError = 'Dispatch error';
+  rsPreWin32Error = 'Error in SHFileOperation';
+  rsShellExec = 'ShellExecute error';
 
 { ------------------------------------------------------------------- }
 // Strings from NumberUtils
@@ -56,17 +64,6 @@ resourcestring
   rsComStateError = 'Error setting COM port state';
   rsComFlushError = 'Error flushing COM buffers';
   rsComSetupError = 'Error initializing COM port';
-
-{ ------------------------------------------------------------------- }
-// Strings from WinUtils
-  rsUnknownError = 'Unknown system error code';
-  rsWindowsError = 'Windows error';
-  rsStorageError = 'Storage error';
-  rsRpcError = 'Remote procedure call error';
-  rsInterfaceError = 'Interface error';
-  rsDispatchError = 'Dispatch error';
-  rsPreWin32Error = 'Error in SHFileOperation';
-  rsShellExec = 'ShellExecute error';
 
 { ------------------------------------------------------------------- }
 // Strings from SystemInfo
@@ -115,11 +112,27 @@ resourcestring
   rsUnlicensed = 'Unlicensed product';
 
 { ------------------------------------------------------------------- }
+// Strings from DateUtilEx
+  rsBegSpring = 'Beginning of spring';
+  rsBegSummer = 'Beginning of summer';
+  rsBegAutumn = 'Beginning of autumn';
+  rsBegWinter = 'Beginning of winter';
+
+{ ------------------------------------------------------------------- }
+// Strings from PasswordStrength
+  rsVeryWeak = 'very weak';
+  rsWeak = 'weak';
+  rsGood = 'good';
+  rsStrong = 'strong';
+  rsVeryStrong = 'very strong';
+
+{ ------------------------------------------------------------------- }
 // Misc.
   rsVersion = 'Version';
   rsLongCopyRight = '%s Dr. J. Rathlev'+sLineBreak+' 24222 Schwentinental, Germany';
   rsCopyRight = '%s Dr. J. Rathlev';
   rsNotAvail = 'not available';
+  rsNoName = 'unlabeled';
   rsConnectTo = 'Connect to ..';
   rsUnknown = '<Unknown>';
   rsAnyKey = 'Strike any key to continue ...';

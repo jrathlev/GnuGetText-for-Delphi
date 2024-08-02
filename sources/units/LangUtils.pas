@@ -437,7 +437,7 @@ begin
     end;
   LangFromCfg:=length(Result)=0;
   if LangFromCfg then begin    //aus Konfigurations-Datei
-    with TIniFile.Create(CfgName) do begin
+    with TMemIniFile.Create(CfgName) do begin
       Result:=ReadString(LangSekt,LangID,'');
       Free;
       end;
@@ -455,9 +455,13 @@ procedure SaveLanguage (NewLangCode : TLangCodeString);
 begin
   SelectedLanguage:=NewLangCode;
   if LangFromCfg then begin
-    with TIniFile.Create(CfgName) do begin
+    with TMemIniFile.Create(CfgName) do begin
       WriteString(LangSekt,LangID,SelectedLanguage);
-      Free;
+      try
+        UpdateFile;
+      finally
+        Free;
+        end;
       end;
     end;
   end;
