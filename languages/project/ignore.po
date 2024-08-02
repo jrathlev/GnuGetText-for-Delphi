@@ -1,6 +1,6 @@
 #  Doesn't have any letters
 #. frmTransMain.pmDirectorytList.N21.Caption
-#: TransMain.dfm:2892
+#: TransMain.dfm:2983
 msgid "-"
 msgstr ""
 
@@ -18,11 +18,11 @@ msgid "..."
 msgstr ""
 
 #. frmTransMain.paTop.pcOptions.tsLang.cbLanguage.Font.Name
-#: TransMain.dfm:626
+#: TransMain.dfm:623
 #. frmTransMain.paTop.pcOptions.tsLang.lbLang.Font.Name
-#: TransMain.dfm:682
+#: TransMain.dfm:679
 #. frmTransMain.pnStatus.meProgress.Font.Name
-#: TransMain.dfm:1449
+#: TransMain.dfm:1450
 msgid "Courier New"
 msgstr ""
 
@@ -35,9 +35,9 @@ msgstr ""
 #. frmConfig.rgEncoding.Items.Strings
 #: GetTextConfig.dfm:500
 #. frmMain.rgEncoding.Items.Strings
-#: PoFromPasMain.dfm:516
+#: PoFromPasMain.dfm:496
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1377
+#: TransMain.dfm:1374
 msgid "ISO-8859-1"
 msgstr ""
 
@@ -67,8 +67,6 @@ msgstr ""
 #: IssToPasMain.dfm:10
 #. frmMain.laTitle.Font.Name
 #: IssToPasMain.dfm:49
-#. frmMain.Font.Name
-#: IssToPoMain.dfm:11
 #. frmMerge.Font.Name
 #: MergeMain.dfm:12
 #. frmMain.Font.Name
@@ -90,9 +88,9 @@ msgstr ""
 #. frmMain.laEntry.Font.Name
 #: PoSpellMain.dfm:53
 #. frmMain.edWord.Font.Name
-#: PoSpellMain.dfm:412
+#: PoSpellMain.dfm:392
 #. frmMain.meTrans.Font.Name
-#: PoSpellMain.dfm:466
+#: PoSpellMain.dfm:446
 #. PoStatDialog.Font.Name
 #: PoStatDlg.dfm:11
 #. PoStatDialog.laPoFile.Font.Name
@@ -116,15 +114,13 @@ msgstr ""
 #. frmConfig.rgEncoding.Items.Strings
 #: GetTextConfig.dfm:501
 #. frmMain.rgEncoding.Items.Strings
-#: PoFromPasMain.dfm:517
+#: PoFromPasMain.dfm:497
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1378
+#: TransMain.dfm:1375
 msgid "UTF-8"
 msgstr ""
 
 #  Seems like unrenamed form
-#. frmMain.Caption
-#: IssToPoMain.dfm:4
 #. frmMain.Caption
 #: PoStatMain.dfm:4
 #. frmMain.Caption
@@ -146,27 +142,27 @@ msgstr ""
 #. PoStatDialog.gbStat.laNumChars.Caption
 #: PoStatDlg.dfm:215
 #. frmMain.gbStat.laEntries.Caption
-#: PoStatMain.dfm:278
+#: PoStatMain.dfm:268
 #. frmMain.gbStat.laNumTrans.Caption
-#: PoStatMain.dfm:285
+#: PoStatMain.dfm:275
 #. frmMain.gbStat.laNumNoTrans.Caption
-#: PoStatMain.dfm:292
+#: PoStatMain.dfm:282
 #. frmMain.gbStat.laNumFuzzy.Caption
-#: PoStatMain.dfm:299
+#: PoStatMain.dfm:289
 #. frmMain.gbStat.laNumChars.Caption
-#: PoStatMain.dfm:306
+#: PoStatMain.dfm:296
 msgid "xxx"
 msgstr ""
 
 #  Seems like unrenamed tab sheet
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.Caption
-#: TransMain.dfm:148
+#: TransMain.dfm:136
 msgid "tsMask"
 msgstr ""
 
 #  Seems like unrenamed tab sheet
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.Caption
-#: TransMain.dfm:307
+#: TransMain.dfm:295
 msgid "tsFiles"
 msgstr ""
 
