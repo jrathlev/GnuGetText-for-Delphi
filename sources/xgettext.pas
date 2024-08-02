@@ -113,6 +113,7 @@ type
       IgnoreMarkers : TStringList; // List with left most characters of possible unrenamed objects
       CFiles:TStringList;   // This will contain filenames of C/C++ source files to be scanned elsewhere
       definedDomain: String;
+      FCanceled : boolean;
       procedure doHandleExtendedDirective (line: string);
       procedure ClearConstList;
       function GetDomain(domain: string): TXGTDomain;
@@ -174,7 +175,8 @@ type
       procedure AddLazarusFilemasks;
       procedure AddCppFilemasks;
       procedure HandleIgnores;
-      procedure Execute;
+      function Execute : boolean;
+      procedure Cancel;
       property IgnoreListFile : string read fIgnoreListFile write SetIgnoreListFile;
     end;
 
@@ -284,6 +286,7 @@ begin
   ExcludeDirs:=TStringList.Create; // JR
   defaultDomain:='default';
   Generator:=AGenerator; //Format(_('dxgettext %s'),[GgtVersion])   // JR
+  FCanceled:=false;
   end;
 
 destructor TXGetText.Destroy;
@@ -1172,10 +1175,11 @@ begin
           n:=ExcludeDirs.IndexOf(sr.Name);          // JR
           if (sr.Attr and faDirectory<>0) and (sr.Name<>'.') and (sr.Name<>'..') and (n<0) then
             dirlist.Add(curdir+sr.Name+PathDelim);
-          more:=FindNext(sr) = 0;
-        end;
+          if FCanceled then more:=false
+          else more:=FindNext(sr) = 0;
+          end;
         FindClose (sr);
-        inc (idx);
+        inc(idx);
         end;
       end;
     dirlist.Sort;
@@ -1194,10 +1198,14 @@ begin
           end;
         FindClose(sr);
         sl.Sort;
-        for i:=0 to sl.count-1 do ExtractFromFile(sl.Strings[i]);
+        for i:=0 to sl.count-1 do begin
+          ExtractFromFile(sl.Strings[i]);
+          if FCanceled then Break;
+          end;
       finally
         FreeAndNil (sl);
         end;
+      if FCanceled then Break;
       end;
   finally
     FreeAndNil (dirlist);
@@ -1410,13 +1418,14 @@ begin
   ExcludeDirs.CommaText:=AList;
   end;
 
-procedure TXGetText.Execute;
+function TXGetText.Execute : boolean;
 var
   i,j : integer;
   sx,sp : string;
   hd  : TStringList;
   ok  : boolean;
 begin
+  FCanceled:=false;
   // If no base directories, make one
   if BaseDirectoryList.Count=0 then
     AddBaseDirectory(IncludeTrailingPathDelimiter(ExpandFileName('.')));
@@ -1437,17 +1446,21 @@ begin
     for i:=0 to filemasks.count-1 do begin
       if NoWildcards then ExtractFromFile(filemasks.Strings[i])
       else ExtractFromFileMasks(filemasks.Strings[i]);
+      if FCanceled then Break;
       end;
     end;
 
-  // Handle ignores
-  HandleIgnores;
+  if FCanceled then ok:=false
+  else begin
+    // Handle ignores
+    HandleIgnores;
 
-  // Write files
-  if UpdateIgnore then ignorelist.SaveToFile(DestinationPath+PoIgnore,true);
-  ok:=true;
-  // Write all domain.po files
-  for i:=0 to domainlist.Count-1 do ok:=ok and WriteAll(domainlist.Strings[i]);
+    // Write files
+    if UpdateIgnore then ignorelist.SaveToFile(DestinationPath+PoIgnore,true);
+    ok:=true;
+    // Write all domain.po files
+    for i:=0 to domainlist.Count-1 do ok:=ok and WriteAll(domainlist.Strings[i]);
+    end;
 
   if ok and (CFiles.Count>0) then begin  // process c/cpp files
     DoProgress(_('Extract strings from C/CPP files:'),'',0);
@@ -1467,6 +1480,12 @@ begin
     hd.Free;
     DoProgress(Format(_('Updating %s'),[sx]),sx,0);
     end;
+  Result:=ok;
+  end;
+
+procedure TXGetText.Cancel;
+begin
+  FCanceled:=true;
   end;
 
 procedure TXGetText.AddDelphiFilemasks;

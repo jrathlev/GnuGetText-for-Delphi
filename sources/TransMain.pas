@@ -99,7 +99,7 @@ type
     bbUp: TBitBtn;
     bbDown: TBitBtn;
     Label4: TLabel;
-    ilMerge: TImageList;
+    ilGlyphs: TImageList;
     pmDirectorytList: TPopupMenu;
     pmiEdit: TMenuItem;
     pmiClear: TMenuItem;
@@ -171,6 +171,7 @@ type
     TextEditor        : string;
     ErrorOutput       : TStringList;
     WarnCount         : integer;
+    XGetText          : TXGetText;
     procedure GetSelectedIndex (n : integer);
     function GetFileFilter : string;
     function GetGenerator : string;
@@ -257,13 +258,14 @@ begin
     end;
   lbLang.Items.NameValueSeparator:='-';
   ErrorOutput:=TStringList.Create;
+  XGetText:=nil;
   end;
 
 {$IFDEF HDPI}   // scale glyphs and images for High DPI
 procedure TfrmTransMain.AfterConstruction;
 begin
   inherited;
-  ScaleImageList(ilMerge,PixelsPerInchOnDesign,Monitor.PixelsPerInch);
+  ScaleImageList(ilGlyphs,PixelsPerInchOnDesign,Monitor.PixelsPerInch);
   ScaleButtonGlyphs(self,PixelsPerInchOnDesign,Monitor.PixelsPerInch);
   end;
 {$EndIf}
@@ -311,8 +313,8 @@ begin
   pcOptions.ActivePageIndex:=0;
   with btMerge do begin
     Glyph:=nil;
-    if cbPoedit.Checked then ilMerge.GetBitmap(1,Glyph)
-    else ilMerge.GetBitmap(0,Glyph);
+    if cbPoedit.Checked then ilGlyphs.GetBitmap(1,Glyph)
+    else ilGlyphs.GetBitmap(0,Glyph);
     end;
   ShowTextDialog.LoadFromIni(IniName,'ShowErrors');
   if (length(TextEditor)=0) or not FileExists(TextEditor) then begin
@@ -757,8 +759,8 @@ procedure TfrmTransMain.cbPoEditClick(Sender: TObject);
 begin
   with btMerge do begin
     Glyph:=nil;
-    if cbPoedit.Checked then ilMerge.GetBitmap(1,Glyph)
-    else ilMerge.GetBitmap(0,Glyph);
+    if cbPoedit.Checked then ilGlyphs.GetBitmap(1,Glyph)
+    else ilGlyphs.GetBitmap(0,Glyph);
     end;
   end;
 
@@ -854,8 +856,8 @@ begin
 { ---------------------------------------------------------------- }
 procedure TfrmTransMain.btExtractClick(Sender: TObject);
 var
-  xgt  : TXGetText;
   si   : string;
+  ok   : boolean;
 
   procedure Explode (line : string; sl : TStrings);
   var
@@ -874,54 +876,69 @@ var
     end;
 
 begin
-  SaveGetTextSettings;
-  btMerge.Enabled:=false;
-  xgt:=TXGetText.Create;
-  meProgress.Clear;
-  WarnCount:=0;
-  with xgt do begin
-    ExePath:=PrgPath;
-    Recurse:=cbRecurse.Checked;
-    OrderbyMsgid:=cbOrder.Checked;
-    SetExcludeDirs(ExcludeDirs.Text);
-    UpdateIgnore:=cbCreateIgnore.Checked;
-    UseIgnoreFile:=cbRemoveIgnore.Checked;
-    DestinationPath:=IncludeTrailingPathDelimiter(cbProjDir.Text);
-    Generator:=GetGenerator;
-    AddBaseDirectory(DestinationPath);
-    AllowNonAscii:=rgEncoding.ItemIndex>0; //not cbCheckNonAscii.Checked;
-    case rgEncoding.ItemIndex of
-    1 : CodePage:=cpLatin1;
-    2 : CodePage:=cpUtf8;
-    else CodePage:=0;
+  if assigned(XGetText) then begin
+    XGetText.Cancel;
+    end
+  else begin
+    SaveGetTextSettings;
+    with btExtract do begin
+      Glyph:=nil;
+      ilGlyphs.GetBitmap(3,Glyph);
       end;
-    if rbOther.Checked then defaultDomain:=OutputName.Text;
-    NoWildcards:=rbFiles.Checked;
-    if NoWildcards then filemasks.CommaText:=cbFiles.Text
-    else Explode(EditMask.Text,filemasks);
-    si:=DestinationPath+sIgnoreList;
-//    if not FileExists(si) then begin
-//      if FileExists(sIgnoreList) then CopyFileTS(sIgnoreList,si) // copy from install dir
-//      else si:='';
-//      end;
-    IgnoreListFile:=si;
-    OnProgress:=Progress;
-    OnWarning:=Warning;
-    OnOverwrite:=OverwriteQuestion;
-    Application.ProcessMessages;
-    try
-      Execute;
-    finally
-      Free;
+    btMerge.Enabled:=false;
+    XGetText:=TXGetText.Create;
+    meProgress.Clear;
+    WarnCount:=0;
+    with XGetText do begin
+      ExePath:=PrgPath;
+      Recurse:=cbRecurse.Checked;
+      OrderbyMsgid:=cbOrder.Checked;
+      SetExcludeDirs(ExcludeDirs.Text);
+      UpdateIgnore:=cbCreateIgnore.Checked;
+      UseIgnoreFile:=cbRemoveIgnore.Checked;
+      DestinationPath:=IncludeTrailingPathDelimiter(cbProjDir.Text);
+      Generator:=GetGenerator;
+      AddBaseDirectory(DestinationPath);
+      AllowNonAscii:=rgEncoding.ItemIndex>0; //not cbCheckNonAscii.Checked;
+      case rgEncoding.ItemIndex of
+      1 : CodePage:=cpLatin1;
+      2 : CodePage:=cpUtf8;
+      else CodePage:=0;
+        end;
+      if rbOther.Checked then defaultDomain:=OutputName.Text;
+      NoWildcards:=rbFiles.Checked;
+      if NoWildcards then filemasks.CommaText:=cbFiles.Text
+      else Explode(EditMask.Text,filemasks);
+      si:=DestinationPath+sIgnoreList;
+  //    if not FileExists(si) then begin
+  //      if FileExists(sIgnoreList) then CopyFileTS(sIgnoreList,si) // copy from install dir
+  //      else si:='';
+  //      end;
+      IgnoreListFile:=si;
+      OnProgress:=Progress;
+      OnWarning:=Warning;
+      OnOverwrite:=OverwriteQuestion;
+      Application.ProcessMessages;
+      try
+        ok:=Execute;
+      finally
+        Free;
+        end;
+      end;
+    XGetText:=nil;
+    with meProgress.Lines do if ok then begin
+      if WarnCount>0 then Add('==> '+Format(_('%u warnings or errors'),[WarnCount]));
+      Add('');
+      laProgress.Caption:=_('Template was created');
+      end
+    else Add('Canceled by user');
+    laLineNr.Caption:='';
+    btMerge.Enabled:=true;
+    with btExtract do begin
+      Glyph:=nil;
+      ilGlyphs.GetBitmap(2,Glyph);
       end;
     end;
-  with meProgress.Lines do begin
-    if WarnCount>0 then Add('==> '+Format(_('%u warnings or errors'),[WarnCount]));
-    Add('');
-    end;
-  laProgress.Caption:=_('Template was created');
-  laLineNr.Caption:='';
-  btMerge.Enabled:=true;
   end;
 
 procedure TfrmTransMain.btMergeClick(Sender: TObject);
