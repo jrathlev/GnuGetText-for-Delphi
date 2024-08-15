@@ -537,6 +537,7 @@ begin
 
       if resourcestringmode<>0 then begin
         while true do begin
+          if FCanceled then Break;
           line:=trim(line);
           p:=pos('''', line);
           if p = 0 then break;
@@ -598,6 +599,7 @@ begin
       else begin
         // Check for occurence of gettext()
         while true do begin
+          if FCanceled then Break;
           uline:=uppercase(line);
           p:=poscode('_',uline);
           p2:=poscode('GETTEXT', uline);
@@ -785,6 +787,7 @@ begin
       multilinevalue:=false;
       collectionlevel:=0;
       while true do begin
+        if FCanceled then Break;
         // Get next line and check it out
         lastline:=line;
         if not StreamReadln (src, line) then break;
