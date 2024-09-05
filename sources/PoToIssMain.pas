@@ -19,7 +19,7 @@
      /out:<OutName>   - Use this file for output (instead of poname.txt)
 
    Feb. 2014
-   last modified: November 2023
+   last modified: April 2024
    *)
 
 unit PoToIssMain;
@@ -29,20 +29,18 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  HListBox, PoParser, GgtConsts, Vcl.ExtCtrls, Vcl.ComCtrls;
+  PoParser, GgtConsts, Vcl.ExtCtrls, Vcl.ComCtrls;
 
 const
-  Vers = ' - Vers. 1.1';
+  Vers = ' - Vers. 3.1';
 
 type
   TfrmMain = class(TForm)
     Label2: TLabel;
-    edPoFile: THistoryCombo;
     bbInfo: TBitBtn;
     bbExit: TBitBtn;
     bbConvert: TBitBtn;
     OpenDialog: TOpenDialog;
-    edLanguage: THistoryCombo;
     Label1: TLabel;
     edOutName: TLabeledEdit;
     bbPoFile: TBitBtn;
@@ -50,6 +48,8 @@ type
     StatusBar: TStatusBar;
     laTitle: TLabel;
     btnHelp: TBitBtn;
+    edPoFile: TComboBox;
+    edLanguage: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbExitClick(Sender: TObject);
@@ -99,6 +99,7 @@ const
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
+  IniFile  : TMemIniFile;
   i : integer;
   sn,sp : string;
 begin
@@ -108,13 +109,16 @@ begin
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     Top:=ReadInteger(CfGSekt,iniTop,Top);
     Left:=ReadInteger(CfGSekt,iniLeft,Left);
     PoFile:=ReadString(CfGSekt,iniLast,'');
     sn:=ExtractLastDir(ExtractFilePath(PoFile));
     if length(sn)>2 then sn:='de';
     LangId:=ReadString(CfGSekt,îniLang,sn);
+    LoadHistory(IniFile,PoSekt,edPoFile);
+    LoadHistory(IniFile,LangSekt,edLanguage);
     Free;
     end;
   OutName:='';
@@ -136,16 +140,8 @@ begin
       end;
     end;
   if length(OutName)=0 then OutName:=ChangeFileExt(ExtractFilename(PoFile),'.txt');
-  with edPoFile do begin
-    LoadFromIni(IniName,PoSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=PoFile;
-    end;
-  with edLanguage do begin
-    LoadFromIni(IniName,LangSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=LangId;
-    end;
+  AddToHistory(edPoFile,PoFile);
+  AddToHistory(edLanguage,LangId);
   edOutName.Text:=OutName;
   PoList:=TPoEntryList.Create;
   Loaded:=false; Changed:=false;
@@ -157,12 +153,18 @@ begin
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  IniFile  : TMemIniFile;
 begin
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     WriteInteger(CfGSekt,iniTop,Top);
     WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniLast,PoFile);
     WriteString(CfGSekt,îniLang,LangId);
+    SaveHistory(IniFile,PoSekt,edPoFile);
+    SaveHistory(IniFile,LangSekt,edLanguage);
+    UpdateFile;
     Free;
     end;
   PoList.Free;
@@ -199,7 +201,7 @@ begin
 procedure TfrmMain.edPoFileCloseUp(Sender: TObject);
 begin
   with edPoFile do begin
-    PoFile:=HistoryList[ItemIndex];
+    PoFile:=Items[ItemIndex];
     end;
   end;
 
@@ -208,14 +210,14 @@ var
   s : string;
 begin
   with OpenDialog do begin
-    if length(PoFile)>0 then InitialDir:=ExtractFilePath(PoFile)
+    if length(PoFile)>0 then InitialDir:=GetExistingParentPath(PoFile,UserPath)
     else InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file with translation');
     Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
-    if Execute then with edPoFile do begin
+    if Execute then begin
       PoFile:=FileName;
-      Text:=Filename; AddItem(Filename);
+      AddToHistory(edPoFile,Filename);
       s:=ExtractLastDir(ExtractFilePath(PoFile));
       if length(s)=2 then edLanguage.Text:=s;
       Result:=true;
@@ -294,7 +296,7 @@ begin
   s:=NewExt(PoFile,'~'+GetExt(so));
   if FileExists(s) then DeleteFile(s);
   if FileExists(so) then RenameFile(so,s);
-  sl.SaveToFile(so);
+  sl.SaveToFile(so,TEncoding.UTF8);
   sl.Free;
   end;
 
