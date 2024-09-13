@@ -1448,6 +1448,7 @@ begin
   if Attr and faArchive =0 then s:=s+'-' else s:=s+'a';
   if Attr and faHidden =0 then s:=s+'-' else s:=s+'h';
   if Attr and faSysFile =0 then s:=s+'-' else s:=s+'s';
+//  if Attr and faNormal =0 then s:=s+'-' else s:=s+'n';
   if Attr and faSymLink	<>0 then s:=s+'L';
   Result:=s;
   end;

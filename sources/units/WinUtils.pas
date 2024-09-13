@@ -14,7 +14,8 @@
 
    New compilation: April 2015
    language dependend strings in UnitConsts
-   last modified: July 2023
+
+   last modified: August 2024
    *)
 
 unit WinUtils;
@@ -124,7 +125,7 @@ function MaxTextWidth(const Text : string; Canvas : TCanvas) : integer;
 
 // calculate text width for given font
 function GetTextWidth(const Text : string; AFont : TFont) : integer;
-function GetMaxTextWidth(sl : TStrings; AFont : TFont) : integer; overload;
+function GetMaxTextWidth(AList : TStrings; AFont : TFont) : integer; overload;
 function GetMaxTextWidth(const Text : string; AFont : TFont) : integer; overload;
 function GetMaxTextExtent(const Text : string; AFont : TFont) : TSize;
 
@@ -150,6 +151,10 @@ procedure ScaleScreenFonts (OldDPI,NewDPI : integer);
 // Scale absolute pixel value
 function PixelScale (Value : integer; AForm : TForm) : integer; overload;
 function PixelScale (Value : integer; mo : TMonitor) : integer; overload;
+function PixelScale (Value : TPoint; AForm : TForm) : TPoint; overload;
+function PixelScale (Value : TPoint; mo : TMonitor) : TPoint; overload;
+function PixelScale (x,y : integer; AForm : TForm) : TPoint; overload;
+function PixelScale (x,y : integer; mo : TMonitor) : TPoint; overload;
 
 // adjust Itemheight of owner drawn comboboxes
 procedure AdjustComboBoxes(AControl : TWinControl; OldDPI,NewDPI : integer);
@@ -248,6 +253,12 @@ procedure FreeListViewData (Liste : TListItems);
 function GetSelectedItem (ListBox : TListBox) : string;
 
 { ---------------------------------------------------------------- }
+// Replacement for TStrings functions: IndexOfName, Name and Value
+function GetIndexOfName (AList : TStrings; const AName : string) : integer;
+function GetName (AList : TStrings; AIndex : integer) : string;
+function GetValue (AList : TStrings; AIndex : integer) : string;
+
+{ ---------------------------------------------------------------- }
 // Listview-Index aus Caption ermitteln (wie IndexOf bei TListBox)
 function GetListViewIndex (lv : TListView; const ACaption : string): integer;
 
@@ -268,7 +279,9 @@ function ClearKeyboardBuffer : Integer;
 
 { ---------------------------------------------------------------- }
 // Liste der auf dem System vorhandenen Codepages erstellen
-function GetCodePageList (sl : TStrings; Default : string = '') : boolean;
+function GetCodePageList (AList : TStrings; Default : string = '') : boolean;
+
+function GetLanguageList (AList : TStrings) : boolean;
 
 { =================================================================== }
 implementation
@@ -559,7 +572,7 @@ begin
   bm.Free;
   end;
 
-function GetMaxTextWidth(sl : TStrings; AFont : TFont) : integer;
+function GetMaxTextWidth(AList : TStrings; AFont : TFont) : integer;
 var
   i : integer;
   bm  : TBitmap;
@@ -567,7 +580,7 @@ begin
   Result:=0;
   bm:=TBitmap.Create;                      // prepare temp. canvas
   bm.Canvas.Font.Assign(AFont);
-  with sl do for i:=0 to Count-1 do begin
+  with AList do for i:=0 to Count-1 do begin
     Result:=Max(Result,bm.Canvas.TextWidth(Strings[i]));
     end;
   bm.Free;
@@ -824,7 +837,31 @@ begin
   Result:=MulDiv(Value,mo.PixelsPerInch,PixelsPerInchOnDesign);
   end;
 
-{ --------------------------------------------------------------- }
+function PixelScale (Value : TPoint; AForm : TForm) : TPoint;
+begin
+  with Result do begin
+    x:=PixelScale(Value.x,AForm); y:=PixelScale(Value.y,AForm);
+    end;
+  end;
+
+function PixelScale (x,y : integer; AForm : TForm) : TPoint;
+begin
+  Result:=PixelScale(Point(x,y),AForm);
+  end;
+
+function PixelScale (Value : TPoint; mo : TMonitor) : TPoint;
+begin
+  with Result do begin
+    x:=PixelScale(Value.x,mo); y:=PixelScale(Value.y,mo);
+    end;
+ end;
+
+function PixelScale (x,y : integer; mo : TMonitor) : TPoint;
+begin
+  Result:=PixelScale(Point(x,y),mo);
+  end;
+
+{ ---------------------------------------------------------------- }
 // Dateifilter-Index ermitteln (siehe TOpenDialog)
 function GetFilterIndex(AFilter,AExtension : string) : integer;
 var
@@ -1255,6 +1292,50 @@ begin
   else Result:='';
   end;
 
+{ ---------------------------------------------------------------- }
+// Replacement for TStrings functions: IndexOfName, Name and Value
+// NameValueSeparator can have spaces at left and right (e.g. Name - Value)
+function GetIndexOfName (AList : TStrings; const AName : string) : integer;
+var
+  n: integer;
+  s: string;
+begin
+  for Result:=0 to AList.Count-1 do begin
+    s:=AList[Result];
+    n:=AnsiPos(AList.NameValueSeparator,s);
+    if (n<>0) and AnsiSameText(Trim(Copy(s,1,n-1)),AName) then Exit;
+    end;
+  Result:=-1;
+  end;
+
+function GetName (AList : TStrings; AIndex : integer) : string;
+var
+  n: integer;
+  s: string;
+begin
+  if (AIndex>=0) and (AIndex<AList.Count) then begin
+    s:=AList[AIndex];
+    n:=AnsiPos(AList.NameValueSeparator,s);
+    if n>0 then Result:=Trim(Copy(s,1,n-1))
+    else Result:='';
+    end
+  else Result:='';
+  end;
+
+function GetValue (AList : TStrings; AIndex : integer) : string;
+var
+  n: integer;
+  s: string;
+begin
+  if (AIndex>=0) and (AIndex<AList.Count) then begin
+    s:=AList[AIndex];
+    n:=AnsiPos(AList.NameValueSeparator,s);
+    if n>0 then Result:=Trim(Copy(s,n+1,length(s)))
+    else Result:='';
+    end
+  else Result:='';
+  end;
+
 //-----------------------------------------------------------------------------
 // Listview-Index aus Caption ermitteln (wie IndexOf bei TListBox)
 function GetListViewIndex (lv : TListView; const ACaption : string): integer;
@@ -1360,7 +1441,7 @@ begin
 var
   CodePageList : TStringList;
 
-function CpEnumProc(CodePage : PChar) : Cardinal ; stdcall;
+function CpEnumProc (CodePage : PChar) : Cardinal; stdcall;
 var
    CpInfoEx : TCPInfoEx;
    s : string;
@@ -1373,20 +1454,39 @@ begin
     ReadNxtStr(s,' ');
     s:=Trim(s);
     s:=RemChar(CutChar(s,')'),'(');
-    CodePageList.AddObject(Format('%s - (%u)', [s,CpInfoEx.Codepage]), TObject(Cp));
+    CodePageList.AddObject(Format('%s - (%u)',[s,CpInfoEx.Codepage]),TObject(Cp));
     end;
   Result := 1;
   end;
 
-function GetCodePageList (sl : TStrings; Default : string) : boolean;
+function GetCodePageList (AList : TStrings; Default : string) : boolean;
 begin
   CodePageList:=TStringList.Create;
   CodePageList.Sorted:=true;
   if length(Default)>0 then CodePageList.AddObject(Space+Default,nil);
   Result:=false;
   try
-    Result:=EnumSystemCodePages(@CpEnumProc, CP_SUPPORTED);
-    if Result then sl.Assign(CodePageList);
+    Result:=EnumSystemCodePages(@CpEnumProc,CP_SUPPORTED);
+    if Result then AList.Assign(CodePageList);
+  finally
+    CodePageList.Free;
+    end;
+  end;
+
+function LangEnumProc (lpName : PChar; lParam : long_ptr) : boolean; stdcall;
+begin
+  CodePageList.AddObject(Format('%s - (%u)',[lpName,lParam]), TObject(lParam));
+  Result:=true;
+  end;
+
+function GetLanguageList (AList : TStrings) : boolean;
+begin
+  CodePageList:=TStringList.Create;
+  CodePageList.Sorted:=true;
+  Result:=false;
+  try
+    Result:=EnumUILanguages(@LangEnumProc,MUI_LANGUAGE_NAME,0);
+    if Result then AList.Assign(CodePageList);
   finally
     CodePageList.Free;
     end;

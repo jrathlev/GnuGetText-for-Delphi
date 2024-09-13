@@ -15,7 +15,6 @@
 
    Vers. 1 - Sep. 2002
    Vers. 2 - Jan. 2009 : dyn. Einbindung von CreateProcessWithLogonW
-                         und GetxxxDefaultUILanguage
    Vers. 3 - Mar. 2010 : several constants from WinNT.h, WinBase.h, WinIoCtl.h
                          see: JclWin32.pas
    Vers. 4 - Jun. 2011 : SetThreadExecutionState, SetSuspendState
@@ -25,7 +24,7 @@
                          removed that are now handled in Winapi.Windows)
    Vers. 7.1 - July 2021 : LoadLibrary replaced by ExtLoadLibrary to handle FPU exceptions
 
-   last modified:  July 2021
+   last modified:  September 2024
    *)
 
 unit WinApiUtils;

@@ -742,7 +742,6 @@ var
   siSrcFile: IShellItem;
   siDestFolder: IShellItem;
   destFileName : string;
-  ua           : BOOL;
 begin
   //init com
   Result:=CoInitializeEx(nil, COINIT_APARTMENTTHREADED or COINIT_DISABLE_OLE1DDE);
@@ -785,7 +784,7 @@ function IShellCopyFiles (WinHandle : HWnd; const Source,Dest : string; Silent :
 var
   f : integer;
 begin
-  if Silent then f:=f or FOF_NO_UI or FOFX_EARLYFAILURE else f:=0;
+  if Silent then f:=FOF_NO_UI or FOFX_EARLYFAILURE else f:=0;
   Result:=DoIFileOperation(WinHandle,Source,Dest,FO_COPY,f or FOF_FILESONLY or FOF_NO_CONNECTED_ELEMENTS);
   end;
 
@@ -793,7 +792,7 @@ function IShellMoveFiles (WinHandle : HWnd; const Source,Dest : string; Silent :
 var
   f : integer;
 begin
-  if Silent then f:=f or FOF_NO_UI or FOFX_EARLYFAILURE else f:=0;
+  if Silent then f:=FOF_NO_UI or FOFX_EARLYFAILURE else f:=0;
   Result:=DoIFileOperation(WinHandle,Source,Dest,FO_MOVE,f or FOF_FILESONLY or FOF_NO_CONNECTED_ELEMENTS);
   end;
 
@@ -838,7 +837,7 @@ function ShellCopyFiles (WinHandle : HWnd; const Source,Dest,Hint : string; Sile
 var
   f : integer;
 begin
-  if Silent then f:=f or FOF_NO_UI else f:=0;
+  if Silent then f:=FOF_NO_UI else f:=0;
   Result:=DoFileOperation(WinHandle,Source,Dest,Hint,FO_COPY,
     f or FOF_FILESONLY or FOF_MULTIDESTFILES or FOF_NO_CONNECTED_ELEMENTS);
   end;
@@ -849,7 +848,7 @@ function ShellMoveFiles (WinHandle        : HWnd;
 var
   f : integer;
 begin
-  if Silent then f:=f or FOF_NO_UI else f:=0;
+  if Silent then f:=FOF_NO_UI else f:=0;
   Result:=DoFileOperation(WinHandle,Source,Dest,Hint,FO_MOVE,
     f or FOF_FILESONLY or FOF_MULTIDESTFILES or FOF_NO_CONNECTED_ELEMENTS);
   end;
