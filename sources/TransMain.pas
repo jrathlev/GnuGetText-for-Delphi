@@ -22,7 +22,10 @@
    Vers. 3.1   - August 2023: enhanced po header management
                               highlighting of languages which need revision
                - April 2024:  TMemInFile instead aof TIniFile
-   last modified: April 2024
+   Vers. 3.2   - August 2024: external loadable language list
+                              language selections are saved by shortcuts instead of index
+
+   last modified: September 2024
    *)
 
 unit TransMain;
@@ -41,7 +44,7 @@ const
 
   defOutput = 'default';
   defCopyDir ='locale\%s\LC_MESSAGES\';
-  defLang = '4'; // German
+  defLang = 'de'; // German
 
 type
   TfrmTransMain = class(TForm)
@@ -118,6 +121,7 @@ type
     btnManual: TBitBtn;
     cbProjDir: TComboBox;
     cbFiles: TComboBox;
+    btUpdate: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -161,6 +165,7 @@ type
     procedure btnHelpClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnManualClick(Sender: TObject);
+    procedure btUpdateClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -211,13 +216,15 @@ uses System.IniFiles, System.Win.Registry, System.Types, Winapi.ShellApi,
   StringUtils, WinUtils, MsgDialogs, GnuGetText, LangUtils, InitProg, ShellDirDlg,
   ExtSysUtils, WinApiUtils, PathUtils, FileUtils, StrUtils, PoParser, SelectListItems,
   AssembleEngine, FileListDlg, SelectDlg, ShowText, ExecuteApp, EditHistListDlg,
-  ListSelectDlg, PoStatDlg;
+  PoStatDlg, ListSelectDlg;
 
 { ---------------------------------------------------------------- }
 const
 // external programs
 //  MsgMerge = 'msgmerge.exe';
   MsgFmt = 'msgfmt.exe';
+  LangSubDir = 'Lang';
+  LangName = 'languages';
 
   (* INI-Sektionen *)
   StatSekt = 'PoStat';
@@ -228,23 +235,49 @@ const
   iniLast     = 'LastDir';
   IniEditor   = 'Editor';
 
+// old language indexes (before Vers. 3.2 to shortcut
+  MaxLang = 29;
+  LangShortNames : array [0..MaxLang-1] of string = (
+    'bg','cs','da','de','el','en','es','et','fi','fr','hr','hu','it','lt','lv',
+    'nl','no','pl','pt','ro','ru','sk','sl','sq','sr','sv','tr','uk','zh');
+  defLanguages = '"bg - Bulgarian","cs - Czech","da - Danish","de - German","el - Greek","en - English",'+
+      '"es - Spanish","et - Estonian","fi - Finnish","fr - French","hr - Croatian","hu - Hungarian",'+
+      '"it - Italian","lt - Lithuanian","lv - Latvian","nl - Dutch","no - Norwegian","pl - Polish",'+
+      '"pt - Portuguese","ro - Romanian","ru - Russian","sk - Slovak","sl - Slovenian",'+
+      '"sq - Albanian","sr - Serbian","sv - Swedish","tr - Turkish","uk - Ukrainian","zh - Chinese"';
+
 procedure TfrmTransMain.FormCreate(Sender: TObject);
 var
   IniFile  : TMemIniFile;
   n        : integer;
+  s,sl     : string;
 begin
   TranslateComponent(self);
   Application.Title:=_('Process GnuGetText translations for Delphi');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
+  // prepare language combobox
+  s:=AddPath(PrgPath,LangSubdir);
+  s:=AddPath(s,NewExt(LangName,SelectedLanguage));
+  if not FileExists(s) then s:=NewExt(s,'en');
+  with cbLanguage.Items do if FileExists(s) then LoadFromFile(s)
+  else CommaText:=defLanguages;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
     edLangSubdir.Text:=ReadString(CfgSekt,iniLangDir,'languages');
+    s:=ReadString(CfgSekt,iniLanguage,'');
     with cbLanguage do begin
-      n:=ReadInteger(CfgSekt,iniLanguage,ItemIndex);
-      if (n>=0) and (n<Items.Count) then ItemIndex:=n;
+      Items.NameValueSeparator:='-';
+      if not TryStrToInt(s,n) then n:=-1;
+      if (n>=0) and (n<MaxLang) then sl:=LangShortNames[n]  // n is index for old language list
+      else sl:=s;
+      if length(sl)>0 then begin
+        n:=GetIndexOfName(Items,sl);
+        if n>=0 then ItemIndex:=n else ItemIndex:=0;
+        end
+      else ItemIndex:=0;
       end;
     LastDir:=ReadString(CfgSekt,IniLast,'');
     Top:=ReadInteger(CfgSekt,iniTop,Top);
@@ -282,7 +315,8 @@ begin
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
     WriteString(CfgSekt,iniLangDir,edLangSubdir.Text);
-    WriteInteger(CfgSekt,iniLanguage,cbLanguage.ItemIndex);
+//    WriteInteger(CfgSekt,iniLanguage,cbLanguage.ItemIndex);
+    with cbLanguage do WriteString(CfgSekt,iniLanguage,GetName(Items,ItemIndex));
     WriteString(CfgSekt,IniLast,cbProjDir.Text);
     WriteInteger(CfgSekt,iniTop,Top);
     WriteInteger(CfgSekt,iniLeft,Left);
@@ -438,7 +472,7 @@ const
 procedure TfrmTransMain.LoadGetTextSettings (const ADir : string);
 var
   n,i : integer;
-  s : string;
+  s,sl : string;
 begin
   // dxgettext.ini einlesen
   with TMemIniFile.Create(IncludeTrailingPathDelimiter(ADir)+DxGetTextIni) do begin
@@ -479,8 +513,13 @@ begin
     if length(s)=0 then s:=defLang;
     lbLang.Clear;
     repeat
-      n:=ReadNxtInt(s,',',0);
-      if n>0 then lbLang.AddItem(cbLanguage.Items[n-1],pointer(n));
+      sl:=ReadNxtStr(s,',','');
+      if not TryStrToInt(sl,n) then n:=0;
+      if (n>0) and (n<=MaxLang) then sl:=LangShortNames[n-1];  // n-1 is index for old language list
+      if length(sl)>0 then begin
+        n:=GetIndexOfName(cbLanguage.Items,sl);
+        if n>0 then lbLang.AddItem(cbLanguage.Items[n],pointer(n));
+        end;
       until length(s)=0;
     lbLang.Selected[0]:=true;
     btPoEdit.Enabled:=true;
@@ -504,7 +543,7 @@ begin
 procedure TfrmTransMain.SaveGetTextSettings;
 var
   s : string;
-  i : integer;
+  i,n : integer;
 begin
   // dxgettext.ini schreiben
   with TMemIniFile.Create(IncludeTrailingPathDelimiter(cbProjDir.Text)+DxGetTextIni) do begin
@@ -524,7 +563,10 @@ begin
     WriteBool(dxSect,iniOvwr,cbOverwrite.Checked);
     WriteString(trSect,iniLangDir,edLangSubdir.Text);
     s:='';
-    with lbLang.Items do for i:=0 to Count-1 do s:=s+','+IntToStr(integer(Objects[i]) and LangMask);
+    with lbLang do for i:=0 to Count-1 do begin
+      n:=integer(Items.Objects[i]) and LangMask;
+      s:=s+','+GetName(cbLanguage.Items,n);
+      end;
     if length(s)>0 then Delete(s,1,1);
     WriteString(trSect,iniSelLang,s);
     WriteBool(trSect,iniPoedit,cbPoedit.Checked);
@@ -694,6 +736,21 @@ begin
   PoStatDialog.Execute(PoFile);
   end;
 
+procedure TfrmTransMain.btUpdateClick(Sender: TObject);
+var
+  i : integer;
+  s : string;
+begin
+  with lbLang do begin
+    for i:=0 to Count-1 do begin
+      s:=IncludeTrailingPathDelimiter(cbProjDir.Text)+IncludeTrailingPathDelimiter(GetLangSubDir(i));
+      s:=NewExt(s+GetTemplName,PoExt);
+      SetLangMarker(i,CheckPoFile(s));
+      end;
+    Invalidate;
+    end;
+  end;
+
 procedure TfrmTransMain.btnNewClick(Sender: TObject);   // new file list
 var
   s : string;
@@ -765,9 +822,13 @@ begin
   end;
 
 procedure TfrmTransMain.cbProjDirCloseUp(Sender: TObject);
+var
+  s : string;
 begin
   SaveGetTextSettings;
-  with cbProjDir do LoadGetTextSettings (Items[ItemIndex]);
+  with cbProjDir do s:=Items[ItemIndex];
+  AddToHistory(cbProjDir,s);
+  LoadGetTextSettings(s);
   end;
 
 procedure TfrmTransMain.cbRecurseClick(Sender: TObject);
@@ -1073,8 +1134,8 @@ var
   tf        : TextFile;
   fs        : TFileStream;
   MergePath,PoFile,
-  sv,sx,scd,st      : string;
-  res,i     : integer;
+  sv,sx,scd,st : string;
+  i         : integer;
   ok,cphd   : boolean;
 begin
   st:=GetTemplName;
@@ -1297,11 +1358,11 @@ procedure TfrmTransMain.btPoEditClick(Sender: TObject);
 var
   PoFile,ss : string;
 begin
-  with lbLang do ss:=GetLangSubDir(ItemIndex);
-  ss:=IncludeTrailingPathDelimiter(cbProjDir.Text)+IncludeTrailingPathDelimiter(ss);
+  ss:=IncludeTrailingPathDelimiter(cbProjDir.Text)+IncludeTrailingPathDelimiter(GetLangSubDir(lbLang.ItemIndex));
   PoFile:=NewExt(ss+GetTemplName,PoExt);
   StartAndWait(PoFile,'');
   SetLangMarker(lbLang.ItemIndex,CheckPoFile(PoFile));
+  lbLang.Invalidate;
 //  ShellExecute (0,'open',PChar(PoFile),nil,nil,SW_SHOWNORMAL);
   end;
 
