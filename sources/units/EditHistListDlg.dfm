@@ -150,9 +150,9 @@ object EditHistListDialog: TEditHistListDialog
   end
   object lbxStringList: TListBox
     Left = 5
-    Top = 20
+    Top = 22
     Width = 201
-    Height = 249
+    Height = 246
     Anchors = [akLeft, akTop, akRight, akBottom]
     ItemHeight = 13
     MultiSelect = True
@@ -532,8 +532,9 @@ object EditHistListDialog: TEditHistListDialog
   object lbDesc: TStaticText
     Left = 5
     Top = 5
-    Width = 4
-    Height = 4
+    Width = 22
+    Height = 17
+    Caption = 'xxx'
     TabOrder = 0
   end
 end
