@@ -1,6 +1,8 @@
 #  Doesn't have any letters
+#. frmMain.pmFileList.N21.Caption
+#: PoCompMain.dfm:1972
 #. frmTransMain.pmDirectorytList.N21.Caption
-#: TransMain.dfm:2983
+#: TransMain.dfm:3366
 msgid "-"
 msgstr ""
 
@@ -20,9 +22,9 @@ msgstr ""
 #. frmTransMain.paTop.pcOptions.tsLang.cbLanguage.Font.Name
 #: TransMain.dfm:623
 #. frmTransMain.paTop.pcOptions.tsLang.lbLang.Font.Name
-#: TransMain.dfm:679
+#: TransMain.dfm:648
 #. frmTransMain.pnStatus.meProgress.Font.Name
-#: TransMain.dfm:1450
+#: TransMain.dfm:1509
 msgid "Courier New"
 msgstr ""
 
@@ -37,7 +39,7 @@ msgstr ""
 #. frmMain.rgEncoding.Items.Strings
 #: PoFromPasMain.dfm:496
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1374
+#: TransMain.dfm:1433
 msgid "ISO-8859-1"
 msgstr ""
 
@@ -116,7 +118,7 @@ msgstr ""
 #. frmMain.rgEncoding.Items.Strings
 #: PoFromPasMain.dfm:497
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1375
+#: TransMain.dfm:1434
 msgid "UTF-8"
 msgstr ""
 
