@@ -135,6 +135,10 @@ object frmTransMain: TfrmTransMain
         object tsMask: TTabSheet
           Caption = 'tsMask'
           TabVisible = False
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           DesignSize = (
             338
             121)
@@ -2519,7 +2523,7 @@ object frmTransMain: TfrmTransMain
     Left = 680
     Top = 25
     Bitmap = {
-      494C01010400A400980128001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010400A4009C0128001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000A00000002800000001002000000000000064
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

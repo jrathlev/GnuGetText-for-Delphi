@@ -124,16 +124,6 @@ object frmMain: TfrmMain
       ReadOnly = True
       TabOrder = 5
     end
-    object edComp: THistoryCombo
-      Left = 390
-      Top = 30
-      Width = 331
-      Height = 21
-      Sorted = True
-      TabOrder = 3
-      OnCloseUp = edCompCloseUp
-      MaxItems = 15
-    end
     object bbSaveChanges: TBitBtn
       Tag = 1
       Left = 340
@@ -1059,7 +1049,11 @@ object frmMain: TfrmMain
       Top = 30
       Width = 321
       Height = 21
+      Hint = 'List of po files to be edited'
       DropDownCount = 15
+      ParentShowHint = False
+      PopupMenu = pmFileList
+      ShowHint = True
       TabOrder = 0
       OnCloseUp = cbEditCloseUp
     end
@@ -1251,6 +1245,19 @@ object frmMain: TfrmMain
       ShowHint = True
       TabOrder = 2
       OnClick = bbCopyNameClick
+    end
+    object cbComp: TComboBox
+      Left = 390
+      Top = 30
+      Width = 331
+      Height = 21
+      Hint = 'List of po files with changed translations'
+      ParentShowHint = False
+      PopupMenu = pmFileList
+      ShowHint = True
+      Sorted = True
+      TabOrder = 3
+      OnCloseUp = cbCompCloseUp
     end
   end
   object pnTools: TPanel
@@ -1949,5 +1956,23 @@ object frmMain: TfrmMain
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Left = 655
     Top = 55
+  end
+  object pmFileList: TPopupMenu
+    Left = 588
+    Top = 60
+    object pmiEdit: TMenuItem
+      Caption = 'Edit list'
+      OnClick = pmiEditClick
+    end
+    object pmiClear: TMenuItem
+      Caption = 'Clear list'
+      OnClick = pmiClearClick
+    end
+    object N21: TMenuItem
+      Caption = '-'
+    end
+    object pmiCancel: TMenuItem
+      Caption = 'Cancel'
+    end
   end
 end

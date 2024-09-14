@@ -40,7 +40,7 @@ uses
 
 const
   ProgName = 'Process GnuGetText translations';
-  Vers = '3.1';
+  Vers = '3.2';
 
   defOutput = 'default';
   defCopyDir ='locale\%s\LC_MESSAGES\';

@@ -14,7 +14,7 @@
    the specific language governing rights and limitations under the License.
 
    Feb. 2014
-   last modified: April 2024
+   last modified: September 2024
    *)
 
 unit PoCompMain;
@@ -75,7 +75,12 @@ type
     bbComp: TBitBtn;
     bbCopyName: TBitBtn;
     btnHelp: TBitBtn;
-    edComp: TComboBox;
+    cbComp: TComboBox;
+    pmFileList: TPopupMenu;
+    pmiEdit: TMenuItem;
+    pmiClear: TMenuItem;
+    N21: TMenuItem;
+    pmiCancel: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure bbExitClick(Sender: TObject);
     procedure bbInfoClick(Sender: TObject);
@@ -90,7 +95,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure bbEditFileClick(Sender: TObject);
     procedure bbCompClick(Sender: TObject);
-    procedure edCompCloseUp(Sender: TObject);
+    procedure cbCompCloseUp(Sender: TObject);
     procedure bbCopyAllClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure cbEditCloseUp(Sender: TObject);
@@ -105,6 +110,8 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure bbEditPoClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
+    procedure pmiEditClick(Sender: TObject);
+    procedure pmiClearClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -142,7 +149,7 @@ implementation
 
 uses System.IniFiles, Winapi.ShellApi, WinUtils, MsgDialogs, LangUtils, InitProg,
   WinApiUtils, WinShell, Winapi.ShlObj, System.StrUtils, gnugettext, PathUtils,
-  EditStringListDlg, GgtConsts, GgtUtils;
+  EditStringListDlg, GgtConsts, GgtUtils, EditHistListDlg;
 
 { ------------------------------------------------------------------- }
 constructor TText.Create (const AText : string);
@@ -189,7 +196,7 @@ begin
         cbEdit.AddItem(s,TText.Create(t));
         end;
       end;
-    LoadHistory(IniFile,CompSekt,edComp);
+    LoadHistory(IniFile,CompSekt,cbComp);
     Free;
     end;
   if ParamCount>0 then begin
@@ -204,7 +211,7 @@ begin
   else if Items.IndexOf(EditFile)>=0 then AddToHistory(cbEdit,EditFile)
   else Items.InsertObject(0,EditFile,TText.Create(''));
   GetCompFile(false);
-  edComp.Text:=CompFile;
+  cbComp.Text:=CompFile;
   LastMsg:='';
   RefList:=TPoEntryList.Create;
   EdList:=TPoEntryList.Create;
@@ -253,7 +260,7 @@ begin
         WriteString(FileSekt,iniComp+IntToStr(i),(Objects[i] as TText).Text);
         end;
       end;
-    SaveHistory(IniFile,CompSekt,true,edComp);
+    SaveHistory(IniFile,CompSekt,true,cbComp);
     UpdateFile;
     Free;
     end;
@@ -281,7 +288,7 @@ begin
       CompFile:='';
       end;
     end;
-  edComp.Text:=CompFile;
+  cbComp.Text:=CompFile;
   end;
 
 procedure TfrmMain.SetCompFile;
@@ -352,7 +359,7 @@ begin
 
 procedure TfrmMain.bbCompClick(Sender: TObject);
 begin
-  CompFile:=edComp.Text;
+  CompFile:=cbComp.Text;
   if SelectComp(CompFile) then LoadFiles(false);
   end;
 
@@ -369,7 +376,7 @@ begin
     Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
     if Execute then begin
       CompFile:=Filename;
-      Text:=Filename; AddToHistory(edComp,Filename);
+      Text:=Filename; AddToHistory(cbComp,Filename);
       SetCompFile;
       Result:=true;
       end
@@ -405,9 +412,9 @@ begin
   Result:=FileExists(CompFile) or SelectComp(EditFile);
   end;
 
-procedure TfrmMain.edCompCloseUp(Sender: TObject);
+procedure TfrmMain.cbCompCloseUp(Sender: TObject);
 begin
-  with edComp do begin
+  with cbComp do begin
     SetCompFile;
     if FileExists(CompFile) or SelectComp(EditFile) then LoadFiles(false)
     else laEntry.Caption:=_('No file for comparison specified!');
@@ -428,7 +435,7 @@ begin
 procedure TfrmMain.bbReloadClick(Sender: TObject);
 begin
   EditFile:=cbEdit.Text;
-  CompFile:=edComp.Text;
+  CompFile:=cbComp.Text;
   LoadFiles(true);
   end;
 
@@ -579,6 +586,22 @@ begin
 procedure TfrmMain.meRefChange(Sender: TObject);
 begin
   bbSaveChanges.Enabled:=true;
+  end;
+
+procedure TfrmMain.pmiClearClick(Sender: TObject);
+begin
+  if ConfirmDialog(CursorPos,'Clear whole list of files?') then with (Sender as TComboBox) do begin
+    Clear; FreeListObjects(Items); Style:=csSimple;
+    end;
+  end;
+
+procedure TfrmMain.pmiEditClick(Sender: TObject);
+var
+  n : integer;
+  cbx : TComboBox;
+begin
+  cbx:=pmFileList.PopupComponent as TComboBox;
+  EditHistList(CursorPos,'',cbx.Hint,cbx,true,true,n);
   end;
 
 procedure TfrmMain.bbSaveChangesClick(Sender: TObject);
