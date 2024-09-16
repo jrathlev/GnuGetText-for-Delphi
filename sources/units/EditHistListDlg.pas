@@ -65,6 +65,9 @@ function EditHistList(APos : TPoint; Titel,Desc : string;
                       var AIndex : integer) : boolean; overload;
 function EditHistList(APos : TPoint; Titel,Desc : string;
                       HList : TStrings) : boolean; overload;
+function EditHistList(APos : TPoint; Titel,Desc : string;
+                      Combo : TComboBox; ADelete,AEdit : boolean;
+                      var AIndex : integer) : boolean; overload;
 
 var
   EditHistListDialog: TEditHistListDialog;
@@ -260,6 +263,16 @@ var
   n : integer;
 begin
   Result:=EditHistList(APos,Titel,Desc,Hlist,true,false,n);
+  end;
+
+function EditHistList(APos : TPoint; Titel,Desc : string;
+                      Combo : TComboBox; ADelete,AEdit : boolean;
+                      var AIndex : integer) : boolean; overload;
+var
+  n : integer;
+begin
+  Result:=EditHistList(APos,Titel,Desc,Combo.Items,true,false,n);
+  with Combo do if Items.Count<=1 then Style:=csSimple else Style:=csDropDown;
   end;
 
 end.
