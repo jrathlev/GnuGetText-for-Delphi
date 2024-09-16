@@ -159,7 +159,7 @@ begin
     // get entries
     pe:=FindFirst;
     while pe<>nil do begin
-      with pe do if not (AnsiStartsStr('##',MsgId) or MsgId.IsEmpty) then begin // skip history entries
+      with pe do if not (AnsiStartsStr(HistMarker,MsgId) or MsgId.IsEmpty) then begin // skip history entries
         if length(MsgStr)=0 then inc(nu) else inc(nt);
         if Fuzzy then inc(nf);
         cs:=cs+length(MsgId); ct:=ct+length(MsgStr);

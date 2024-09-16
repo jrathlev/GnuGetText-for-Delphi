@@ -23,7 +23,7 @@ interface
 const
   DefIniPath  = 'GgtTranslate\';
 
-  CopRgt = '© 2010 - 2023 Dr. J. Rathlev, 24222 Schwentinental';
+  CopRgt = '© 2010 - 2024 Dr. J. Rathlev, 24222 Schwentinental';
   EmailAdr = 'kontakt(a)rathlev-home.de';
 
 // Code pages

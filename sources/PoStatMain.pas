@@ -13,7 +13,7 @@
    the specific language governing rights and limitations under the License.
 
    September 2023
-   last modified: September 2023
+   last modified: April 2024
    *)
 
 unit PoStatMain;
@@ -23,14 +23,13 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  HListBox, PoParser, Vcl.ComCtrls;
+  PoParser, Vcl.ComCtrls;
 
 const
   Vers = ' - Vers. 3.1';
 
 type
   TfrmMain = class(TForm)
-    edTranslation: THistoryCombo;
     Label2: TLabel;
     bbInfo: TBitBtn;
     bbExit: TBitBtn;
@@ -50,6 +49,7 @@ type
     Label6: TLabel;
     bbOpenPoFile: TBitBtn;
     btnHelp: TBitBtn;
+    edTranslation: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure bbOpenPoFileClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -93,6 +93,8 @@ const
   iniPoName = 'LastPo';
 
 procedure TfrmMain.FormCreate(Sender: TObject);
+var
+  IniFile  : TMemIniFile;
 begin
   TranslateComponent (self);
   DragAcceptFiles(frmMain.Handle, true);
@@ -103,19 +105,17 @@ begin
   if ParamCount>0 then PoFile:=ExpandFileName(ParamStr(1))
   else PoFile:='';
   IniName:=Erweiter(AppPath,PrgName,IniExt);
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     if length(PoFile)=0 then PoFile:=ReadString(CfGSekt,iniPoName,'');
     Top:=ReadInteger(CfgSekt,iniTop,Top);
     Left:=ReadInteger(CfgSekt,iniLeft,Left);
     ClientWidth:=ReadInteger (CfgSekt,IniWidth,ClientWidth);
     ClientHeight:=ReadInteger (CfgSekt,IniHeight,ClientHeight);
+    LoadHistory(IniFile,TransSekt,edTranslation);
     Free;
     end;
-  with edTranslation do begin
-    LoadFromIni(IniName,TransSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=PoFile;
-    end;
+  AddToHistory(edTranslation,PoFile);
   PoList:=TPoEntryList.Create;
   end;
 
@@ -139,13 +139,18 @@ begin
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  IniFile  : TMemIniFile;
 begin
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     WriteString(CfGSekt,iniPoName,PoFile);
     WriteInteger(CfgSekt,iniTop,Top);
     WriteInteger(CfgSekt,iniLeft,Left);
     WriteInteger (CfgSekt,IniWidth,ClientWidth);
     WriteInteger (CfgSekt,IniHeight,ClientHeight);
+    SaveHistory(IniFile,TransSekt,edTranslation);
+    UpdateFile;
     Free;
     end;
   try HtmlHelp(0,nil,HH_CLOSE_ALL,0); except end;
@@ -165,9 +170,7 @@ begin
     DragQueryFile(Msg.WParam,0,Filename,size);
     if AnsiSameText(GetExt(Filename),'po') then begin
       PoFile:=Filename;
-      with edTranslation do begin
-        Text:=PoFile; AddItem(PoFile);
-        end;
+      AddToHistory(edTranslation,PoFile);
       Application.BringToFront;
       LoadFile;
       end
@@ -209,7 +212,7 @@ begin
     // get entries
     pe:=FindFirst;
     while pe<>nil do begin
-      with pe do if not (AnsiStartsStr('##',MsgId) or MsgId.IsEmpty) then begin // skip history entries
+      with pe do if not (AnsiStartsStr(HistMarker,MsgId) or MsgId.IsEmpty) then begin // skip history entries
         if length(MsgStr)=0 then inc(nu) else inc(nt);
         if Fuzzy then inc(nf);
         cs:=cs+length(MsgId); ct:=ct+length(MsgStr);
@@ -260,9 +263,9 @@ begin
     Filename:='';
     Title:=_('Select po file');
     Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
-    if Execute then with edTranslation do begin
+    if Execute then begin
       PoFile:=Filename;
-      Text:=Filename; AddItem(Filename);
+      AddToHistory(edTranslation,PoFile);
       Result:=true;
       end
     else Result:=false;

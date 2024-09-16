@@ -91,8 +91,8 @@ var
 implementation
 
 uses
-  gnugettext, Winapi.shellapi, System.IniFiles, poparser, ExecuteApp, GgtConsts, GgtUtils,
-  FileCopy;
+  Winapi.shellapi, System.IniFiles, System.StrUtils, gnugettext, poparser,
+  GgtConsts, GgtUtils, FileCopy;
 
 {$R *.dfm}
 
@@ -261,7 +261,7 @@ var
   PoHeader  : TPoHeader;
   tf        : TextFile;
   fs        : TFileStream;
-  scd       : string;
+  scd,s     : string;
   n         : integer;
 begin
   FileMode:=fmOpenRead;
@@ -301,14 +301,39 @@ begin
                 else begin  // normal entry
                   pe.MsgStr:=petr.MsgStr;
                   pe.UserCommentList.Text:=petr.UserCommentList.Text;
+//                  pe.HistCommentList.Text:=petr.HistCommentList.Text;
                   end;
+                petr.Merged:=true;
                 end;
               pe.WriteToStream(fs);
+              end;
+          // check for obsolete history comments
+            petr:=translist.FindFirst;
+            while (petr<>nil) do begin
+              with petr do if (copy(MsgId,1,2)=HistMarker) then begin
+                if (HistCommentList.Count>0) then begin
+                  s:=Trim(HistCommentList[0].Substring(3));
+                  if AnsiStartsText('MSGID',s) then begin
+                    delete(s,1,5);
+                    s:=AnsiDequotedStr(Trim(s),'"');
+                    if translist.IsEntry(s) then Merged:=true;
+                    end;
+                  end;
+                end;
+              petr:=translist.FindNext(petr);
               end;
           // copy history comments
             petr:=translist.FindFirst;
             while (petr<>nil) do begin
-              if (copy(petr.MsgId,1,2)='##') then petr.WriteToStream(fs);
+              with petr do if not Merged then begin   // check for entries no longer used in template
+                if (copy(MsgId,1,2)=HistMarker) then WriteToStream(fs)
+                else begin
+                  HistCommentList.Add('#~ msgid '+AnsiQuotedStr(MsgId,'"'));
+                  HistCommentList.Add('#~ msgstr '+AnsiQuotedStr(MsgStr,'"'));
+                  MsgId:=HistMarker+MsgId;
+                  WriteToStream(fs);
+                  end;
+                end;
               petr:=translist.FindNext(petr);
               end;
           finally

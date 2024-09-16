@@ -7,7 +7,8 @@ uses
   Graphics,
   GgtConsts in 'GgtConsts.pas',
   PoCompMain in 'PoCompMain.pas' {frmMain},
-  EditStringListDlg in 'units\EditStringListDlg.pas' {EditStringListDialog};
+  EditStringListDlg in 'units\EditStringListDlg.pas' {EditStringListDialog},
+  EditHistListDlg in 'units\EditHistListDlg.pas' {EditHistListDialog};
 
 {$R *.res}
 {$IFDEF WIN32}
@@ -25,5 +26,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TEditStringListDialog, EditStringListDialog);
+  Application.CreateForm(TEditHistListDialog, EditHistListDialog);
   Application.Run;
 end.

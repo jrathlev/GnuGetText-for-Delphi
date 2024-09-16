@@ -1115,7 +1115,7 @@ begin
   if FileExists(PoFile) then with TPoEntryList.Create do if LoadFromFile(PoFile)=0 then begin  // check for new entries
     pe:=FindFirst;
     while not Result and (pe<>nil) do begin
-      with pe do if not (AnsiStartsStr('##',MsgId) or MsgId.IsEmpty) then begin // skip history entries
+      with pe do if not (AnsiStartsStr(HistMarker,MsgId) or MsgId.IsEmpty) then begin // skip history entries
         if length(MsgStr)=0 then Result:=true   // new msgstr
         else if Fuzzy then Result:=true;
         end;
@@ -1134,7 +1134,8 @@ var
   tf        : TextFile;
   fs        : TFileStream;
   MergePath,PoFile,
-  sv,sx,scd,st : string;
+  sv,sx,scd,
+  st,s      : string;
   i         : integer;
   ok,cphd   : boolean;
 begin
@@ -1191,13 +1192,37 @@ begin
                   pe.MsgStr:=petr.MsgStr;
                   pe.UserCommentList.Text:=petr.UserCommentList.Text;
                   end;
+                petr.Merged:=true;
                 end;
               pe.WriteToStream(fs);
+              end;
+          // check for obsolete history comments
+            petr:=translist.FindFirst;
+            while (petr<>nil) do begin
+              with petr do if (copy(MsgId,1,2)=HistMarker) then begin
+                if (HistCommentList.Count>0) then begin
+                  s:=Trim(HistCommentList[0].Substring(3));
+                  if AnsiStartsText('MSGID',s) then begin
+                    delete(s,1,5);
+                    s:=AnsiDequotedStr(Trim(s),'"');
+                    if translist.IsEntry(s) then Merged:=true;
+                    end;
+                  end;
+                end;
+              petr:=translist.FindNext(petr);
               end;
           // copy history comments
             petr:=translist.FindFirst;
             while (petr<>nil) do begin
-              if (copy(petr.MsgId,1,2)='##') then petr.WriteToStream(fs);
+              with petr do if not Merged then begin   // check for entries no longer used in template
+                if (copy(MsgId,1,2)=HistMarker) then WriteToStream(fs)
+                else begin
+                  HistCommentList.Add('#~ msgid '+AnsiQuotedStr(MsgId,'"'));
+                  HistCommentList.Add('#~ msgstr '+AnsiQuotedStr(MsgStr,'"'));
+                  MsgId:=HistMarker+MsgId;
+                  WriteToStream(fs);
+                  end;
+                end;
               petr:=translist.FindNext(petr);
               end;
           finally

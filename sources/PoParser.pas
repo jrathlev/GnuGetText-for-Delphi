@@ -33,6 +33,8 @@ const
   cpLatin1 = 1252;
   cpUtf8 = 65001;
 
+  HistMarker = '#*';
+
 type
   TPoHeaderIds = (hiProjectId,hiCreationDate,hiRevisionDate,hiLastTranslator,hiLanguageTeam,
     hiLanguage,hiMIMEVersion,hiContentType,hiContentEncoding,hiPluralForms,hiXGenerator,hiXSourceCharset);
@@ -61,9 +63,10 @@ type
       AutoCommentList : TStringList;   // Entire lines, unicode!
       HistCommentList : TStringList;   // Entire lines, unicode!
       IdEntry,IdLine  : integer;       // original number of entry, linenumber JR
-      MsgId  : string;                  // singular and plural are separated by #0, if plural form is present
+      MsgId  : string;                 // singular and plural are separated by #0, if plural form is present
       MsgStr : string;                 // plural forms are separated by #0, if present
-      Fuzzy  : boolean;                   // If true, msgstr is not the translation, but just a proposal for a translation
+      Merged,                          // Entry was merged
+      Fuzzy  : boolean;                // If true, msgstr is not the translation, but just a proposal for a translation
       constructor Create;
       destructor Destroy; override;
       procedure Assign (po : TPoEntry);
@@ -89,6 +92,7 @@ type
       procedure SaveToFile (const filename : string; OrgOrder : boolean = false);
       procedure Clear;
       function FindEntry (const MsgId : string) : TPoEntry;
+      function IsEntry (const MsgId : string) : boolean;
       function DeleteEntry (MsgId : string) : boolean;  // True if found and deleted, false if not found
       procedure AddEntry (entry : TPoEntry); // Will fail if MsgId exists. Entry is copied.
       procedure UpdateHeader (pe : TPoEntry);
@@ -346,7 +350,7 @@ begin
       if copy(line,1,2)='#~' then begin
         with entry do if length(MsgId)=0 then begin
           inc(HistCount);
-          MsgId:='##'+IntToStr(HistCount);
+          MsgId:=HistMarker+IntToStr(HistCount);
           end;
         entry.HistCommentList.Add(line);
         end
@@ -456,6 +460,7 @@ begin
   MsgId:=po.MsgId;
   MsgStr:=po.MsgStr;
   Fuzzy:=po.Fuzzy;
+  Merged:=po.Merged;
   end;
 
 procedure TPoEntry.Clear;
@@ -468,6 +473,7 @@ begin
   IdEntry:=-1;
   IdLine:=0;
   Fuzzy:=False;
+  Merged:=false;
   end;
 
 function FindBestBreak (const s : string; LineWidth : integer) : integer;
@@ -543,7 +549,7 @@ begin
   // Fuzzy?
   if Fuzzy then StreamWriteln(str, '#, fuzzy');
 
-  if copy(MsgId,1,2)='##' then begin   // history comments - JR
+  if copy(MsgId,1,2)=HistMarker then begin   // history comments - JR
     s:=trim(HistCommentList.Text);
     if s<>'' then StreamWrite (str, s+sLineBreak);
     end
@@ -703,6 +709,11 @@ begin
       end;
     end;
   Result:=nil;
+  end;
+
+function TPoEntryList.IsEntry (const MsgId : string) : boolean;
+begin
+  Result:=FindEntry(MsgId)<>nil;
   end;
 
 function TPoEntryList.FindFirst: TPoEntry;
