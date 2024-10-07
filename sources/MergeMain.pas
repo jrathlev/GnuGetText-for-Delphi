@@ -328,10 +328,12 @@ begin
               with petr do if not Merged then begin   // check for entries no longer used in template
                 if (copy(MsgId,1,2)=HistMarker) then WriteToStream(fs)
                 else begin
-                  HistCommentList.Add('#~ msgid '+AnsiQuotedStr(MsgId,'"'));
-                  HistCommentList.Add('#~ msgstr '+AnsiQuotedStr(MsgStr,'"'));
+                  HistCommentList.Add('#~ msgid '+String2PO(MsgId));
+                  HistCommentList.Add('#~ msgstr '+String2PO(MsgStr));
+                  s:=MsgId;
                   MsgId:=HistMarker+MsgId;
-                  WriteToStream(fs);
+                  WriteToStream(fs,false);
+                  MsgId:=s;
                   end;
                 end;
               petr:=translist.FindNext(petr);

@@ -71,13 +71,14 @@ type
       destructor Destroy; override;
       procedure Assign (po : TPoEntry);
       procedure Clear;
-      procedure WriteToStream (str : TStream);  // Adds an empty line afterwards.
+      procedure WriteToStream (str : TStream; WriteComments : boolean = true);  // Adds an empty line afterwards.
     end;
 
   TPoEntryList = class        // read and write utf-8
     private
       list : TStringList;    // Strings are searchkeys, objects are TList of TPoEntries
       FHeader : TPoHeader;
+      FLoaded,
       HdChanged : boolean;  // header was changed
       function GetSearchKey (const MsgId : string) : string;
       function GetCount : integer;   // JR
@@ -100,6 +101,7 @@ type
       // Iterate through all items. When nil is returned, no more elements are there.
       function FindFirst : TPoEntry;
       function FindNext (po : TPoEntry) : TPoEntry;
+      property Loaded : boolean read FLoaded;
       property TotalEntries : integer read GetCount;  // JR
       property Header[Index : TPoHeaderIds] : string read GetHeader write SetHeader;
       property Items[Index: Integer] : TPoEntry read GetItem; default;
@@ -439,7 +441,7 @@ begin
   UserCommentList:=TStringList.Create;
   AutoCommentList:=TStringList.Create;
   HistCommentList:=TStringList.Create;
-  IdEntry:=-1;
+  IdEntry:=-1; Merged:=false;
   end;
 
 destructor TPoEntry.Destroy;
@@ -517,7 +519,7 @@ begin
     end;
   end;
 
-procedure TPoEntry.WriteToStream(str: TStream);
+procedure TPoEntry.WriteToStream(str: TStream; WriteComments : boolean);
 
   procedure WritePart (const token : string; msg : string; StartEmpty : boolean = false);
   var
@@ -540,11 +542,13 @@ var
   idx:integer;
   isplural:boolean;
 begin
-  // Write comments
-  s:=trim(UserCommentList.Text);
-  if s<>'' then StreamWrite (str, s+sLineBreak);
-  s:=trim(AutoCommentList.Text);
-  if s<>'' then StreamWrite (str, s+sLineBreak);
+  if WriteComments then begin
+    // Write comments
+    s:=trim(UserCommentList.Text);
+    if s<>'' then StreamWrite (str, s+sLineBreak);
+    s:=trim(AutoCommentList.Text);
+    if s<>'' then StreamWrite (str, s+sLineBreak);
+    end;
 
   // Fuzzy?
   if Fuzzy then StreamWriteln(str, '#, fuzzy');
@@ -593,7 +597,7 @@ begin
   list.Duplicates:=dupError;
   list.CaseSensitive:=True;
   list.Sorted:=true;
-  HdChanged:=false;
+  HdChanged:=false; FLoaded:=false;
   end;
 
 procedure TPoEntryList.Clear;
@@ -822,6 +826,7 @@ begin
   finally
     CloseFile (tf);
     end;
+  FLoaded:=Result=0;
   end;
 
 procedure TPoEntryList.SaveToFile(const filename : string; OrgOrder : boolean);

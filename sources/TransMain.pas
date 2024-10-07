@@ -212,7 +212,7 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, System.Win.Registry, System.Types, Winapi.ShellApi,
-  System.DateUtils, System.TimeSpan, System.UITypes, GgtUtils,
+  System.DateUtils, System.TimeSpan, System.UITypes, GgtUtils, 
   StringUtils, WinUtils, MsgDialogs, GnuGetText, LangUtils, InitProg, ShellDirDlg,
   ExtSysUtils, WinApiUtils, PathUtils, FileUtils, StrUtils, PoParser, SelectListItems,
   AssembleEngine, FileListDlg, SelectDlg, ShowText, ExecuteApp, EditHistListDlg,
@@ -438,7 +438,7 @@ begin
 
 procedure TfrmTransMain.btnInfoClick(Sender: TObject);
 begin
-  InfoDialog(ProgVersName+' - '+ProgVersDate+sLineBreak+
+  InfoDialog(BottomLeftPos(btExtract,0,10),ProgVersName+' - '+ProgVersDate+sLineBreak+
            VersInfo.CopyRight+sLineBreak+'E-Mail: '+EmailAdr);
   end;
 
@@ -1217,10 +1217,12 @@ begin
               with petr do if not Merged then begin   // check for entries no longer used in template
                 if (copy(MsgId,1,2)=HistMarker) then WriteToStream(fs)
                 else begin
-                  HistCommentList.Add('#~ msgid '+AnsiQuotedStr(MsgId,'"'));
-                  HistCommentList.Add('#~ msgstr '+AnsiQuotedStr(MsgStr,'"'));
+                  HistCommentList.Add('#~ msgid '+String2PO(MsgId));
+                  HistCommentList.Add('#~ msgstr '+String2PO(MsgStr));
+                  s:=MsgId;
                   MsgId:=HistMarker+MsgId;
-                  WriteToStream(fs);
+                  WriteToStream(fs,false);
+                  MsgId:=s;
                   end;
                 end;
               petr:=translist.FindNext(petr);
@@ -1473,3 +1475,4 @@ begin
   end;
 
 end.
+
