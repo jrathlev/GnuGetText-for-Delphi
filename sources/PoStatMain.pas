@@ -13,7 +13,7 @@
    the specific language governing rights and limitations under the License.
 
    September 2023
-   last modified: April 2024
+   last modified: September 2024
    *)
 
 unit PoStatMain;
@@ -50,6 +50,7 @@ type
     bbOpenPoFile: TBitBtn;
     btnHelp: TBitBtn;
     edTranslation: TComboBox;
+    btnReload: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure bbOpenPoFileClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -60,6 +61,7 @@ type
     procedure edTranslationCloseUp(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
+    procedure btnReloadClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -283,9 +285,15 @@ begin
   if SelectPo then LoadFile;
   end;
 
+procedure TfrmMain.btnReloadClick(Sender: TObject);
+begin
+  LoadFile;
+  end;
+
 procedure TfrmMain.btnHelpClick(Sender: TObject);
 begin
   ShowHelp('tools.html#stat');
   end;
 
 end.
+
