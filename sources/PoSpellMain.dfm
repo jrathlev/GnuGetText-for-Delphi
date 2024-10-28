@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
   Left = 0
   Top = 0
-  Caption = 'Spell checking of PO translations'
+  Caption = 'Spell checking of po translations'
   ClientHeight = 321
   ClientWidth = 481
   Color = clBtnFace
@@ -23,9 +23,9 @@ object frmMain: TfrmMain
   object Label2: TLabel
     Left = 10
     Top = 50
-    Width = 105
+    Width = 103
     Height = 13
-    Caption = 'PO file to be checked:'
+    Caption = 'po file to be checked:'
   end
   object Label5: TLabel
     Left = 10
@@ -61,16 +61,6 @@ object frmMain: TfrmMain
     Height = 13
     Anchors = [akLeft, akBottom]
     Caption = 'Mispelled or unknown word:'
-  end
-  object edTranslation: THistoryCombo
-    Left = 10
-    Top = 65
-    Width = 431
-    Height = 21
-    Anchors = [akLeft, akTop, akRight]
-    TabOrder = 2
-    OnCloseUp = edTranslationCloseUp
-    MaxItems = 15
   end
   object bbSave: TBitBtn
     Left = 370
@@ -389,16 +379,6 @@ object frmMain: TfrmMain
     ShowHint = True
     TabOrder = 12
     OnClick = bbExitClick
-  end
-  object edDictionary: THistoryCombo
-    Left = 10
-    Top = 20
-    Width = 431
-    Height = 21
-    Anchors = [akLeft, akTop, akRight]
-    TabOrder = 0
-    OnCloseUp = edDictionaryCloseUp
-    MaxItems = 15
   end
   object edWord: TEdit
     Left = 10
@@ -884,6 +864,24 @@ object frmMain: TfrmMain
     NumGlyphs = 2
     TabOrder = 14
     OnClick = btnHelpClick
+  end
+  object edTranslation: TComboBox
+    Left = 10
+    Top = 65
+    Width = 431
+    Height = 21
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 2
+    OnCloseUp = edTranslationCloseUp
+  end
+  object edDictionary: TComboBox
+    Left = 10
+    Top = 20
+    Width = 431
+    Height = 21
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 0
+    OnCloseUp = edDictionaryCloseUp
   end
   object OpenDialog: TOpenDialog
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]

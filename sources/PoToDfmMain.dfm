@@ -48,15 +48,6 @@ object MainForm: TMainForm
     Anchors = [akTop, akRight]
     Caption = 'Language'
   end
-  object edPoFile: THistoryCombo
-    Left = 10
-    Top = 25
-    Width = 481
-    Height = 21
-    Anchors = [akLeft, akTop, akRight]
-    TabOrder = 0
-    MaxItems = 15
-  end
   object bbExit: TBitBtn
     Left = 545
     Top = 320
@@ -595,6 +586,14 @@ object MainForm: TMainForm
     NumGlyphs = 2
     TabOrder = 10
     OnClick = btnHelpClick
+  end
+  object edPoFile: TComboBox
+    Left = 10
+    Top = 25
+    Width = 481
+    Height = 21
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 0
   end
   object OpenDialog: TOpenDialog
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]

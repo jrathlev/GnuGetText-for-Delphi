@@ -15,6 +15,7 @@
    the specific language governing rights and limitations under the License.
 
    Sep. 2016
+   last modified: April 2024
    *)
 
 unit PoFromPasMain;
@@ -23,7 +24,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, HListBox, PoParser,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, PoParser,
   Vcl.ComCtrls, Vcl.ExtCtrls;
 
 const
@@ -46,8 +47,6 @@ type
     Label2: TLabel;
     Label5: TLabel;
     sbEdit: TSpeedButton;
-    edDir: THistoryCombo;
-    edEdit: THistoryCombo;
     bbInfo: TBitBtn;
     bbExit: TBitBtn;
     bbSave: TBitBtn;
@@ -57,6 +56,8 @@ type
     rgEncoding: TRadioGroup;
     cbOverwrite: TCheckBox;
     btnHelp: TBitBtn;
+    edDir: TComboBox;
+    edEdit: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbExitClick(Sender: TObject);
@@ -95,8 +96,8 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, Winapi.ShlObj, System.StrUtils, gnugettext, PathUtils,
-  WinUtils, MsgDialogs, LangUtils, InitProg, WinApiUtils, WinShell, StringUtils,
-  ShellDirDlg, xgettexttools, GgtConsts, GgtUtils;
+  WinUtils, ListUtils, MsgDialogs, LangUtils, InitProg, WinApiUtils, WinShell,
+  StringUtils, ShellDirDlg, xgettexttools, GgtConsts, GgtUtils;
 
 { ------------------------------------------------------------------- }
 constructor TTextInfo.Create (const AUnit,AText : string);
@@ -112,6 +113,8 @@ const
   iniTrans = 'Translation';
 
 procedure TfrmMain.FormCreate(Sender: TObject);
+var
+  IniFile  : TMemIniFile;
 begin
   TranslateComponent (self);
   Application.Title:=_('Insert translated strings from pas files');
@@ -119,23 +122,18 @@ begin
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     Top:=ReadInteger(CfGSekt,iniTop,Top);
     Left:=ReadInteger(CfGSekt,iniLeft,Left);
     PasDir:=ReadString(CfGSekt,iniDir,'');
     EdFile:=ReadString(CfGSekt,iniTrans,'');
+    LoadHistory(IniFile,DirSekt,edDir);
+    LoadHistory(IniFile,TransSekt,edEdit);
     Free;
     end;
-  with edDir do begin
-    LoadFromIni(IniName,DirSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=PasDir;
-    end;
-  with edEdit do begin
-    LoadFromIni(IniName,TransSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=EdFile;
-    end;
+  AddToHistory(edDir,PasDir);
+  AddToHistory(edEdit,EdFile);
   EdList:=TPoEntryList.Create;
   RsList:=TStringList.Create;  // list of resourcestrings
   constlist:=TStringList.Create;
@@ -153,12 +151,18 @@ begin
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  IniFile  : TMemIniFile;
 begin
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     WriteInteger(CfGSekt,iniTop,Top);
     WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniDir,PasDir);
     WriteString(CfGSekt,iniTrans,EdFile);
+    SaveHistory(IniFile,DirSekt,edDir);
+    SaveHistory(IniFile,TransSekt,edEdit);
+    UpdateFile;
     Free;
     end;
   try HtmlHelp(0,nil,HH_CLOSE_ALL,0); except end;
@@ -614,7 +618,7 @@ begin
 procedure TfrmMain.edEditCloseUp(Sender: TObject);
 begin
   with edEdit do begin
-    EdFile:=HistoryList[ItemIndex];
+    EdFile:=Items[ItemIndex];
     LoadEditFile;
     end;
   end;
@@ -622,7 +626,7 @@ begin
 procedure TfrmMain.edDirCloseUp(Sender: TObject);
 begin
   with edDir do begin
-    PasDir:=HistoryList[ItemIndex];
+    PasDir:=Items[ItemIndex];
     end;
   end;
 
@@ -634,9 +638,9 @@ begin
     Filename:='';
     Title:=_('Select po file to be edited');
     Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
-    if Execute then with edEdit do begin
+    if Execute then begin
       EdFile:=Filename;
-      Text:=Filename; AddItem(Filename);
+      AddToHistory(edEdit,EdFile);
       Result:=true;
       end
     else Result:=false;
@@ -649,9 +653,7 @@ var
 begin
   s:=PasDir;
   if ShellDirDialog.Execute(_('Select directory with pas sources'),false,true,true,'',s) then begin
-    with edDir do begin
-      AddItem(s); ItemIndex:=0;
-      end;
+    AddToHistory(edDir,s);
     PasDir:=s;
     end;
   end;

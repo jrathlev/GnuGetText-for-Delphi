@@ -50,16 +50,6 @@ object frmMain: TfrmMain
     ParentFont = False
     WordWrap = True
   end
-  object edPoFile: THistoryCombo
-    Left = 10
-    Top = 55
-    Width = 461
-    Height = 21
-    Anchors = [akLeft, akTop, akRight]
-    TabOrder = 0
-    OnCloseUp = edPoFileCloseUp
-    MaxItems = 15
-  end
   object bbInfo: TBitBtn
     Left = 435
     Top = 135
@@ -334,15 +324,6 @@ object frmMain: TfrmMain
     TabOrder = 5
     OnClick = bbConvertClick
   end
-  object edLanguage: THistoryCombo
-    Left = 10
-    Top = 100
-    Width = 51
-    Height = 21
-    TabOrder = 2
-    OnCloseUp = edLanguageCloseUp
-    MaxItems = 15
-  end
   object edOutName: TLabeledEdit
     Left = 115
     Top = 100
@@ -577,6 +558,23 @@ object frmMain: TfrmMain
     NumGlyphs = 2
     TabOrder = 9
     OnClick = btnHelpClick
+  end
+  object edPoFile: TComboBox
+    Left = 10
+    Top = 55
+    Width = 461
+    Height = 21
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 0
+    OnCloseUp = edPoFileCloseUp
+  end
+  object edLanguage: TComboBox
+    Left = 10
+    Top = 100
+    Width = 51
+    Height = 21
+    TabOrder = 2
+    OnCloseUp = edLanguageCloseUp
   end
   object OpenDialog: TOpenDialog
     Left = 290

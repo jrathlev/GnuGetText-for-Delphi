@@ -1,8 +1,8 @@
 object frmMain: TfrmMain
   Left = 0
   Top = 0
-  ClientHeight = 170
-  ClientWidth = 431
+  ClientHeight = 171
+  ClientWidth = 461
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,8 +14,8 @@ object frmMain: TfrmMain
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
-    431
-    170)
+    461
+    171)
   PixelsPerInch = 96
   TextHeight = 13
   object Label2: TLabel
@@ -32,33 +32,20 @@ object frmMain: TfrmMain
     Height = 13
     Caption = 'as comments into'
   end
-  object edRef: THistoryCombo
+  object laStatus: TLabel
     Left = 10
-    Top = 30
-    Width = 386
-    Height = 21
-    Anchors = [akLeft, akTop, akRight]
-    TabOrder = 0
-    OnCloseUp = edRefCloseUp
-    MaxItems = 15
-  end
-  object edEdit: THistoryCombo
-    Left = 10
-    Top = 80
-    Width = 386
-    Height = 21
-    Anchors = [akLeft, akTop, akRight]
-    TabOrder = 2
-    OnCloseUp = edEditCloseUp
-    MaxItems = 15
+    Top = 110
+    Width = 18
+    Height = 13
+    Caption = 'xxx'
   end
   object bbInfo: TBitBtn
-    Left = 360
-    Top = 125
+    Left = 390
+    Top = 135
     Width = 31
     Height = 31
     Hint = 'About the program'
-    Anchors = [akTop, akRight]
+    Anchors = [akRight, akBottom]
     Glyph.Data = {
       96090000424D9609000000000000360000002800000028000000140000000100
       18000000000060090000120B0000120B00000000000000000000C0DCC0C0DCC0
@@ -142,14 +129,15 @@ object frmMain: TfrmMain
     ShowHint = True
     TabOrder = 5
     OnClick = bbInfoClick
+    ExplicitTop = 115
   end
   object bbExit: TBitBtn
-    Left = 395
-    Top = 125
+    Left = 425
+    Top = 135
     Width = 31
     Height = 31
     Hint = 'Quit program'
-    Anchors = [akTop, akRight]
+    Anchors = [akRight, akBottom]
     Glyph.Data = {
       96090000424D9609000000000000360000002800000028000000140000000100
       18000000000060090000120B0000120B00000000000000000000C0DCC0C0DCC0
@@ -233,14 +221,15 @@ object frmMain: TfrmMain
     ShowHint = True
     TabOrder = 6
     OnClick = bbExitClick
+    ExplicitTop = 115
   end
   object bbSave: TBitBtn
-    Left = 55
-    Top = 125
+    Left = 85
+    Top = 135
     Width = 256
     Height = 31
     Hint = 'Copy translated strings as comments'
-    Anchors = [akTop, akRight]
+    Anchors = [akRight, akBottom]
     Caption = 'Insert comments and save'
     Glyph.Data = {
       360F0000424D360F000000000000360000002800000040000000140000000100
@@ -370,9 +359,10 @@ object frmMain: TfrmMain
     ShowHint = True
     TabOrder = 4
     OnClick = bbSaveClick
+    ExplicitTop = 115
   end
   object bbRef: TBitBtn
-    Left = 400
+    Left = 430
     Top = 28
     Width = 24
     Height = 24
@@ -436,7 +426,7 @@ object frmMain: TfrmMain
     OnClick = bbRefClick
   end
   object bbEdit: TBitBtn
-    Left = 400
+    Left = 430
     Top = 78
     Width = 24
     Height = 24
@@ -500,8 +490,8 @@ object frmMain: TfrmMain
     OnClick = bbEditClick
   end
   object btnHelp: TBitBtn
-    Left = 325
-    Top = 125
+    Left = 355
+    Top = 136
     Width = 31
     Height = 31
     Anchors = [akRight, akBottom]
@@ -586,6 +576,25 @@ object frmMain: TfrmMain
     NumGlyphs = 2
     TabOrder = 7
     OnClick = btnHelpClick
+    ExplicitTop = 116
+  end
+  object edRef: TComboBox
+    Left = 10
+    Top = 30
+    Width = 416
+    Height = 21
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 0
+    OnCloseUp = edRefCloseUp
+  end
+  object edEdit: TComboBox
+    Left = 10
+    Top = 80
+    Width = 416
+    Height = 21
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 2
+    OnCloseUp = edEditCloseUp
   end
   object OpenDialog: TOpenDialog
     Left = 10

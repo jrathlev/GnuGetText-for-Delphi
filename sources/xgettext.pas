@@ -1124,34 +1124,37 @@ begin
   else sf:=SourceFilename;
   if Excludes.ExcludeDirectory(ExtractFilePath(sf)) or Excludes.ExcludeFormFile(sf) then
     Exit;
-  try
-    ext:=uppercase(ExtractFileExt(sf));
-    if (ext='.C') or (ext='.CPP') then CFiles.Add(sf)
-    else begin
-      DoProgress(Format(_('Reading %s'),[sf]),sf,0);
-      if (ext='.DFM') or (ext='.LFM') or (ext='.XFM') then
-        ExtractFromDFM(sf)
-      else
-      if ext='.RC' then
-        ExtractFromRC(sf)
-      else
-      if (ext='.PAS') or (ext='.LPR') or (ext='.DPR') or (ext='.INC') then
-        ExtractFromPascal(sf)
+  if FileExists(sf) then begin
+    try
+      ext:=uppercase(ExtractFileExt(sf));
+      if (ext='.C') or (ext='.CPP') then CFiles.Add(sf)
       else begin
-        Warning (wtParameterError,Format(_('WARNING: Unknown file extension % - reading file as being pascal source'),[ext]));
-        ExtractFromPascal(sf)
+        DoProgress(Format(_('Reading %s'),[sf]),sf,0);
+        if (ext='.DFM') or (ext='.LFM') or (ext='.XFM') then
+          ExtractFromDFM(sf)
+        else
+        if ext='.RC' then
+          ExtractFromRC(sf)
+        else
+        if (ext='.PAS') or (ext='.LPR') or (ext='.DPR') or (ext='.INC') then
+          ExtractFromPascal(sf)
+        else begin
+          Warning (wtParameterError,Format(_('WARNING: Unknown file extension % - reading file as being pascal source'),[ext]));
+          ExtractFromPascal(sf)
+        end;
       end;
-    end;
-  except
-    on e:EControlC do begin
-      raise;
-    end;
-    on e:Exception do begin
-      Warning (wtUnexpectedException,'Exception '+e.ClassName+sLineBreak+e.Message);
-    end;
-  end;
+    except
+      on e:EControlC do begin
+        raise;
+        end;
+      on e:Exception do begin
+        Warning (wtUnexpectedException,'Exception '+e.ClassName+sLineBreak+e.Message);
+        end;
+      end;
+    end
+  else Warning(wtUnexpectedException,Format(_('File not found: %s'),[sourcefilename]));
   CurrentFilename:='';
-end;
+  end;
 
 procedure TXGetText.ExtractFromFileMasks(const mask : string);
 var

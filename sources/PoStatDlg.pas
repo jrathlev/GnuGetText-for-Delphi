@@ -52,6 +52,7 @@ type
     { Private-Deklarationen }
     FIniName,FIniSection : string;
     PoList               : TPoEntryList;
+    InComplete           : boolean;
     procedure ClearStat;
     procedure ShowStat;
     function LoadFile (const PoFile : string) : boolean;
@@ -59,7 +60,7 @@ type
   public
     { Public-Deklarationen }
     procedure LoadFromIni (const IniName, Section : string);
-    procedure Execute (const PoFilename : string);
+    function Execute (const PoFilename : string) : boolean;
   end;
 
 var
@@ -171,6 +172,7 @@ begin
     laNumTrans.Caption:=IntToStr(nt)+' ('+IntToStr(round(100*nt/ne))+'%)';
     laNumNoTrans.Caption:=IntToStr(nu)+' ('+IntToStr(round(100*nu/ne))+'%)';
     laNumFuzzy.Caption:=IntToStr(nf);
+    InComplete:=(nu>0) or (nf>0);
     laNumChars.Caption:=_('Template = ')+IntToStr(cs)+sLineBreak+_('Translation = ')+IntToStr(ct);
     lvHeader.Clear;
     for id:=Low(TPoHeaderIds) to High(TPoHeaderIds) do begin
@@ -203,10 +205,11 @@ begin
     end;
   end;
 
-procedure TPoStatDialog.Execute (const PoFilename : string);
+function TPoStatDialog.Execute (const PoFilename : string) : boolean;
 begin
   LoadFile(PoFilename);
   ShowModal;
+  Result:=InComplete;
   end;
 
 end.

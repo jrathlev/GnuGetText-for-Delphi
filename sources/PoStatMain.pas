@@ -87,7 +87,7 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, System.StrUtils, Winapi.ShellApi, GnuGetText, InitProg,
-  WinUtils, PathUtils, MsgDialogs, GgtConsts, GgtUtils;
+  WinUtils, ListUtils, PathUtils, MsgDialogs, GgtConsts, GgtUtils;
 
 { ------------------------------------------------------------------- }
 const
@@ -100,7 +100,7 @@ var
 begin
   TranslateComponent (self);
   DragAcceptFiles(frmMain.Handle, true);
-  Application.Title:=_('Statistics of PO file');
+  Application.Title:=_('Statistics of po file');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
@@ -296,4 +296,3 @@ begin
   end;
 
 end.
-

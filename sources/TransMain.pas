@@ -19,13 +19,15 @@
    Vers. 3.0   - July 2023 : template creation also from c/cpp files
        requires XGetText.exe Windows binary from
        https://mlocati.github.io/articles/gettext-iconv-windows.html
-   Vers. 3.1   - August 2023: enhanced po header management
-                              highlighting of languages which need revision
-               - April 2024:  TMemInFile instead aof TIniFile
-   Vers. 3.2   - August 2024: external loadable language list
-                              language selections are saved by shortcuts instead of index
+   Vers. 3.1   - August 2023:  enhanced po header management
+                               highlighting of languages which need revision
+               - April 2024:   TMemInFile instead aof TIniFile
+   Vers. 3.2   - August 2024:  external loadable language list
+                               language selections are saved by shortcuts instead of index
+   Vers. 3.3   - October 2024: optional merging of AutoComments and HistComments
+                               optional merging with similat msgids
 
-   last modified: September 2024
+   last modified: October 2024
    *)
 
 unit TransMain;
@@ -40,7 +42,7 @@ uses
 
 const
   ProgName = 'Process GnuGetText translations';
-  Vers = '3.2';
+  Vers = '3.3';
 
   defOutput = 'default';
   defCopyDir ='locale\%s\LC_MESSAGES\';
@@ -122,6 +124,17 @@ type
     cbProjDir: TComboBox;
     cbFiles: TComboBox;
     btUpdate: TBitBtn;
+    tsMerge: TTabSheet;
+    gbLangMerge: TGroupBox;
+    cbMergeAutoComments: TCheckBox;
+    cbMergeHistory: TCheckBox;
+    laMergeLanguage: TLabel;
+    cbMergeSimilar: TCheckBox;
+    edSimLength: TEdit;
+    udSimLength: TUpDown;
+    gbSaveLanguage: TGroupBox;
+    laSaveLanguage: TLabel;
+    sbSetAllBu: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -166,6 +179,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnManualClick(Sender: TObject);
     procedure btUpdateClick(Sender: TObject);
+    procedure MergeOptionClick(Sender: TObject);
+    procedure sbSetAllBuClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -183,13 +198,14 @@ type
     function GetLangId (AIndex : integer) : string;
     function GetLangName (AIndex : integer) : string;
     function GetLangSubDir (AIndex : integer) : string;
+    procedure ShowLangOptions;
     procedure SetLangMarker (AIndex : integer; Mark : boolean);
     function CheckPoFile (const PoFile : string) : boolean;
     function GetTemplName : string;
     procedure LoadGetTextSettings (const ADir : string);
     procedure SaveGetTextSettings;
     procedure LoadMergeSettings(const AFilename : string);
-    procedure SaveMergeSettings(const AFilename : string);
+    procedure SaveMergeSettings(const AFilename : string; ac,hc,bu : boolean);
     procedure RemoveBOM(const PoName : string);
     function CompileToMo (const PoFile,MergePath : string) : boolean;
     procedure Merge (AIndex : integer);
@@ -212,7 +228,7 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, System.Win.Registry, System.Types, Winapi.ShellApi,
-  System.DateUtils, System.TimeSpan, System.UITypes, GgtUtils, 
+  System.DateUtils, System.TimeSpan, System.UITypes, GgtUtils, ListUtils,
   StringUtils, WinUtils, MsgDialogs, GnuGetText, LangUtils, InitProg, ShellDirDlg,
   ExtSysUtils, WinApiUtils, PathUtils, FileUtils, StrUtils, PoParser, SelectListItems,
   AssembleEngine, FileListDlg, SelectDlg, ShowText, ExecuteApp, EditHistListDlg,
@@ -261,8 +277,11 @@ begin
   s:=AddPath(PrgPath,LangSubdir);
   s:=AddPath(s,NewExt(LangName,SelectedLanguage));
   if not FileExists(s) then s:=NewExt(s,'en');
-  with cbLanguage.Items do if FileExists(s) then LoadFromFile(s)
-  else CommaText:=defLanguages;
+  with cbLanguage do begin
+    if FileExists(s) then Items.LoadFromFile(s)
+    else Items.CommaText:=defLanguages;
+    TrimEndOfList(Items);
+    end;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
@@ -464,14 +483,21 @@ const
   iniPoedit = 'StartEditor';
   iniMulti  = 'MultiCopy';
   iniCopyPath = 'CopyPath';
+  iniSimLen = 'SimMeasure';
+  iniSimilar = 'MergeSimilar';
   iniSelLang  = 'SelectedLanguages';
+  iniLangCnt = 'LanguageCount';
+  iniLang = 'Language';
 
+  AutoComm = $2000;
+  KeepHist = AutoComm shl 1;
+  MergBack = KeepHist shl 1;
   ReqTrans = $1000;   // requires editing of translation
   LangMask = $FFF;
 
 procedure TfrmTransMain.LoadGetTextSettings (const ADir : string);
 var
-  n,i : integer;
+  n,i,nl : integer;
   s,sl : string;
 begin
   // dxgettext.ini einlesen
@@ -509,24 +535,43 @@ begin
     else pcMode.ActivePageIndex:=1;
     cbOverwrite.Checked:=ReadBool(dxSect,iniOvwr,false);
     with edLangSubdir do Text:=ReadString(trSect,iniLangDir,Text);
-    s:=ReadString(trSect,iniSelLang,defLang);
-    if length(s)=0 then s:=defLang;
+    nl:=ReadInteger(trSect,iniLangCnt,0);
     lbLang.Clear;
-    repeat
-      sl:=ReadNxtStr(s,',','');
-      if not TryStrToInt(sl,n) then n:=0;
-      if (n>0) and (n<=MaxLang) then sl:=LangShortNames[n-1];  // n-1 is index for old language list
-      if length(sl)>0 then begin
-        n:=GetIndexOfName(cbLanguage.Items,sl);
-        if n>0 then lbLang.AddItem(cbLanguage.Items[n],pointer(n));
+    if nl=0 then begin // old setting
+      s:=ReadString(trSect,iniSelLang,defLang);
+      if length(s)=0 then s:=defLang;
+      repeat
+        sl:=ReadNxtStr(s,',','');
+        if not TryStrToInt(sl,n) then n:=0;
+        if (n>0) and (n<=MaxLang) then sl:=LangShortNames[n-1];  // n-1 is index for old language list
+        if length(sl)>0 then begin
+          n:=GetIndexOfName(cbLanguage.Items,sl);
+          if n>0 then lbLang.AddItem(cbLanguage.Items[n],pointer(n));
+          end;
+        until length(s)=0;
+      end
+    else begin
+      for i:=0 to nl-1 do begin
+        s:=ReadString(trSect,iniLang+IntToStr(i),'');
+        if length(s)>0 then begin
+          sl:=ReadNxtStr(s,',','');
+          if length(sl)>0 then begin
+            n:=GetIndexOfName(cbLanguage.Items,sl);
+            if n>0 then lbLang.AddItem(cbLanguage.Items[n],pointer(n+AutoComm*ReadNxtInt(s,',',4)));
+            end;
+          end;
         end;
-      until length(s)=0;
+      if lbLang.Count=0 then lbLang.AddItem(defLang,pointer(GetIndexOfName(cbLanguage.Items,defLang)));
+      end;
     lbLang.Selected[0]:=true;
+    ShowLangOptions;
     btPoEdit.Enabled:=true;
     btMerge.Caption:=_('Merge translation with template');
     cbPoedit.Checked:=ReadBool(trSect,iniPoedit,true);
     if ReadBool(trSect,iniMulti,false) then rbMulti.Checked:=true
     else rbSingle.Checked:=true;
+    udSimLength.Position:=ReadInteger(trSect,iniSimLen,defSimMeasure);
+    cbMergeSimilar.Checked:=ReadBool(trSect,iniSimilar,false);
     edTargetDir.Text:=ReadString(trSect,iniCopyPath,ADir);
     Free;
     end;
@@ -562,15 +607,24 @@ begin
     WriteString(ggtSect,iniFilenames,cbFiles.Text);
     WriteBool(dxSect,iniOvwr,cbOverwrite.Checked);
     WriteString(trSect,iniLangDir,edLangSubdir.Text);
-    s:='';
+    WriteInteger(trSect,iniLangCnt,lbLang.Count);
     with lbLang do for i:=0 to Count-1 do begin
-      n:=integer(Items.Objects[i]) and LangMask;
-      s:=s+','+GetName(cbLanguage.Items,n);
+      n:=integer(Items.Objects[i]);
+      s:=GetName(cbLanguage.Items,n and LangMask)+','+IntToStr(n div AutoComm);
+      WriteString(trSect,iniLang+IntToStr(i),s);
       end;
-    if length(s)>0 then Delete(s,1,1);
-    WriteString(trSect,iniSelLang,s);
+    DeleteKey(trSect,iniSelLang);     // old value
+//    s:='';                // old
+//    with lbLang do for i:=0 to Count-1 do begin
+//      n:=integer(Items.Objects[i]) and LangMask;
+//      s:=s+','+GetName(cbLanguage.Items,n);
+//      end;
+//    if length(s)>0 then Delete(s,1,1);
+//    WriteString(trSect,iniSelLang,s);
     WriteBool(trSect,iniPoedit,cbPoedit.Checked);
     WriteBool(trSect,iniMulti,rbMulti.Checked);
+    WriteInteger(trSect,iniSimLen,udSimLength.Position);
+    WriteBool(trSect,iniSimilar,cbMergeSimilar.Checked);
     WriteString(trSect,iniCopyPath,edTargetDir.Text);
     UpdateFile;
     Free;
@@ -582,6 +636,8 @@ const
 
   iniTemplate = 'template';
   iniBackup = 'createbackup';
+  iniAuto = 'MergeAutoComments';
+  iniHist = 'ObsoleteTranslations';
 
 procedure TfrmTransMain.LoadMergeSettings(const AFilename : string);
 begin
@@ -593,14 +649,25 @@ begin
     end;
   end;
 
-procedure TfrmTransMain.SaveMergeSettings(const AFilename : string);
+procedure TfrmTransMain.SaveMergeSettings(const AFilename : string; ac,hc,bu : boolean);
 begin
   with TMemIniFile.Create(NewExt(AFilename,IniExt)) do begin
 //    WriteString(ggmSect,iniTemplate,TemplPath);
-    WriteBool(ggmSect,iniBackup,cbBackup.Checked);
+    WriteBool(ggmSect,iniBackup,bu);
+    WriteBool(ggmSect,iniAuto,ac);
+    WriteBool(ggmSect,iniHist,hc);
     UpdateFile;
     Free;
     end;
+  end;
+
+procedure TfrmTransMain.sbSetAllBuClick(Sender: TObject);
+var
+  i : integer;
+begin
+  with lbLang do for i:=0 to Items.Count-1 do
+    Items.Objects[i]:=pointer(integer(Items.Objects[i]) and LangMask or MergBack);
+  ShowLangOptions;
   end;
 
 procedure TfrmTransMain.lbLangClick(Sender: TObject);
@@ -613,6 +680,33 @@ begin
     else btCopy.Caption:=_('Copy MO files to binary folder of project');
     bbUp.Enabled:=Enabled;
     bbDown.Enabled:=Enabled;
+    end;
+  ShowLangOptions;
+  end;
+
+procedure TfrmTransMain.ShowLangOptions;
+var
+  n : integer;
+begin
+  with lbLang do begin
+    laMergeLanguage.Caption:=Items[ItemIndex];
+    laSaveLanguage.Caption:=laMergeLanguage.Caption;
+    end;
+  with lbLang do n:=integer(Items.Objects[ItemIndex]);
+  cbMergeAutoComments.Checked:=n and AutoComm <>0;
+  cbMergeHistory.Checked:=n and KeepHist <>0;
+  cbBackup.Checked:=n and MergBack <>0;
+  end;
+
+procedure TfrmTransMain.MergeOptionClick(Sender: TObject);
+var
+  n : integer;
+begin
+  if cbMergeAutoComments.Checked then n:=AutoComm else n:=0;
+  if cbMergeHistory.Checked then n:=n or KeepHist;
+  if cbBackup.Checked then n:=n or MergBack;
+  with lbLang do begin
+    Items.Objects[ItemIndex]:=pointer(integer(Items.Objects[ItemIndex]) and LangMask or n);
     end;
   end;
 
@@ -643,7 +737,7 @@ procedure TfrmTransMain.bbAddClick(Sender: TObject);
 begin
   with lbLang do begin
     ClearSelection;
-    Selected[Items.AddObject(cbLanguage.Text,pointer(cbLanguage.ItemIndex+1))]:=true;
+    Selected[Items.AddObject(cbLanguage.Text,pointer(cbLanguage.ItemIndex))]:=true;
     end;
   end;
 
@@ -730,10 +824,10 @@ procedure TfrmTransMain.btStatusClick(Sender: TObject);
 var
   PoFile,ss : string;
 begin
-  with lbLang do ss:=GetLangSubDir(ItemIndex);
+  ss:=GetLangSubDir(lbLang.ItemIndex);
   ss:=IncludeTrailingPathDelimiter(cbProjDir.Text)+IncludeTrailingPathDelimiter(ss);
   PoFile:=NewExt(ss+GetTemplName,PoExt);
-  PoStatDialog.Execute(PoFile);
+  SetLangMarker(lbLang.ItemIndex,PoStatDialog.Execute(PoFile));
   end;
 
 procedure TfrmTransMain.btUpdateClick(Sender: TObject);
@@ -828,6 +922,7 @@ begin
   SaveGetTextSettings;
   with cbProjDir do s:=Items[ItemIndex];
   AddToHistory(cbProjDir,s);
+  pcOptions.ActivePageIndex:=0;
   LoadGetTextSettings(s);
   end;
 
@@ -892,14 +987,21 @@ begin
   end;
 
 procedure TfrmTransMain.Warning(WarningType: TWarningType; const Msg, Line, Filename: string; LineNumber: Integer);
+var
+  sl : TStringList;
+  i  : integer;
 begin
+  sl:=TStringList.Create;
+  sl.Text:=Msg;
   with meProgress do begin
-    Lines.Add('* '+Msg);
+    Lines.Add('* '+sl[0]);
+    for i:=1 to sl.Count-1 do Lines.Add('  '+sl[i]);
     if LineNumber>0 then Lines.Add('  '+Format(_('Line: %u'),[Linenumber]));
     if length(Line)>0 then Lines.Add('  '+Format(_('Last line read: %s'),[Line]));
 //    Lines.Add('');
     end;
   inc(WarnCount);
+  sl.Free;
   end;
 
 procedure TfrmTransMain.OverwriteQuestion(sender: TObject; const aFileName: string; var Overwrite: boolean);
@@ -1101,12 +1203,13 @@ var
   n : integer;
 begin
   with lbLang.Items do begin
-    if Mark then n:=ReqTrans else n:=0;
-    Objects[AIndex]:=pointer(integer(Objects[AIndex]) and LangMask +n);
+    n:=integer(Objects[AIndex]);
+    if Mark then n:=n or ReqTrans else n:=n and not ReqTrans;
+    Objects[AIndex]:=pointer(n);
     end;
   end;
 
-// returns true if translation is complete
+// returns true if translation is incomplete
 function TfrmTransMain.CheckPoFile (const PoFile : string) : boolean;
 var
   pe : TPoEntry;
@@ -1136,13 +1239,20 @@ var
   MergePath,PoFile,
   sv,sx,scd,
   st,s      : string;
-  i         : integer;
+  i,n       : integer;
+  ac,hc,bu,
   ok,cphd   : boolean;
 begin
   st:=GetTemplName;
   MergePath:=IncludeTrailingPathDelimiter(cbProjDir.Text)+IncludeTrailingPathDelimiter(GetLangSubDir(AIndex));
   PoFile:=NewExt(MergePath+st,PoExt);
-  LoadMergeSettings(MergePath+st);
+//  LoadMergeSettings(MergePath+st);
+  with lbLang do begin
+    n:=integer(Items.Objects[AIndex]);
+    hc:=n and KeepHist <>0;
+    ac:=n and AutoComm <>0;
+    bu:=n and MergBack <>0;
+    end;
   // Template
   sv:=NewExt(IncludeTrailingPathDelimiter(cbProjDir.Text)+st,PoExt);
   // Translation
@@ -1156,6 +1266,7 @@ begin
   FileMode:=fmOpenRead;
 //  if rgEncoding.ItemIndex=0 then cp:=cpUtf8 else cp:=cpLatin1;
   translist:=TPoEntryList.Create;
+  translist.SimMeasure:=udSimLength.Position;
   try
     i:=translist.LoadFromFile(PoFile);
     if i>0 then begin
@@ -1190,42 +1301,62 @@ begin
                   end
                 else begin  // normal entry
                   pe.MsgStr:=petr.MsgStr;
+                  pe.Fuzzy:=petr.Fuzzy;
+                  if not ac then begin
+                    pe.AutoCommentList.Clear; pe.HistCommentList.Clear;
+                    end;
                   pe.UserCommentList.Text:=petr.UserCommentList.Text;
                   end;
                 petr.Merged:=true;
-                end;
-              pe.WriteToStream(fs);
-              end;
-          // check for obsolete history comments
-            petr:=translist.FindFirst;
-            while (petr<>nil) do begin
-              with petr do if (copy(MsgId,1,2)=HistMarker) then begin
-                if (HistCommentList.Count>0) then begin
-                  s:=Trim(HistCommentList[0].Substring(3));
-                  if AnsiStartsText('MSGID',s) then begin
-                    delete(s,1,5);
-                    s:=AnsiDequotedStr(Trim(s),'"');
-                    if translist.IsEntry(s) then Merged:=true;
+                end
+              else if not pe.MsgId.IsEmpty then begin
+                if cbMergeSimilar.Checked then begin
+                  petr:=translist.FindSoundEntry(pe.MsgId); // check for case independent msgid
+                  if petr<>nil then begin
+                    pe.MsgStr:=petr.MsgStr;
+                    pe.Fuzzy:=true;
+                    if not ac then begin
+                      pe.AutoCommentList.Clear; pe.HistCommentList.Clear;
+                      end;
+                    pe.UserCommentList.Text:=petr.UserCommentList.Text;
+                    petr.Merged:=true;
                     end;
                   end;
                 end;
-              petr:=translist.FindNext(petr);
+              pe.WriteToStream(fs);
               end;
-          // copy history comments
-            petr:=translist.FindFirst;
-            while (petr<>nil) do begin
-              with petr do if not Merged then begin   // check for entries no longer used in template
-                if (copy(MsgId,1,2)=HistMarker) then WriteToStream(fs)
-                else begin
-                  HistCommentList.Add('#~ msgid '+String2PO(MsgId));
-                  HistCommentList.Add('#~ msgstr '+String2PO(MsgStr));
-                  s:=MsgId;
-                  MsgId:=HistMarker+MsgId;
-                  WriteToStream(fs,false);
-                  MsgId:=s;
+            if hc then begin
+            // check for obsolete history comments
+              petr:=translist.FindFirst;
+              while (petr<>nil) do begin
+                with petr do if (copy(MsgId,1,2)=HistMarker) then begin
+                  if (HistCommentList.Count>0) then begin
+                    s:=Trim(HistCommentList[0].Substring(3));
+                    if AnsiStartsText('MSGID',s) then begin
+                      delete(s,1,5);
+                      s:=AnsiDequotedStr(Trim(s),'"');
+                      if translist.IsEntry(s) then Merged:=true;
+                      end;
+                    end;
                   end;
+                petr:=translist.FindNext(petr);
                 end;
-              petr:=translist.FindNext(petr);
+            // copy history comments
+              petr:=translist.FindFirst;
+              while (petr<>nil) do begin
+                with petr do if not Merged then begin   // check for entries no longer used in template
+                  if (copy(MsgId,1,2)=HistMarker) then WriteToStream(fs)
+                  else begin
+                    HistCommentList.Add('#~ msgid '+String2PO(MsgId));
+                    HistCommentList.Add('#~ msgstr '+String2PO(MsgStr));
+                    s:=MsgId;
+                    MsgId:=HistMarker+MsgId;
+                    WriteToStream(fs,false);
+                    MsgId:=s;
+                    end;
+                  end;
+                petr:=translist.FindNext(petr);
+                end;
               end;
           finally
             FreeAndNil (fs);
@@ -1243,7 +1374,7 @@ begin
   if ok then begin
     sv:=NewExt(PoFile,'~'+PoExt);
     if FileExists(sv) then DeleteFile(sv);
-    if cbBackup.Checked then begin
+    if bu then begin
       if FileExists(PoFile) then ok:=RenameFile(PoFile,sv)
       else ok:=true;
       if not ok then ErrorDialog(Format(_('Cannot rename %s to %s'),[PoFile,sv]));
@@ -1263,7 +1394,7 @@ begin
   if ok then begin
     SetLangMarker(AIndex,CheckPoFile(PoFile));
     lbLang.Invalidate;
-    SaveMergeSettings(MergePath+st);
+    SaveMergeSettings(MergePath+st,ac,hc,bu);
     laProgress.Caption:=_('The template was merged into the translation file');
     if cbPoEdit.Checked then begin // and (lbLang.SelCount=1) then
       StartAndWait(PoFile,'');
@@ -1341,7 +1472,6 @@ begin
   MergePath:=IncludeTrailingPathDelimiter(cbProjDir.Text)+IncludeTrailingPathDelimiter(GetLangSubDir(AIndex));
   sm:=MergePath+GetTemplName;
   PoFile:=NewExt(sm,PoExt);
-  LoadMergeSettings(sm);
   sm:=NewExt(PoFile,MoExt);
   if (GetFileLastWriteDateTime(PoFile))>GetFileLastWriteDateTime(sm) then ok:=CompileToMo(PoFile,MergePath)
   else ok:=true;
@@ -1475,4 +1605,3 @@ begin
   end;
 
 end.
-

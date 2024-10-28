@@ -606,7 +606,7 @@ object frmTransMain: TfrmTransMain
       Top = 115
       Width = 454
       Height = 176
-      ActivePage = tsLang
+      ActivePage = tsMerge
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
       object tsLang: TTabSheet
@@ -617,7 +617,7 @@ object frmTransMain: TfrmTransMain
         ExplicitHeight = 0
         object Label4: TLabel
           Left = 265
-          Top = 55
+          Top = 57
           Width = 99
           Height = 13
           Caption = 'Available languages:'
@@ -1447,6 +1447,92 @@ object frmTransMain: TfrmTransMain
           TabOrder = 0
         end
       end
+      object tsMerge: TTabSheet
+        Caption = 'Merging'
+        ImageIndex = 3
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
+        object cbMergeSimilar: TCheckBox
+          Left = 15
+          Top = 12
+          Width = 371
+          Height = 26
+          Caption = 'Accept similar strings and mark as Fuzzy'
+          TabOrder = 0
+          WordWrap = True
+        end
+        object gbLangMerge: TGroupBox
+          Left = 10
+          Top = 45
+          Width = 426
+          Height = 96
+          Caption = 'Language-dependent settings'
+          TabOrder = 1
+          object laMergeLanguage: TLabel
+            Left = 35
+            Top = 22
+            Width = 21
+            Height = 13
+            Caption = 'xxx'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+          end
+          object cbMergeAutoComments: TCheckBox
+            Left = 35
+            Top = 45
+            Width = 356
+            Height = 17
+            Caption = 'Retain automatic comments'
+            ParentShowHint = False
+            ShowHint = False
+            TabOrder = 0
+            OnClick = MergeOptionClick
+          end
+          object cbMergeHistory: TCheckBox
+            Left = 35
+            Top = 70
+            Width = 356
+            Height = 17
+            Caption = 'Retain obsolete translations'
+            ParentShowHint = False
+            ShowHint = False
+            TabOrder = 1
+            OnClick = MergeOptionClick
+          end
+        end
+        object edSimLength: TEdit
+          Left = 395
+          Top = 16
+          Width = 25
+          Height = 21
+          Hint = 'Similarity measure'
+          ParentShowHint = False
+          ReadOnly = True
+          ShowHint = True
+          TabOrder = 2
+          Text = '5'
+        end
+        object udSimLength: TUpDown
+          Left = 420
+          Top = 16
+          Width = 16
+          Height = 21
+          Hint = 'Similarity measure'
+          Associate = edSimLength
+          Min = 4
+          Max = 12
+          ParentShowHint = False
+          Position = 5
+          ShowHint = True
+          TabOrder = 3
+        end
+      end
       object tsSaveOptions: TTabSheet
         Caption = 'Saving'
         ImageIndex = 2
@@ -1454,14 +1540,6 @@ object frmTransMain: TfrmTransMain
         ExplicitTop = 0
         ExplicitWidth = 0
         ExplicitHeight = 0
-        object cbBackup: TCheckBox
-          Left = 20
-          Top = 65
-          Width = 376
-          Height = 17
-          Caption = 'Create backup file of old translation'
-          TabOrder = 2
-        end
         object cbOverwrite: TCheckBox
           Left = 20
           Top = 40
@@ -1477,6 +1555,99 @@ object frmTransMain: TfrmTransMain
           Height = 17
           Caption = 'Sort entries by original strings (msgid)'
           TabOrder = 0
+        end
+        object gbSaveLanguage: TGroupBox
+          Left = 10
+          Top = 65
+          Width = 426
+          Height = 76
+          Caption = 'Language-dependent settings'
+          TabOrder = 2
+          object laSaveLanguage: TLabel
+            Left = 35
+            Top = 22
+            Width = 21
+            Height = 13
+            Caption = 'xxx'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+          end
+          object sbSetAllBu: TSpeedButton
+            Left = 395
+            Top = 42
+            Width = 24
+            Height = 24
+            Hint = 'Tick for all languages'
+            Flat = True
+            Glyph.Data = {
+              36060000424D3606000000000000360000002800000020000000100000000100
+              18000000000000060000120B0000120B00000000000000000000C0DCC0C0DCC0
+              7A3F05C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DC
+              C0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0404040C0DCC0C0DCC0C0DCC0C0DCC0C0
+              DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC07A3F05
+              7A3F05C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DC
+              C0C0DCC0C0DCC0C0DCC0C0DCC0404040404040C0DCC0C0DCC0C0DCC0C0DCC0C0
+              DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC07A3F057A3F05
+              7A3F057A3F05C0DCC0C0DCC0C0DCC09966339966339966339966339966339966
+              33996633996633996633404040404040404040404040C0DCC0C0DCC0C0DCC066
+              66666666666666666666666666666666666666666666666666667A3F05C0DCC0
+              C0DCC07A3F057A3F05C0DCC0C0DCC09966339966339966339966339966339966
+              33996633996633996633404040C0DCC0C0DCC0404040404040C0DCC0C0DCC066
+              6666666666666666666666666666666666666666666666666666C0DCC0C0DCC0
+              C0DCC0C0DCC07A3F05C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DC
+              C0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0404040C0DCC0C0DCC0C0
+              DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0
+              7A3F05C0DCC0C0DCC07A3F05C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DC
+              C0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0404040C0DCC0C0DCC0404040C0DCC0C0
+              DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC07A3F05
+              7A3F05C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DC
+              C0C0DCC0C0DCC0C0DCC0C0DCC0404040404040C0DCC0C0DCC0C0DCC0C0DCC0C0
+              DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC07A3F057A3F05
+              7A3F057A3F05C0DCC0C0DCC0C0DCC09966339966339966339966339966339966
+              33996633996633996633404040404040404040404040C0DCC0C0DCC0C0DCC066
+              66666666666666666666666666666666666666666666666666667A3F05C0DCC0
+              C0DCC07A3F057A3F05C0DCC0C0DCC09966339966339966339966339966339966
+              33996633996633996633404040C0DCC0C0DCC0404040404040C0DCC0C0DCC066
+              6666666666666666666666666666666666666666666666666666C0DCC0C0DCC0
+              C0DCC0C0DCC07A3F05C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DC
+              C0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0404040C0DCC0C0DCC0C0
+              DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0
+              7A3F05C0DCC0C0DCC07A3F05C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DC
+              C0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0404040C0DCC0C0DCC0404040C0DCC0C0
+              DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC07A3F05
+              7A3F05C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DC
+              C0C0DCC0C0DCC0C0DCC0C0DCC0404040404040C0DCC0C0DCC0C0DCC0C0DCC0C0
+              DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC07A3F057A3F05
+              7A3F057A3F05C0DCC0C0DCC0C0DCC09966339966339966339966339966339966
+              33996633996633996633404040404040404040404040C0DCC0C0DCC0C0DCC066
+              66666666666666666666666666666666666666666666666666667A3F05C0DCC0
+              C0DCC07A3F057A3F05C0DCC0C0DCC09966339966339966339966339966339966
+              33996633996633996633404040C0DCC0C0DCC0404040404040C0DCC0C0DCC066
+              6666666666666666666666666666666666666666666666666666C0DCC0C0DCC0
+              C0DCC0C0DCC07A3F05C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DC
+              C0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0404040C0DCC0C0DCC0C0
+              DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0
+              C0DCC0C0DCC0C0DCC07A3F05C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DC
+              C0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0404040C0DCC0C0
+              DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0}
+            NumGlyphs = 2
+            ParentShowHint = False
+            ShowHint = True
+            OnClick = sbSetAllBuClick
+          end
+          object cbBackup: TCheckBox
+            Left = 35
+            Top = 45
+            Width = 356
+            Height = 17
+            Caption = 'Create backup file of old translation'
+            TabOrder = 0
+            OnClick = MergeOptionClick
+          end
         end
       end
     end
@@ -2531,7 +2702,7 @@ object frmTransMain: TfrmTransMain
     Left = 680
     Top = 25
     Bitmap = {
-      494C01010400A400A40128001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010400A400E80128001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000A00000002800000001002000000000000064
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -3,7 +3,7 @@ object frmMerge: TfrmMerge
   Top = 278
   ActiveControl = EditTemplate
   Caption = 'Merge translation with new translation template'
-  ClientHeight = 256
+  ClientHeight = 336
   ClientWidth = 456
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,12 +21,12 @@ object frmMerge: TfrmMerge
   OnShow = FormShow
   DesignSize = (
     456
-    256)
+    336)
   PixelsPerInch = 96
   TextHeight = 13
   object laVersion: TLabel
     Left = 10
-    Top = 230
+    Top = 310
     Width = 3
     Height = 13
     Anchors = [akLeft, akBottom]
@@ -178,31 +178,31 @@ object frmMerge: TfrmMerge
     EditLabel.Caption = 'Translation template:'
     TabOrder = 1
   end
-  object CheckBoxCreateBackup: TCheckBox
-    Left = 15
-    Top = 170
-    Width = 423
+  object cbCreateBackup: TCheckBox
+    Left = 20
+    Top = 245
+    Width = 426
     Height = 17
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Create backup file of old translation (recommended)'
     Checked = True
     State = cbChecked
-    TabOrder = 3
+    TabOrder = 5
   end
-  object CheckBoxSaveSettings: TCheckBox
-    Left = 15
-    Top = 195
-    Width = 423
+  object cbSaveSettings: TCheckBox
+    Left = 20
+    Top = 270
+    Width = 426
     Height = 17
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Remember settings'
     Checked = True
     State = cbChecked
-    TabOrder = 4
+    TabOrder = 6
   end
   object btnMerge: TBitBtn
-    Left = 235
-    Top = 220
+    Left = 230
+    Top = 300
     Width = 129
     Height = 31
     Anchors = [akRight, akBottom]
@@ -288,16 +288,20 @@ object frmMerge: TfrmMerge
       DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0}
     NumGlyphs = 2
     ParentDoubleBuffered = True
-    TabOrder = 5
+    TabOrder = 7
     OnClick = btnMergeClick
   end
   object gbEncoding: TGroupBox
     Left = 10
     Top = 95
-    Width = 441
+    Width = 436
     Height = 66
+    Anchors = [akLeft, akTop, akRight]
     Caption = 'Encoding of template'
     TabOrder = 2
+    DesignSize = (
+      436
+      66)
     object rbUtf: TRadioButton
       Left = 15
       Top = 20
@@ -321,17 +325,18 @@ object frmMerge: TfrmMerge
     object cbCodePage: TComboBox
       Left = 145
       Top = 25
-      Width = 286
+      Width = 281
       Height = 21
       Style = csDropDownList
+      Anchors = [akLeft, akTop, akRight]
       DropDownCount = 15
       TabOrder = 2
       OnCloseUp = rbOtherClick
     end
   end
   object btnClose: TBitBtn
-    Left = 370
-    Top = 219
+    Left = 365
+    Top = 299
     Width = 81
     Height = 31
     Anchors = [akRight, akBottom]
@@ -390,12 +395,12 @@ object frmMerge: TfrmMerge
       DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0}
     NumGlyphs = 2
     ParentDoubleBuffered = True
-    TabOrder = 6
+    TabOrder = 8
     OnClick = btnCloseClick
   end
   object btnHelp: TBitBtn
-    Left = 200
-    Top = 220
+    Left = 195
+    Top = 300
     Width = 31
     Height = 31
     Hint = 'Show program help'
@@ -481,12 +486,12 @@ object frmMerge: TfrmMerge
     NumGlyphs = 2
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 7
+    TabOrder = 9
     OnClick = btnHelpClick
   end
   object btnManual: TBitBtn
-    Left = 165
-    Top = 220
+    Left = 160
+    Top = 300
     Width = 31
     Height = 31
     Hint = 'Show DxGetText manual'
@@ -572,8 +577,62 @@ object frmMerge: TfrmMerge
     NumGlyphs = 2
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 8
+    TabOrder = 10
     OnClick = btnManualClick
+  end
+  object cbMergeAutoComments: TCheckBox
+    Left = 20
+    Top = 195
+    Width = 426
+    Height = 17
+    Caption = 'Retain automatic comments'
+    ParentShowHint = False
+    ShowHint = False
+    TabOrder = 3
+  end
+  object cbMergeHistory: TCheckBox
+    Left = 20
+    Top = 220
+    Width = 426
+    Height = 17
+    Caption = 'Retain obsolete translations'
+    ParentShowHint = False
+    ShowHint = False
+    TabOrder = 4
+  end
+  object cbMergeSimilar: TCheckBox
+    Left = 20
+    Top = 170
+    Width = 376
+    Height = 17
+    Caption = 'Accept similar strings and mark as Fuzzy'
+    TabOrder = 11
+  end
+  object edSimLength: TEdit
+    Left = 405
+    Top = 166
+    Width = 25
+    Height = 21
+    Hint = 'Similarity measure'
+    ParentShowHint = False
+    ReadOnly = True
+    ShowHint = True
+    TabOrder = 12
+    Text = '5'
+  end
+  object udSimLength: TUpDown
+    Left = 430
+    Top = 166
+    Width = 16
+    Height = 21
+    Hint = 'Similarity measure'
+    Associate = edSimLength
+    Min = 4
+    Max = 12
+    ParentShowHint = False
+    Position = 5
+    ShowHint = True
+    TabOrder = 13
   end
   object OpenDialog: TOpenDialog
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofNoReadOnlyReturn, ofEnableSizing]

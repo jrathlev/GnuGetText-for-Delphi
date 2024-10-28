@@ -19,7 +19,9 @@
                  requires MsgMerge.exe Windows binary from
                  https://mlocati.github.io/articles/gettext-iconv-windows.html
    Vers. 3.1   - August 2023: enhanced header management, UTF-8 as defdault encoding,
-                 uses always internal merge function (istead of msgmerge)
+                 uses always internal merge function (instead of msgmerge)
+   Vers. 3.2   - October 2024: optional merging of AutoComments and HistComments
+                               optional merging with similat msgids
 
    Command line:
    -------------
@@ -27,7 +29,7 @@
      <filename>  - Name of file to be merged
      /noedit     - Do not open editor after merging
 
-   Last modified: September 2023
+   Last modified: October 2024
    *)
 
 unit MergeMain;
@@ -37,14 +39,14 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Buttons;
+  Vcl.Buttons, Vcl.ComCtrls;
 
 type
   TfrmMerge = class(TForm)
     EditTranslation: TLabeledEdit;
     EditTemplate: TLabeledEdit;
-    CheckBoxCreateBackup: TCheckBox;
-    CheckBoxSaveSettings: TCheckBox;
+    cbCreateBackup: TCheckBox;
+    cbSaveSettings: TCheckBox;
     laVersion: TLabel;
     ButtonChooseTemplate: TSpeedButton;
     ButtonChooseTranslation: TSpeedButton;
@@ -57,6 +59,11 @@ type
     rbOther: TRadioButton;
     btnHelp: TBitBtn;
     btnManual: TBitBtn;
+    cbMergeAutoComments: TCheckBox;
+    cbMergeHistory: TCheckBox;
+    cbMergeSimilar: TCheckBox;
+    edSimLength: TEdit;
+    udSimLength: TUpDown;
     procedure btnMergeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -102,6 +109,10 @@ const
 
   iniBackup   = 'createbackup';
   iniSAscii   = 'supportnonascii';
+  iniSimLen = 'SimMeasure';
+  iniSimilar = 'MergeSimilar';
+  iniAuto = 'MergeAutoComments';
+  iniHist = 'ObsoleteTranslations';
 
   IniExt = '.ini';
 
@@ -182,13 +193,17 @@ begin
 
 procedure TfrmMerge.LoadFromIni (const IniName : string);
 begin
-  CheckBoxSaveSettings.Checked:=FileExists(ininame);
-  if CheckBoxSaveSettings.Checked then begin
+  cbSaveSettings.Checked:=FileExists(ininame);
+  if cbSaveSettings.Checked then begin
     with TMemIniFile.Create (ininame) do begin
       Left:=ReadInteger(ggmSect,iniLeft,Left);       // JR
       Top:=ReadInteger(ggmSect,iniTop,Top);
       EditTemplate.Text:=ExpandFileName(ReadString(ggmSect,iniTempl,''));
-      CheckBoxCreateBackup.Checked:=ReadBool(ggmSect,iniBackup,CheckBoxCreateBackup.Checked);
+      cbCreateBackup.Checked:=ReadBool(ggmSect,iniBackup,cbCreateBackup.Checked);
+      udSimLength.Position:=ReadInteger(ggmSect,iniSimLen,defSimMeasure);
+      cbMergeSimilar.Checked:=ReadBool(ggmSect,iniSimilar,false);
+      cbMergeAutoComments.Checked:=ReadBool(ggmSect,iniAuto,false);
+      cbMergeHistory.Checked:=ReadBool(ggmSect,iniHist,false);
       CodePage:=ReadInteger(ggmSect,iniCode,CpUtf8);
       Free;
       end;
@@ -269,6 +284,7 @@ begin
   Result:=true;
   try
     n:=translist.LoadFromFile(translationfilename);
+    translist.SimMeasure:=udSimLength.Position;
     if n>0 then begin
       ShowMessagePos(Format(_('Error in line %u of file "%s"'),[n,translationfilename]),wx,wy);
       Result:=false;
@@ -300,43 +316,62 @@ begin
                   end
                 else begin  // normal entry
                   pe.MsgStr:=petr.MsgStr;
+                  pe.Fuzzy:=petr.Fuzzy;
+                  if not cbMergeAutoComments.Checked then begin
+                    pe.AutoCommentList.Clear; pe.HistCommentList.Clear;
+                    end;
                   pe.UserCommentList.Text:=petr.UserCommentList.Text;
-//                  pe.HistCommentList.Text:=petr.HistCommentList.Text;
                   end;
                 petr.Merged:=true;
-                end;
-              pe.WriteToStream(fs);
-              end;
-          // check for obsolete history comments
-            petr:=translist.FindFirst;
-            while (petr<>nil) do begin
-              with petr do if (copy(MsgId,1,2)=HistMarker) then begin
-                if (HistCommentList.Count>0) then begin
-                  s:=Trim(HistCommentList[0].Substring(3));
-                  if AnsiStartsText('MSGID',s) then begin
-                    delete(s,1,5);
-                    s:=AnsiDequotedStr(Trim(s),'"');
-                    if translist.IsEntry(s) then Merged:=true;
+                end
+              else if not pe.MsgId.IsEmpty then begin
+                if cbMergeSimilar.Checked then begin
+                  petr:=translist.FindSoundEntry(pe.MsgId); // check for case independent msgid
+                  if petr<>nil then begin
+                    pe.MsgStr:=petr.MsgStr;
+                    pe.Fuzzy:=true;
+                    if not cbMergeAutoComments.Checked then begin
+                      pe.AutoCommentList.Clear; pe.HistCommentList.Clear;
+                      end;
+                    pe.UserCommentList.Text:=petr.UserCommentList.Text;
+                    petr.Merged:=true;
                     end;
                   end;
                 end;
-              petr:=translist.FindNext(petr);
+              pe.WriteToStream(fs);
               end;
-          // copy history comments
-            petr:=translist.FindFirst;
-            while (petr<>nil) do begin
-              with petr do if not Merged then begin   // check for entries no longer used in template
-                if (copy(MsgId,1,2)=HistMarker) then WriteToStream(fs)
-                else begin
-                  HistCommentList.Add('#~ msgid '+String2PO(MsgId));
-                  HistCommentList.Add('#~ msgstr '+String2PO(MsgStr));
-                  s:=MsgId;
-                  MsgId:=HistMarker+MsgId;
-                  WriteToStream(fs,false);
-                  MsgId:=s;
+            if cbMergeHistory.Checked then begin
+            // check for obsolete history comments
+              petr:=translist.FindFirst;
+              while (petr<>nil) do begin
+                with petr do if (copy(MsgId,1,2)=HistMarker) then begin
+                  if (HistCommentList.Count>0) then begin
+                    s:=Trim(HistCommentList[0].Substring(3));
+                    if AnsiStartsText('MSGID',s) then begin
+                      delete(s,1,5);
+                      s:=AnsiDequotedStr(Trim(s),'"');
+                      if translist.IsEntry(s) then Merged:=true;
+                      end;
+                    end;
                   end;
+                petr:=translist.FindNext(petr);
                 end;
-              petr:=translist.FindNext(petr);
+            // copy history comments
+              petr:=translist.FindFirst;
+              while (petr<>nil) do begin
+                with petr do if not Merged then begin   // check for entries no longer used in template
+                  if (copy(MsgId,1,2)=HistMarker) then WriteToStream(fs)
+                  else begin
+                    HistCommentList.Add('#~ msgid '+String2PO(MsgId));
+                    HistCommentList.Add('#~ msgstr '+String2PO(MsgStr));
+                    s:=MsgId;
+                    MsgId:=HistMarker+MsgId;
+                    WriteToStream(fs,false);
+                    MsgId:=s;
+                    end;
+                  end;
+                petr:=translist.FindNext(petr);
+                end;
               end;
           finally
             FreeAndNil (fs);
@@ -420,7 +455,7 @@ begin
         raise Exception.Create (Format(_('Cannot rename %s to %s'),[tempfilename,translation]));
       if fileexists(tempfilename) then
         deletefile (tempfilename);
-      if not CheckBoxCreateBackup.Checked then
+      if not cbCreateBackup.Checked then
         deletefile (translationbackup);
       if not noedit and (MessageDlgPos(_('The template was merged into the translation file.'+sLineBreak+
                       'Do you want to open the translation file now?'+sLineBreak+
@@ -428,12 +463,16 @@ begin
                       mtConfirmation,[mbYes,mbNo],0,wx,wy)=mrYes) then
         ShellExecute (Application.Handle,'open',PChar(translation),nil,nil,SW_RESTORE);
       end;
-    if CheckBoxSaveSettings.Checked then begin
+    if cbSaveSettings.Checked then begin
       with TMemIniFile.Create (ChangeFileExt(translation,'.ini')) do begin
         WriteInteger(ggmSect,iniLeft,Left);       // JR
         WriteInteger(ggmSect,iniTop,Top);
         WriteString(ggmSect,iniTempl,ExtractRelativePath(IncludeTrailingPathDelimiter(GetCurrentDir),template));
-        WriteBool(ggmSect,iniBackup,CheckBoxCreateBackup.Checked);
+        WriteBool(ggmSect,iniBackup,cbCreateBackup.Checked);
+        WriteInteger(ggmSect,iniSimLen,udSimLength.Position);
+        WriteBool(ggmSect,iniSimilar,cbMergeSimilar.Checked);
+        WriteBool(ggmSect,iniAuto,cbMergeAutoComments.Checked);
+        WriteBool(ggmSect,iniHist,cbMergeHistory.Checked);
         WriteInteger(ggmSect,iniCode,CodePage);
 //        with rgEncoding do begin
 //          WriteBool(ggmSect,iniSAscii,ItemIndex<>1);

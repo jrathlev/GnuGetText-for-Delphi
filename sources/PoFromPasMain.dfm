@@ -157,26 +157,6 @@ object frmMain: TfrmMain
     NumGlyphs = 2
     OnClick = btDirClick
   end
-  object edDir: THistoryCombo
-    Left = 10
-    Top = 25
-    Width = 426
-    Height = 21
-    Anchors = [akLeft, akTop, akRight]
-    TabOrder = 0
-    OnCloseUp = edDirCloseUp
-    MaxItems = 15
-  end
-  object edEdit: THistoryCombo
-    Left = 10
-    Top = 125
-    Width = 426
-    Height = 21
-    Anchors = [akLeft, akTop, akRight]
-    TabOrder = 3
-    OnCloseUp = edEditCloseUp
-    MaxItems = 15
-  end
   object bbInfo: TBitBtn
     Left = 400
     Top = 170
@@ -613,6 +593,24 @@ object frmMain: TfrmMain
     NumGlyphs = 2
     TabOrder = 8
     OnClick = btnHelpClick
+  end
+  object edDir: TComboBox
+    Left = 10
+    Top = 25
+    Width = 426
+    Height = 21
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 0
+    OnCloseUp = edDirCloseUp
+  end
+  object edEdit: TComboBox
+    Left = 10
+    Top = 125
+    Width = 426
+    Height = 21
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 3
+    OnCloseUp = edEditCloseUp
   end
   object OpenDialog: TOpenDialog
     Left = 10

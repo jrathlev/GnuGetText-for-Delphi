@@ -18,7 +18,8 @@
 
 // Added: TPoHeader - new record containing the po file header infos
 //        Optional saving of file entries in original order
-// last modified: August 2023
+//        Find algorithm using SoundEx to find similar translations
+// last modified: October 2024
 
 unit PoParser;
 
@@ -34,6 +35,7 @@ const
   cpUtf8 = 65001;
 
   HistMarker = '#*';
+  defSimMeasure = 5;     // length for SoundEx
 
 type
   TPoHeaderIds = (hiProjectId,hiCreationDate,hiRevisionDate,hiLastTranslator,hiLanguageTeam,
@@ -77,6 +79,9 @@ type
   TPoEntryList = class        // read and write utf-8
     private
       list : TStringList;    // Strings are searchkeys, objects are TList of TPoEntries
+      SoundList,             // list SopundEx expressions
+      CiList : TStringList;  // case insensitive list
+      FSimMeasure : integer;
       FHeader : TPoHeader;
       FLoaded,
       HdChanged : boolean;  // header was changed
@@ -94,7 +99,9 @@ type
       procedure Clear;
       function FindEntry (const MsgId : string) : TPoEntry;
       function IsEntry (const MsgId : string) : boolean;
-      function DeleteEntry (MsgId : string) : boolean;  // True if found and deleted, false if not found
+      function FindNoCaseEntry (const MsgId : string) : TPoEntry;
+      function FindSoundEntry (const MsgId : string) : TPoEntry;
+//      function DeleteEntry (MsgId : string) : boolean;  // True if found and deleted, false if not found
       procedure AddEntry (entry : TPoEntry); // Will fail if MsgId exists. Entry is copied.
       procedure UpdateHeader (pe : TPoEntry);
 
@@ -103,6 +110,7 @@ type
       function FindNext (po : TPoEntry) : TPoEntry;
       property Loaded : boolean read FLoaded;
       property TotalEntries : integer read GetCount;  // JR
+      property SimMeasure : integer read FSimMeasure write FSimMeasure;
       property Header[Index : TPoHeaderIds] : string read GetHeader write SetHeader;
       property Items[Index: Integer] : TPoEntry read GetItem; default;
     end;
@@ -594,10 +602,22 @@ constructor TPoEntryList.Create;
 begin
   inherited Create;
   list:=TStringList.Create;
-  list.Duplicates:=dupError;
-  list.CaseSensitive:=True;
-  list.Sorted:=true;
-  HdChanged:=false; FLoaded:=false;
+  with list do begin
+    Duplicates:=dupError;
+    CaseSensitive:=True;
+    Sorted:=true;
+    end;
+  CiList:=TStringList.Create;
+  with CiList do begin       // case insensitive duplicate
+    Duplicates:=dupIgnore;
+    Sorted:=true;
+    end;
+  SoundList:=TStringList.Create;
+  with SoundList do begin       // soundex duplicate
+    Duplicates:=dupIgnore;
+    Sorted:=true;
+    end;
+  HdChanged:=false; FLoaded:=false; FSimMeasure:=defSimMeasure;
   end;
 
 procedure TPoEntryList.Clear;
@@ -610,13 +630,13 @@ begin
     for j:=0 to l.count-1 do TObject(l.Items[j]).Free;
     l.Free;
     end;
-  list.Clear;
+  list.Clear; CiList.Clear;
   end;
 
 destructor TPoEntryList.Destroy;
 begin
   Clear;
-  FreeAndNil (list);
+  FreeAndNil (list); FreeAndNil (CiList); FreeAndNil (SoundList);
   inherited;
   end;
 
@@ -672,44 +692,43 @@ begin
   l.Add(po);
   end;
 
-function TPoEntryList.DeleteEntry (MsgId: string): boolean;
-var
-  p:Integer;
-  l : TList;
-  idx:integer;
-  po : TPoEntry;
-begin
-  Result:=False;
-  if list.Find(GetSearchKey(MsgId),idx) then begin
-    l:=list.Objects[idx] as TList;
-    for p:=0 to l.count-1 do begin
-      po:=TObject(l.Items[p]) as TPoEntry;
-      if po.MsgId=MsgId then begin
-        po.Free;
-        l.Delete (p);
-        Result:=True;
-        if l.Count=0 then begin
-          l.Free;
-          list.Delete (idx);
-          end;
-        exit;
-        end;
-      end;
-    end;
-  end;
+//function TPoEntryList.DeleteEntry (MsgId: string): boolean;
+//var
+//  p:Integer;
+//  l : TList;
+//  idx:integer;
+//  po : TPoEntry;
+//begin
+//  Result:=False;
+//  if list.Find(GetSearchKey(MsgId),idx) then begin
+//    l:=list.Objects[idx] as TList;
+//    for p:=0 to l.count-1 do begin
+//      po:=TObject(l.Items[p]) as TPoEntry;
+//      if po.MsgId=MsgId then begin
+//        po.Free;
+//        l.Delete (p);
+//        Result:=True;
+//        if l.Count=0 then begin
+//          l.Free;
+//          list.Delete (idx);
+//          end;
+//        exit;
+//        end;
+//      end;
+//    end;
+//  end;
 
 function TPoEntryList.FindEntry (const MsgId : string) : TPoEntry;
 var
-  p:Integer;
+  p :Integer;
   l : TList;
-  idx:integer;
+  idx : integer;
 begin
   if list.Find(GetSearchKey(MsgId),idx) then begin
     l:=list.Objects[idx] as TList;
     for p:=0 to l.count-1 do begin
       Result:=TObject(l.Items[p]) as TPoEntry;
-      if Result.MsgId=MsgId then
-        exit;
+      if Result.MsgId=MsgId then exit;
       end;
     end;
   Result:=nil;
@@ -718,6 +737,38 @@ begin
 function TPoEntryList.IsEntry (const MsgId : string) : boolean;
 begin
   Result:=FindEntry(MsgId)<>nil;
+  end;
+
+function TPoEntryList.FindNoCaseEntry (const MsgId : string) : TPoEntry;
+var
+  idx,p : integer;
+  l : TList;
+begin
+  if CiList.Find(GetSearchKey(MsgId),idx) then begin
+    idx:=integer(CiList.Objects[idx]);
+    l:=list.Objects[idx] as TList;
+    for p:=0 to l.count-1 do begin
+      Result:=TObject(l.Items[p]) as TPoEntry;
+      if AnsiSameText(Result.MsgId,MsgId) then exit;
+      end;
+    end;
+  Result:=nil;
+  end;
+
+function TPoEntryList.FindSoundEntry (const MsgId : string) : TPoEntry;
+var
+  idx,p : integer;
+  l : TList;
+begin
+  if SoundList.Find(SoundEx(MsgId,FSimMeasure),idx) then begin
+    idx:=integer(SoundList.Objects[idx]);
+    l:=list.Objects[idx] as TList;
+    for p:=0 to l.count-1 do begin
+      Result:=TObject(l.Items[p]) as TPoEntry;
+      if length(Result.MsgStr)>0 then exit;
+      end;
+    end;
+  Result:=nil;
   end;
 
 function TPoEntryList.FindFirst: TPoEntry;
@@ -795,7 +846,7 @@ var
   tf  : TextFile;
   pop : TPoParser;
   pe  : TPoEntry;
-  ne  : integer;
+  ne,i : integer;
 begin
   Clear; Result:=0; ne:=0;
   FileMode:=fmOpenRead;
@@ -827,6 +878,10 @@ begin
     CloseFile (tf);
     end;
   FLoaded:=Result=0;
+  if FLoaded then begin
+//    for i:=0 to list.Count-1 do CiList.AddObject(list[i],pointer(i));
+    for i:=0 to list.Count-1 do SoundList.AddObject(SoundEx(list[i],FSimMeasure),pointer(i));
+    end;
   end;
 
 procedure TPoEntryList.SaveToFile(const filename : string; OrgOrder : boolean);

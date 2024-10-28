@@ -12,7 +12,7 @@
    the specific language governing rights and limitations under the License.
 
    Jan. 2016
-   last modified: February 2023
+   last modified: April 2024
    *)
 
 unit PoSpellMain;
@@ -22,10 +22,10 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  HListBox, PoParser, SpellChecker;
+  PoParser, SpellChecker;
 
 const
-  Vers = ' - Vers. 1.1';
+  Vers = ' - Vers. 3.1';
 
   PoExt = 'po';
   DicExt = 'dic';
@@ -33,12 +33,10 @@ const
 
 type
   TfrmMain = class(TForm)
-    edTranslation: THistoryCombo;
     Label2: TLabel;
     bbSave: TBitBtn;
     bbInfo: TBitBtn;
     bbExit: TBitBtn;
-    edDictionary: THistoryCombo;
     Label5: TLabel;
     edWord: TEdit;
     btAdd: TButton;
@@ -54,6 +52,8 @@ type
     bbTranslation: TBitBtn;
     btGetSuggestion: TBitBtn;
     btnHelp: TBitBtn;
+    edTranslation: TComboBox;
+    edDictionary: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -116,7 +116,7 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, Winapi.ShlObj, System.StrUtils, System.Character,
-  GnuGetText, WinUtils, MsgDialogs, LangUtils, InitProg, ListSelectDlg,
+  GnuGetText, WinUtils, ListUtils, MsgDialogs, LangUtils, InitProg, ListSelectDlg,
   WinApiUtils, WinShell, PathUtils, StringUtils, GgtConsts, GgtUtils;
 
 function RemoveLeadingChars (const s : string; CheckChars : array of char) : string;
@@ -158,31 +158,34 @@ const
   iniDicName = 'LastDic';
 
 procedure TfrmMain.FormCreate(Sender: TObject);
+var
+  IniFile  : TMemIniFile;
 begin
   TranslateComponent (self);
-  Application.Title:=_('Spell checking of PO translations');
+  Application.Title:=_('Spell checking of po translations');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
   if ParamCount>0 then PoFile:=ExpandFileName(ParamStr(1))
   else PoFile:='';
   IniName:=Erweiter(AppPath,PrgName,IniExt);
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     Top:=ReadInteger(CfGSekt,iniTop,Top);
     Left:=ReadInteger(CfGSekt,iniLeft,Left);
     if length(PoFile)=0 then PoFile:=ReadString(CfGSekt,iniPoName,'');
     DicFile:=ReadString(CfGSekt,iniDicName,'');
+    LoadHistory(IniFile,TransSekt,edTranslation);
+    with edTranslation do begin
+      if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
+      Text:=PoFile;
+      end;
+    LoadHistory(IniFile,DicSekt,edDictionary);
+    with edDictionary do begin
+      if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
+      Text:=DicFile;
+      end;
     Free;
-    end;
-  with edTranslation do begin
-    LoadFromIni(IniName,TransSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=PoFile;
-    end;
-  with edDictionary do begin
-    LoadFromIni(IniName,DicSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=DicFile;
     end;
   WordPos:=0; TransStr:='';
   PoList:=TPoEntryList.Create;
@@ -236,12 +239,18 @@ begin
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  IniFile  : TMemIniFile;
 begin
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     WriteInteger(CfGSekt,iniTop,Top);
     WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniPoName,PoFile);
     WriteString(CfGSekt,iniDicName,DicFile);
+    SaveHistory(IniFile,TransSekt,true,edTranslation);
+    SaveHistory(IniFile,DicSekt,true,edDictionary);
+    UpdateFile;
     Free;
     end;
 //  with UsrList do begin
@@ -276,7 +285,7 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(ProgVersName+' - '+ProgVersDate+#13+CopRgt
+  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
            +#13'E-Mail: '+EmailAdr);
   end;
 
@@ -324,9 +333,9 @@ begin
     Filename:='';
     Title:=_('Select po file for spell checking');
     Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
-    if Execute then with edTranslation do begin
+    if Execute then begin
       PoFile:=Filename;
-      Text:=Filename; AddItem(Filename);
+      Text:=Filename; AddToHistory(edTranslation,Filename);
       Result:=true;
       end
     else Result:=false;
@@ -341,9 +350,9 @@ begin
     Filename:='';
     Title:=_('Select dictionary file');
     Filter:=_('dictionaries|*.'+DicExt+'|all|*.*');
-    if Execute then with edDictionary do begin
+    if Execute then begin
       DicFile:=Filename;
-      Text:=Filename; AddItem(Filename);
+      Text:=Filename; AddToHistory(edDictionary,Filename);
       Result:=true;
       end
     else Result:=false;
@@ -388,7 +397,7 @@ begin
     if ne>0 then
       ShowMessage(Format(_('Error in line %u of po file!'),[ne]),true)
     else begin
-      ShowMessage(_('Po file loaded!'));
+      ShowMessage(_('po file loaded!'));
       EntryCnt:=0;
       Result:=true;
       end;

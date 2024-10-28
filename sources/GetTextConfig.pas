@@ -80,7 +80,7 @@ const
 procedure TfrmConfig.LoadFromIni(const AIniName : string);
 begin
   IniName:=AIniName;
-  with TIniFile.Create (IniName) do begin
+  with TMemIniFile.Create (IniName) do begin
     Left:=ReadInteger(ggtSect,iniLeft,Left);       // JR
     Top:=ReadInteger(ggtSect,iniTop,Top);
     CheckBoxRecurse.Checked:=ReadBool(ggtSect,iniRecurse,false);
@@ -114,7 +114,7 @@ begin
 procedure TfrmConfig.SaveToIni(SaveMask : boolean);
 begin
   if CheckBoxSaveSettings.Checked and (length(IniName)>0) then begin
-    with TIniFile.Create (IniName) do begin
+    with TMemIniFile.Create (IniName) do begin
       WriteInteger(ggtSect,iniLeft,Left);       // JR
       WriteInteger(ggtSect,iniTop,Top);
       WriteBool(ggtSect,iniRecurse,CheckBoxRecurse.Checked);
@@ -129,6 +129,7 @@ begin
       if SaveMask then WriteString(dxSect,iniMask,EditMask.Text);
       WriteBool(dxSect,iniOrder,cbOrder.Checked);
       WriteBool(dxSect,iniOvwr,cbOverwrite.Checked);
+      UpdateFile;
       Free;
       end;
     end;

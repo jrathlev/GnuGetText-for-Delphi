@@ -81,6 +81,7 @@ type
     pmiClear: TMenuItem;
     N21: TMenuItem;
     pmiCancel: TMenuItem;
+    bbCopyAndNext: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure bbExitClick(Sender: TObject);
     procedure bbInfoClick(Sender: TObject);
@@ -112,6 +113,7 @@ type
     procedure btnHelpClick(Sender: TObject);
     procedure pmiEditClick(Sender: TObject);
     procedure pmiClearClick(Sender: TObject);
+    procedure bbCopyAndNextClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -147,9 +149,9 @@ implementation
 
 {$R *.dfm}
 
-uses System.IniFiles, Winapi.ShellApi, WinUtils, MsgDialogs, LangUtils, InitProg,
-  WinApiUtils, WinShell, Winapi.ShlObj, System.StrUtils, gnugettext, PathUtils,
-  EditStringListDlg, GgtConsts, GgtUtils, EditHistListDlg;
+uses System.IniFiles, Winapi.ShellApi, Winapi.ShlObj, System.StrUtils,
+  WinUtils, ListUtils, MsgDialogs, LangUtils, InitProg, WinApiUtils, WinShell,
+  gnugettext, PathUtils, EditStringListDlg, GgtConsts, GgtUtils, EditHistListDlg;
 
 { ------------------------------------------------------------------- }
 constructor TText.Create (const AText : string);
@@ -347,7 +349,7 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(BottomLeftPos(cbEdit,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
+  InfoDialog(BottomLeftPos(meEdit,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
            +#13'E-Mail: '+EmailAdr);
   end;
 
@@ -543,6 +545,13 @@ procedure TfrmMain.bbCopyIdClick(Sender: TObject);
 begin
   CopyEntry (IdIndex,false);
   ShowEntry(IdIndex);
+  end;
+
+procedure TfrmMain.bbCopyAndNextClick(Sender: TObject);
+begin
+  CopyEntry (IdIndex,false);
+  ShowEntry(IdIndex);
+  bbDownClick(Sender);
   end;
 
 procedure TfrmMain.CopyEntry (AIndex : integer; UpdateRef : boolean);

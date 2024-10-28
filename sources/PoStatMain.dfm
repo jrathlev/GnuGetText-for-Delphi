@@ -24,9 +24,9 @@ object frmMain: TfrmMain
   object Label2: TLabel
     Left = 5
     Top = 10
-    Width = 112
+    Width = 110
     Height = 13
-    Caption = 'PO file to be examined:'
+    Caption = 'po file to be examined:'
   end
   object Label6: TLabel
     Left = 5

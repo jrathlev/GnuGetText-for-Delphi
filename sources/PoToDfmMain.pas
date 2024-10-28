@@ -18,7 +18,7 @@
       You may distribute and modify this file as you wish for free
 
    Feb. 2021
-   last modified: September 2023
+   last modified: April 2024
    *)
 
 unit PoToDfmMain;
@@ -26,9 +26,9 @@ unit PoToDfmMain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ComCtrls,
-  PoParser, HListBox;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
+  Vcl.ComCtrls, PoParser;
 
 const
   Vers = ' - Vers. 1.0';
@@ -38,7 +38,6 @@ const
 
 type
   TMainForm = class(TForm)
-    edPoFile: THistoryCombo;
     Label2: TLabel;
     bbExit: TBitBtn;
     bbInfo: TBitBtn;
@@ -54,6 +53,7 @@ type
     bbUnit: TBitBtn;
     bbPoFile: TBitBtn;
     btnHelp: TBitBtn;
+    edPoFile: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbPoFileClick(Sender: TObject);
@@ -95,8 +95,8 @@ implementation
 
 {$R *.dfm}
 
-uses GnuGetText, InitProg, PathUtils, WinUtils, xgettexttools, MsgDialogs,
-  System.IniFiles, System.StrUtils, System.Math, ShellFileDlg, GgtConsts, GgtUtils;
+uses System.IniFiles, System.StrUtils, System.Math, GnuGetText, InitProg, PathUtils,
+  WinUtils, ListUtils, xgettexttools, MsgDialogs, ShellFileDlg, GgtConsts, GgtUtils;
 
 const
   (* INI-Sections *)
@@ -112,6 +112,8 @@ type
     end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
+var
+  IniFile  : TMemIniFile;
 begin
   TranslateComponent (self);
   Application.Title:=_('Copy translated strings from po file to Pascal unit');
@@ -119,18 +121,16 @@ begin
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     Top:=ReadInteger(CfGSekt,iniTop,Top);
     Left:=ReadInteger(CfGSekt,iniLeft,Left);
     PoFile:=ReadString(CfGSekt,iniPoFile,'');
     PasFile:=ReadString(CfGSekt,iniUnit,'');
+    LoadHistory(IniFile,PoSekt,edPoFile);
     Free;
     end;
-  with edPoFile do begin
-    LoadFromIni(IniName,PoSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=PoFile;
-    end;
+  AddToHistory(edPoFile,PoFile);
   edPasFile.Text:=PasFile;
   PoList:=TPoEntryList.Create;
   constlist:=TStringList.Create;
@@ -150,12 +150,17 @@ begin
   end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  IniFile  : TMemIniFile;
 begin
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     WriteInteger(CfGSekt,iniTop,Top);
     WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniPoFile,PoFile);
     WriteString(CfGSekt,iniUnit,PasFile);
+    SaveHistory(IniFile,PoSekt,edPoFile);
+    UpdateFile;
     Free;
     end;
   try HtmlHelp(0,nil,HH_CLOSE_ALL,0); except end;
@@ -210,9 +215,9 @@ begin
     Filename:='';
     Title:=_('Select po file');
     Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
-    if Execute then with edPoFile do begin
+    if Execute then begin
       PoFile:=FileName;
-      Text:=Filename; AddItem(Filename);
+      AddToHistory(edPoFile,PoFile);
       LoadPoFile;
       end
     end;

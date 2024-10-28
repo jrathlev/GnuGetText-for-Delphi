@@ -257,7 +257,7 @@ object frmConfig: TfrmConfig
     Top = 390
     Width = 376
     Height = 17
-    Hint = 'Save settings as ini file in this basic directory '
+    Hint = 'Save settings as ini file in this basic directory'
     Caption = 'Remember settings'
     Checked = True
     ParentShowHint = False

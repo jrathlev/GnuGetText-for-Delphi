@@ -14,7 +14,7 @@
    the specific language governing rights and limitations under the License.
 
    Feb. 2014
-   last modified: February 2023
+   last modified: April 2024
    *)
 
 unit PoInsComMain;
@@ -23,11 +23,11 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, HListBox, PoParser;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, PoParser;
 
 const
-  Vers = ' - Vers. 1.0';
-  CopRgt = '© 2014-2023 Dr. J. Rathlev, 24222 Schwentinental';
+  Vers = ' - Vers. 3.1';
+  CopRgt = '© 2014-2024 Dr. J. Rathlev, 24222 Schwentinental';
   EmailAdr = 'kontakt(a)rathlev-home.de';
 
   PoExt = 'po';
@@ -35,9 +35,7 @@ const
 type
   TfrmMain = class(TForm)
     Label2: TLabel;
-    edRef: THistoryCombo;
     Label5: TLabel;
-    edEdit: THistoryCombo;
     bbInfo: TBitBtn;
     bbExit: TBitBtn;
     bbSave: TBitBtn;
@@ -45,6 +43,9 @@ type
     bbRef: TBitBtn;
     bbEdit: TBitBtn;
     btnHelp: TBitBtn;
+    edRef: TComboBox;
+    edEdit: TComboBox;
+    laStatus: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbExitClick(Sender: TObject);
@@ -81,11 +82,13 @@ implementation
 
 {$R *.dfm}
 
-uses System.IniFiles, WinUtils,  LangUtils, InitProg, WinApiUtils, WinShell, Winapi.ShlObj,
-  System.StrUtils, gnugettext, PathUtils, MsgDialogs, GgtConsts, GgtUtils;
+uses System.IniFiles, Winapi.ShlObj, System.StrUtils, WinUtils,  ListUtils, LangUtils,
+  InitProg, WinApiUtils, WinShell,gnugettext, PathUtils, MsgDialogs, GgtConsts, GgtUtils;
 
 { ------------------------------------------------------------------- }
 procedure TfrmMain.FormCreate(Sender: TObject);
+var
+  IniFile  : TMemIniFile;
 begin
   TranslateComponent (self);
   Application.Title:=_('Copy translated strings as comments');
@@ -93,21 +96,16 @@ begin
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     RefFile:=ReadString(CfGSekt,iniTempl,'');
     EdFile:=ReadString(CfGSekt,iniTrans,'');
+    LoadHistory(IniFile,TemplSekt,edRef);
+    LoadHistory(IniFile,TransSekt,edEdit);
     Free;
     end;
-  with edRef do begin
-    LoadFromIni(IniName,TemplSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=RefFile;
-    end;
-  with edEdit do begin
-    LoadFromIni(IniName,TransSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=EdFile;
-    end;
+  AddToHistory(edRef,RefFile);
+  AddToHistory(edEdit,EdFile);
   RefList:=TPoEntryList.Create;
   EdList:=TPoEntryList.Create;
   IdList:=TStringList.Create;
@@ -118,13 +116,20 @@ procedure TfrmMain.FormShow(Sender: TObject);
 begin
   if FileExists(RefFile) then LoadRefFile else edRef.Text:='';
   if FileExists(EdFile) then LoadEditFile else edEdit.Text:='';
+  laStatus.Caption:='';
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  IniFile  : TMemIniFile;
 begin
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     WriteString(CfGSekt,iniTempl,RefFile);
     WriteString(CfGSekt,iniTrans,EdFile);
+    SaveHistory(IniFile,TemplSekt,edRef);
+    SaveHistory(IniFile,TransSekt,edEdit);
+    UpdateFile;
     Free;
     end;
   IdList.Free;
@@ -140,14 +145,14 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(ProgVersName+' - '+ProgVersDate+#13+CopRgt
+  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
            +#13'E-Mail: '+EmailAdr);
   end;
 
 procedure TfrmMain.edEditCloseUp(Sender: TObject);
 begin
   with edEdit do begin
-    EdFile:=HistoryList[ItemIndex];
+    EdFile:=Items[ItemIndex];
     LoadEditFile;
     end;
   end;
@@ -155,7 +160,7 @@ begin
 procedure TfrmMain.edRefCloseUp(Sender: TObject);
 begin
   with edRef do begin
-    RefFile:=HistoryList[ItemIndex];
+    RefFile:=Items[ItemIndex];
     LoadRefFile;
     end;
   end;
@@ -168,9 +173,9 @@ begin
     Filename:='';
     Title:=_('Select po file for comments');
     Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
-    if Execute then with edRef do begin
+    if Execute then begin
       RefFile:=FileName;
-      Text:=Filename; AddItem(Filename);
+      AddToHistory(edRef,Filename);
       Result:=true;
       end
     else Result:=false;
@@ -185,9 +190,9 @@ begin
     Filename:='';
     Title:=_('Select po file to be edited');
     Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
-    if Execute then with edEdit do begin
+    if Execute then begin
       EdFile:=Filename;
-      Text:=Filename; AddItem(Filename);
+      AddToHistory(edEdit,Filename);
       Result:=true;
       end
     else Result:=false;
@@ -216,6 +221,7 @@ begin
       ErrorDialog(Format(_('Error in line %u of file "%s"'),[ne,RefFile]));
     end
   else InfoDialog(Format(_('File not found: %s'),[RefFile]));
+  laStatus.Caption:='';
   end;
 
 function TfrmMain.LoadEditFile : boolean;
@@ -229,6 +235,7 @@ begin
       ErrorDialog(Format(_('Error in line %u of file "%s"'),[ne,EdFile]));
     end
   else InfoDialog(Format(_('File not found: %s'),[EdFile]));
+  laStatus.Caption:='';
   end;
 
 procedure TfrmMain.bbSaveClick(Sender: TObject);
@@ -236,7 +243,7 @@ var
   pr,pe  : TPoEntry;
   sn,s   : string;
   ok     : boolean;
-  i      : integer;
+  i,n    : integer;
 
   function Convert (msg : string) : string;
   var
@@ -261,11 +268,13 @@ begin
         pr:=RefList.FindEntry(s);
         if pr<>nil then begin
           pe.UserCommentList.Text:=Convert(pr.MsgStr);
+          inc(n);
           end;
         end;
       pe:=FindNext(pe);
       end;
     end;
+  laStatus.Caption:=Format(_('%u comments inserted'),[n]);
   sn:=EdFile+'.tmp';
   EdList.SaveToFile(sn,true);
   s:=EdFile+'.bak';

@@ -84,8 +84,9 @@ implementation
 
 {$R *.dfm}
 
-uses System.IniFiles, Winapi.ShlObj, System.StrUtils, gnugettext, ggtutils, WinUtils,
-  LangUtils, InitProg, WinApiUtils, WinShell, PathUtils, NumberUtils, MsgDialogs;
+uses System.IniFiles, Winapi.ShlObj, System.StrUtils, gnugettext, ggtutils,
+  WinUtils, ListUtils, LangUtils, InitProg, WinApiUtils, WinShell, PathUtils,
+  NumberUtils, MsgDialogs;
 
 { ------------------------------------------------------------------- }
 const
@@ -184,7 +185,7 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(ProgVersName+' - '+ProgVersDate+#13+CopRgt
+  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
            +#13'E-Mail: '+EmailAdr);
   end;
 
