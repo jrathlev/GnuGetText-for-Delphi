@@ -19,6 +19,7 @@
      /out:<UnitName>  - Use this unit name
 
    J. Rathlev, November 2023
+   last modified: April 2024
    *)
 
 unit IssToPasMain;
@@ -27,19 +28,16 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, HListBox,
-  Vcl.ComCtrls, Vcl.ExtCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ComCtrls, Vcl.ExtCtrls;
 
 const
   Vers = ' - Vers. 3.1';
 
 type
   TfrmMain = class(TForm)
-    edIssFile: THistoryCombo;
     Label2: TLabel;
     bbIssFile: TBitBtn;
     Label1: TLabel;
-    edLanguage: THistoryCombo;
     bbSave: TBitBtn;
     bbInfo: TBitBtn;
     bbExit: TBitBtn;
@@ -49,6 +47,8 @@ type
     edOutName: TLabeledEdit;
     bbCopyName: TBitBtn;
     btnHelp: TBitBtn;
+    edIssFile: TComboBox;
+    edLanguage: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure bbExitClick(Sender: TObject);
     procedure bbInfoClick(Sender: TObject);
@@ -58,6 +58,7 @@ type
     procedure edLanguageCloseUp(Sender: TObject);
     procedure bbCopyNameClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
+    procedure bbIssFileClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -79,14 +80,14 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, Winapi.ShlObj, System.StrUtils, gnugettext, ggtconsts, ggtutils,
-  WinUtils, LangUtils, InitProg, WinApiUtils, PathUtils, NumberUtils, MsgDialogs;
+  WinUtils, ListUtils, LangUtils, InitProg, WinApiUtils, PathUtils, NumberUtils, MsgDialogs;
 
 const
   CuMsg = 'CustomMessages';
   IssExt = 'iss';
   PasExt = '.pas';
   UnitHeader = 'unit %s;'+sLineBreak+sLineBreak+
-               'interface'+sLineBreak+'resourcestring'+sLineBreak;
+               'interface'+sLineBreak+sLineBreak+'resourcestring';
   UnitTrailer = sLineBreak+'implementation'+sLineBreak+'end.';
 
 { ------------------------------------------------------------------- }
@@ -101,6 +102,7 @@ const
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
+  IniFile  : TMemIniFile;
   sn : string;
   i  : integer;
 begin
@@ -110,11 +112,14 @@ begin
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     Top:=ReadInteger(CfGSekt,iniTop,Top);
     Left:=ReadInteger(CfGSekt,iniLeft,Left);
     IssName:=ReadString(CfGSekt,iniLast,'');
     LangId:=ReadString(CfGSekt,îniLang,'en');
+    LoadHistory(IniFile,IssSekt,edIssFile);
+    LoadHistory(IniFile,LangSekt,edLanguage);
     Free;
     end;
   PasName:='';
@@ -130,16 +135,8 @@ begin
       end;
     end;
   if length(Pasname)=0 then Pasname:=ChangeFileExt(ExtractFilename(IssName),PasExt);
-  with edIssFile do begin
-    LoadFromIni(IniName,IssSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=IssName;
-    end;
-  with edLanguage do begin
-    LoadFromIni(IniName,LangSekt);
-    if Items.Count=0 then Style:=csSimple else Style:=csDropDown;
-    Text:=LangId;
-    end;
+  AddToHistory(edIssFile,IssName);
+  AddToHistory(edLanguage,LangId);
   edOutName.Text:=PasName;
   end;
 
@@ -151,24 +148,31 @@ begin
 function TfrmMain.SelectIss : boolean;
 begin
   with OpenDialog do begin
-    InitialDir:=GetCurrentDir;
+    if length(IssName)>0 then InitialDir:=GetExistingParentPath(IssName,UserPath)
+    else InitialDir:=UserPath;
     Filename:='';
     DefaultExt:=IssExt;
     Title:=_('Select iss file');
     Filter:=Format(_('iss files|*.%s|all|*.*'),[IssExt]);
     Result:=Execute;
-    if Result then issName:=Filename;
+    if Result then begin
+      IssName:=Filename;
+      AddToHistory(edIssFile,IssName);
+      end;
     end;
-  if Result then edIssFile.Text:=IssName;
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  IniFile  : TMemIniFile;
 begin
-  with TIniFile.Create(IniName) do begin
+  IniFile:=TMemIniFile.Create(IniName);
+  with IniFile do begin
     WriteInteger(CfGSekt,iniTop,Top);
     WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniLast,IssName);
     WriteString(CfGSekt,îniLang,LangId);
+    UpdateFile;
     Free;
     end;
   try HtmlHelp(0,nil,HH_CLOSE_ALL,0); except end;
@@ -180,8 +184,10 @@ var
   nl,vl    : TStringList;
   i        : integer;
 begin
+  PasName:=edOutName.Text;
   nl:=TStringList.Create; vl:=TStringList.Create;
-  with TIniFile.Create(issName) do begin
+  LangId:=edLanguage.Text;
+  with TMemIniFile.Create(issName) do begin
     ReadSection(CuMsg,nl);
     with nl do for i:=0 to Count-1 do begin
       sn:=Strings[i];
@@ -201,7 +207,8 @@ begin
     sn:=ExtractFilePath(issName)+PasName;
     sn:=ChangeFileExt(sn,PasExt);
     SaveToFile(sn);
-    StatusBar.SimpleText:=Format(_('%u strings written to "%s"'),[Count,sn]);    end
+    StatusBar.SimpleText:=Format(_('%u strings written to "%s"'),[Count,sn]);
+    end
   else StatusBar.SimpleText:=Format(_('No messages found for ID: "%s"'),[LangId]);
   vl.Free;
   end;
@@ -232,8 +239,13 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(ProgVersName+' - '+ProgVersDate+#13+CopRgt
+  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
            +#13'E-Mail: '+EmailAdr);
+  end;
+
+procedure TfrmMain.bbIssFileClick(Sender: TObject);
+begin
+  SelectIss;
   end;
 
 end.

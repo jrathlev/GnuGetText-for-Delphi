@@ -52,15 +52,6 @@ object frmMain: TfrmMain
     ParentFont = False
     WordWrap = True
   end
-  object edIssFile: THistoryCombo
-    Left = 10
-    Top = 55
-    Width = 461
-    Height = 21
-    Anchors = [akLeft, akTop, akRight]
-    TabOrder = 0
-    MaxItems = 15
-  end
   object bbIssFile: TBitBtn
     Left = 475
     Top = 53
@@ -123,15 +114,7 @@ object frmMain: TfrmMain
     ParentShowHint = False
     ShowHint = True
     TabOrder = 1
-  end
-  object edLanguage: THistoryCombo
-    Left = 10
-    Top = 100
-    Width = 51
-    Height = 21
-    TabOrder = 2
-    OnCloseUp = edLanguageCloseUp
-    MaxItems = 15
+    OnClick = bbIssFileClick
   end
   object bbSave: TBitBtn
     Left = 155
@@ -577,6 +560,22 @@ object frmMain: TfrmMain
     NumGlyphs = 2
     TabOrder = 9
     OnClick = btnHelpClick
+  end
+  object edIssFile: TComboBox
+    Left = 10
+    Top = 55
+    Width = 461
+    Height = 21
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 0
+  end
+  object edLanguage: TComboBox
+    Left = 10
+    Top = 100
+    Width = 51
+    Height = 21
+    TabOrder = 2
+    OnCloseUp = edLanguageCloseUp
   end
   object OpenDialog: TOpenDialog
     Left = 285
