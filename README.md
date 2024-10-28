@@ -18,7 +18,7 @@ _new features:_ enhanced command line options
   in Delphi and C++ Builder applications 
 
 #### Windows GUI programs:
-- **GgtTranslate**: GUI for translations
+- **GgtTranslate**: GUI to manage translations
 - **PoCompare:** Compare and merge two translations
 - **PoFromPas:** Insert strings from Delphi units (resourcestring) to po file (msgstr) 
 - **TransUnit:** Create translated Delphi unit using strings from po file
