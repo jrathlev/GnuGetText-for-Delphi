@@ -385,6 +385,9 @@ type
     Dependencies : TDependencies;
     end;
 
+  TVersion = record
+    Major,Minor,Release,Build : integer;
+    end;
 
 //{$EXTERNALSYM GetTickCount64}
 //function GetTickCount64: ULONGLONG; stdcall;
@@ -479,6 +482,7 @@ function QueryShutDownReason (fHandle: hWnd; var Reason : string) : boolean;
 (*  Get Version Info from File *)
 function GetFileVersion (const Filename : string; var FileVersionInfo : TFileVersionInfo) : boolean;
 function GetFileVersionString (const Filename : string; var Version : string) : boolean;
+function GetFileVersionAsNumber (const Filename : string; var Version : TVersion) : boolean;
 function GetFileVersionName (const Filename,DefName,DefVers : string): string;
 function GetFileVersionRelease (const Filename,defVers : string) : string;
 function GetFileVersionCopyright (const Filename,defCopyright : string) : string;
@@ -1017,6 +1021,41 @@ begin
       Result:=true;
       end;
     end;
+  end;
+
+function GetFileVersionAsNumber (const Filename : string; var Version : TVersion) : boolean;
+var
+  s : string;
+  val : integer;
+
+  function ReadNxtInt (var s : String;
+                       var n : integer) : boolean;
+  var
+    i : integer;
+  begin
+    i:=pos ('.',s);
+    if i=0 then i:=succ(length(s));
+    Result:=TryStrToInt(copy(s,1,pred(i)),n);
+    delete(s,1,i);
+    end;
+
+begin
+  with Version do begin
+    Major:=0; Minor:=0; Release:=0; Build:=0; ;
+    end;
+  Result:=GetFileVersionString(Filename,s);
+  if Result then with Version do begin
+    if ReadNxtInt(s,val) then begin
+      Major:=val;
+      if ReadNxtInt(s,val) then begin
+        Minor:=val;
+        if ReadNxtInt(s,val) then begin
+          Release:=val;
+          if ReadNxtInt(s,val) then Build:=val;
+          end;
+        end;
+      end;
+    end
   end;
 
 function GetFileVersionName (const Filename,DefName,DefVers : string) : string;

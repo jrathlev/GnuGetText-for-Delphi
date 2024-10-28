@@ -74,7 +74,7 @@ implementation
 
 {$R *.DFM}
 
-uses CharTableDlg, System.IniFiles, GnuGetText, WinUtils
+uses CharTableDlg, System.IniFiles, GnuGetText, WinUtils, ListUtils
   {$IFDEF ACCESSIBLE}, ShowMessageDlg{$ENDIF};
 
 { ------------------------------------------------------------------- }

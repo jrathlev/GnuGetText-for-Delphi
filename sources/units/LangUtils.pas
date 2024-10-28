@@ -168,7 +168,7 @@ implementation
 
 uses
   Winapi.Windows, Vcl.Forms, Winapi.ShlObj, System.IniFiles, System.StrUtils,
-  System.IOUtils, GnuGetText, UnitConsts, StringUtils, WinShell, InitProg, Placeholders;
+  System.IOUtils, GnuGetText, UnitConsts, StringUtils, InitProg;
 
 { ------------------------------------------------------------------- }
 (* Name enthält vollständigen Pfad *)
@@ -459,6 +459,29 @@ var
   s,si  : string;
   j     : integer;
   ok,po : boolean;
+
+  // replace environment variable
+  function ReplacePathPlaceHolder (const ps : string) : string;
+  var
+    n,k : integer;
+    se,sv : string;
+  begin
+    Result:=ps;
+    n:=1;
+    repeat
+      n:=PosEx('%',ps,n);
+      if n>0 then begin
+        k:=PosEx('%',ps,n+1);
+        if k>0 then begin
+          sv:=copy(ps,n+1,k-n-1);
+          se:=GetEnvironmentVariable(sv);
+          Result:=AnsiReplaceText(Result,'%'+sv+'%',se);
+          n:=k+1;
+          end;
+        end;
+      until n=0;
+    end;
+
 begin
   ok:=false; po:=false; si:=''; Result:='';
   for j:=1 to ParamCount do if not ok then begin   // prüfe Befehlszeile
