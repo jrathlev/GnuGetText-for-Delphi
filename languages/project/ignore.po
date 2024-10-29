@@ -1,8 +1,8 @@
 #  Doesn't have any letters
 #. frmMain.pmFileList.N21.Caption
-#: PoCompMain.dfm:1972
+#: PoCompMain.dfm:2064
 #. frmTransMain.pmDirectorytList.N21.Caption
-#: TransMain.dfm:3366
+#: TransMain.dfm:3525
 msgid "-"
 msgstr ""
 
@@ -24,7 +24,7 @@ msgstr ""
 #. frmTransMain.paTop.pcOptions.tsLang.lbLang.Font.Name
 #: TransMain.dfm:648
 #. frmTransMain.pnStatus.meProgress.Font.Name
-#: TransMain.dfm:1509
+#: TransMain.dfm:1668
 msgid "Courier New"
 msgstr ""
 
@@ -39,7 +39,7 @@ msgstr ""
 #. frmMain.rgEncoding.Items.Strings
 #: PoFromPasMain.dfm:496
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1433
+#: TransMain.dfm:1429
 msgid "ISO-8859-1"
 msgstr ""
 
@@ -80,6 +80,8 @@ msgstr ""
 #. frmMain.Font.Name
 #: PoFromPasMain.dfm:10
 #. frmMain.Font.Name
+#: PoImportMain.dfm:12
+#. frmMain.Font.Name
 #: PoInsComMain.dfm:10
 #. frmMain.Font.Name
 #: PoInsMain.dfm:11
@@ -109,6 +111,10 @@ msgstr ""
 #: PoTransMain.dfm:11
 #. frmTransMain.Font.Name
 #: TransMain.dfm:11
+#. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.laMergeLanguage.Font.Name
+#: TransMain.dfm:1462
+#. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.laSaveLanguage.Font.Name
+#: TransMain.dfm:1551
 msgid "Tahoma"
 msgstr ""
 
@@ -118,7 +124,7 @@ msgstr ""
 #. frmMain.rgEncoding.Items.Strings
 #: PoFromPasMain.dfm:497
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1434
+#: TransMain.dfm:1430
 msgid "UTF-8"
 msgstr ""
 
@@ -131,6 +137,10 @@ msgid "frmMain"
 msgstr ""
 
 #  Seems like unrenamed label placeholder
+#. frmMain.laStatus.Caption
+#: PoImportMain.dfm:170
+#. frmMain.laStatus.Caption
+#: PoInsComMain.dfm:40
 #. PoStatDialog.laPoFile.Caption
 #: PoStatDlg.dfm:35
 #. PoStatDialog.gbStat.laEntries.Caption
@@ -153,6 +163,10 @@ msgstr ""
 #: PoStatMain.dfm:289
 #. frmMain.gbStat.laNumChars.Caption
 #: PoStatMain.dfm:296
+#. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.laMergeLanguage.Caption
+#: TransMain.dfm:1458
+#. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.laSaveLanguage.Caption
+#: TransMain.dfm:1547
 msgid "xxx"
 msgstr ""
 
