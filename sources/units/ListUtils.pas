@@ -41,12 +41,6 @@ procedure LoadHistory (IniFile : TCustomIniFile; const Section,Ident : string;
                        History : TStrings; CvQuote : boolean = false); overload;
 procedure LoadHistory (IniFile : TCustomIniFile; const Section : string;
                        History : TStrings; CvQuote : boolean = false); overload;
-procedure LoadHistory (const IniName,Section,Ident : string;
-                       History : TStrings; MaxCount : integer; CvQuote : boolean = false); overload;
-procedure LoadHistory (const IniName,Section,Ident : string;
-                       History : TStrings; CvQuote : boolean = false); overload;
-procedure LoadHistory (const IniName,Section : string;
-                       Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
 procedure LoadHistory (IniFile : TCustomIniFile; const Section : string;
                        Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
 procedure LoadHistory (IniFile : TCustomIniFile; const Section,Ident : string;
@@ -54,6 +48,12 @@ procedure LoadHistory (IniFile : TCustomIniFile; const Section,Ident : string;
 procedure LoadHistoryList (IniFile : TCustomIniFile; const Section : string;
                        Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
 procedure LoadHistoryList (IniFile : TCustomIniFile; const Section,Ident : string;
+                       Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
+procedure LoadHistory (const IniName,Section,Ident : string;
+                       History : TStrings; MaxCount : integer; CvQuote : boolean = false); overload;
+procedure LoadHistory (const IniName,Section,Ident : string;
+                       History : TStrings; CvQuote : boolean = false); overload;
+procedure LoadHistory (const IniName,Section : string;
                        Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
 
 procedure SaveHistory (IniFile : TCustomIniFile; const Section,Ident : string;
@@ -64,14 +64,16 @@ procedure SaveHistory (IniFile : TCustomIniFile; const Section : string;
                        Erase : boolean; History : TStrings; CvQuote : boolean = false); overload;
 procedure SaveHistory (IniFile : TCustomIniFile; const Section : string;
                        History : TStrings; CvQuote : boolean = false); overload;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section : string; Erase : boolean;
+                       Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section : string;
+                       Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
+procedure SaveHistory (IniFile : TCustomIniFile; const Section,Ident : string; Erase : boolean;
+                       Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
 procedure SaveHistory (const IniName,Section,Ident : string;
                        Erase : boolean; History : TStrings; MaxCount : integer; CvQuote : boolean = false); overload;
 procedure SaveHistory (const IniName,Section,Ident : string;
                        Erase : boolean; History : TStrings; CvQuote : boolean = false); overload;
-procedure SaveHistory (IniFile : TCustomIniFile; const Section : string; Erase : boolean;
-                       Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
-procedure SaveHistory (IniFile : TCustomIniFile; const Section,Ident : string; Erase : boolean;
-                       Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
 procedure SaveHistory (const IniName,Section : string; Erase : boolean;
                        Combo : TComboBox; MaxHist : integer = -1; CvQuote : boolean = false); overload;
 
@@ -107,6 +109,7 @@ function GetSelectedItem (ListBox : TListBox) : string;
 function GetIndexOfName (AList : TStrings; const AName : string) : integer;
 function GetName (AList : TStrings; AIndex : integer) : string;
 function GetValue (AList : TStrings; AIndex : integer) : string;
+procedure TrimEndOfList (AList : TStrings);
 
 { ---------------------------------------------------------------- }
 // Listview-Index aus Caption ermitteln (wie IndexOf bei TListBox)
@@ -540,6 +543,15 @@ begin
     else Result:='';
     end
   else Result:='';
+  end;
+
+procedure TrimEndOfList (AList : TStrings);
+var
+  i : integer;
+begin
+  with AList do for i:=Count-1 downto 0 do begin
+    if AList[i].IsEmpty then Delete(i) else Break;
+    end;
   end;
 
 //-----------------------------------------------------------------------------

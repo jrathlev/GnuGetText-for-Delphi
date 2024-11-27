@@ -18,7 +18,7 @@ unit xgettext;
 //   https://mlocati.github.io/articles/gettext-iconv-windows.html
 //   removed: ExtractFromEXE, linux sections, casesentive lists
 //   added: Load list with left most characters of possible unrenamed objects (IgnoreObjects.txt)
-// last modified: August 2023
+// last modified: November 2024
 
 interface
 
@@ -1764,36 +1764,37 @@ var
   sf : string;
 begin
   Result:=True;
+  sf:=Trim(aFilename);
   if length(sf)>0 then begin
     if length(BaseDirectory)>0 then begin
       wildcardfilecount:=0;
       // if a wildcard is used, add all possible Delphi- or Kylix-files to the list
       if RightStr(sf,2) = '.*' then begin
         sf:=Copy(sf, 1, Length(sf) -2);
-        if AddFormFile(sf + '.dpr') then
+        if AddFormFile(sf+ '.dpr') then
           inc(wildcardfilecount);
-        if AddFormFile(sf + '.pas') then
+        if AddFormFile(sf+ '.pas') then
           inc(wildcardfilecount);
-        if AddFormFile(sf + '.dfm') then
+        if AddFormFile(sf+ '.dfm') then
           inc(wildcardfilecount);
-        if AddFormFile(sf + '.xfm') then
+        if AddFormFile(sf+ '.xfm') then
           inc(wildcardfilecount);
-        if AddFormFile(sf + '.inc') then
+        if AddFormFile(sf+ '.inc') then
           inc(wildcardfilecount);
-        if AddFormFile(sf + '.rc') then
+        if AddFormFile(sf+ '.rc') then
           inc(wildcardfilecount);
         if wildcardfilecount = 0 then begin
           Result:=False;
           FLastErrorMsg:=Format(_('No file found for "%s.*"'), [sf]);
           end;
-        Exit;
-        end;
-
-      sf:=GetFullInternalPath(sf);
-      if FileExists(sf) then FFiles.Add(sf)
+        end
       else begin
-        Result:=False;
-        FLastErrorMsg:=Format(_('File %s doesn''t exist'), [sf]);
+        sf:=GetFullInternalPath(sf);
+        if FileExists(sf) then FFiles.Add(sf)
+        else begin
+          Result:=False;
+          FLastErrorMsg:=Format(_('File %s doesn''t exist'), [sf]);
+          end;
         end;
       end;
     end;

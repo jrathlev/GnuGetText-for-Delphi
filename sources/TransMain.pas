@@ -25,7 +25,7 @@
    Vers. 3.2   - August 2024:  external loadable language list
                                language selections are saved by shortcuts instead of index
    Vers. 3.3   - October 2024: optional merging of AutoComments and HistComments
-                               optional merging with similat msgids
+                               optional merging with similar msgids
 
    last modified: October 2024
    *)
