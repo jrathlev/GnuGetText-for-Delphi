@@ -859,7 +859,7 @@ begin
           if not excludeclass then begin
             excludeinstance:=Excludes.ExcludeFormInstance(sourcefilename, instancenames[indent]);
             if not excludeinstance then begin
-              for i:=indent downto 0 do if Excludes.ExcludeFormInstance(sourcefilename, instancenames[i]) then begin
+              for i:=indent-1 downto 0 do if Excludes.ExcludeFormInstance(sourcefilename, instancenames[i]) then begin
                 excludeinstance:=true;
                 break;
                 end;
@@ -1885,7 +1885,7 @@ begin
   for i:=0 to FFormClasses.Count-1 do begin
     s:=FFormClasses[i];
     if RightStr(s,1)='*' then s:=LeftStr(s, Length(s)-1);
-    if s=sc then begin
+    if AnsiStartsText(s,sc) then begin
       Result:=true;
       exit;
       end;
@@ -1924,7 +1924,6 @@ begin
   p:=0;
   for i:=0 to FFormInstances.Count-1 do begin
     if AnsiEndsText(si,FFormInstances[i]) then p:=Length(si)-1
-//    if AnsiSameText(AnsiRightStr(FFormInstances[i],Length(si)),si) then p:=Length(si)-1
     else continue;
     if p>0 then begin
       filenamepart:=AnsiLeftStr(FFormInstances[i],Length(FFormInstances[i])-p-2);
