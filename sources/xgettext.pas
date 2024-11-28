@@ -1923,7 +1923,7 @@ begin
   if (length(si)=0) or (length(sf)=0) or (FFormInstances.Count=0) then Exit;
   p:=0;
   for i:=0 to FFormInstances.Count-1 do begin
-    if AnsiEndsText(FFormInstances[i],si) then p:=Length(si)-1
+    if AnsiEndsText(si,FFormInstances[i]) then p:=Length(si)-1
 //    if AnsiSameText(AnsiRightStr(FFormInstances[i],Length(si)),si) then p:=Length(si)-1
     else continue;
     if p>0 then begin
