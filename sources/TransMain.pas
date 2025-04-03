@@ -135,6 +135,7 @@ type
     gbSaveLanguage: TGroupBox;
     laSaveLanguage: TLabel;
     sbSetAllBu: TSpeedButton;
+    bbImport: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -181,6 +182,7 @@ type
     procedure btUpdateClick(Sender: TObject);
     procedure MergeOptionClick(Sender: TObject);
     procedure sbSetAllBuClick(Sender: TObject);
+    procedure bbImportClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -738,6 +740,43 @@ begin
   with lbLang do begin
     ClearSelection;
     Selected[Items.AddObject(cbLanguage.Text,pointer(cbLanguage.ItemIndex))]:=true;
+    end;
+  end;
+
+procedure TfrmTransMain.bbImportClick(Sender: TObject);
+var
+   sx,sl,s : string;
+   ok : boolean;
+   nl,i,n : integer;
+begin
+  sx:=ExtractParentPath(cbProjDir.Text); sl:=sx;
+  repeat
+    ok:=ShellDirDialog.Execute(_('Select project directory for the import'),
+          false,true,false,sl,sx);
+    if ok then begin
+      s:=AddPath(sx,DxGetTextIni);
+      ok:=FileExists(s);
+      if not ok then ErrorDialog(Format(_('File not found: "%s"'),[s]));
+      end
+    else Break;
+    until ok;
+  if ok then with TMemIniFile.Create(s) do begin
+    lbLang.Clear;
+    nl:=ReadInteger(trSect,iniLangCnt,0);
+    for i:=0 to nl-1 do begin
+      s:=ReadString(trSect,iniLang+IntToStr(i),'');
+      if length(s)>0 then begin
+        sl:=ReadNxtStr(s,',','');
+        if length(sl)>0 then begin
+          n:=GetIndexOfName(cbLanguage.Items,sl);
+          if n>0 then lbLang.AddItem(cbLanguage.Items[n],pointer(n+AutoComm*ReadNxtInt(s,',',4)));
+          end;
+        end;
+      end;
+    if lbLang.Count=0 then lbLang.AddItem(defLang,pointer(GetIndexOfName(cbLanguage.Items,defLang)));
+    Free;
+    lbLang.Selected[0]:=true;
+    ShowLangOptions;
     end;
   end;
 
