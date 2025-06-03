@@ -302,6 +302,7 @@ var
   s : string;
   id : TPoHeaderIds;
 begin
+  for id:=Low(TPoHeaderIds) to High(TPoHeaderIds) do FHeaderItems[id]:='';
   repeat
     s:=ReadNxtStr(hs);
     for id:=Low(TPoHeaderIds) to High(TPoHeaderIds) do begin

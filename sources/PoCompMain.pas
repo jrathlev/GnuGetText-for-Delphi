@@ -59,7 +59,7 @@ type
     laEntry: TLabel;
     bbCopyId: TBitBtn;
     bbSave: TBitBtn;
-    Label2: TLabel;
+    laEditFile: TLabel;
     Label5: TLabel;
     OpenDialog: TOpenDialog;
     bbCopyAll: TBitBtn;
@@ -82,6 +82,7 @@ type
     N21: TMenuItem;
     pmiCancel: TMenuItem;
     bbCopyAndNext: TBitBtn;
+    bbHeader: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure bbExitClick(Sender: TObject);
     procedure bbInfoClick(Sender: TObject);
@@ -114,6 +115,7 @@ type
     procedure pmiEditClick(Sender: TObject);
     procedure pmiClearClick(Sender: TObject);
     procedure bbCopyAndNextClick(Sender: TObject);
+    procedure bbHeaderClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -121,7 +123,7 @@ type
     AppPath,UserPath,
     IniName,ProgPath,
     EditFile,CompFile,
-    LastMsg            : string;
+    LastMsg,LastPrj    : string;
     RefList,EdList     : TPoEntryList;
     PeRef              : TPoEntry;
     IdList             : TStringList;
@@ -151,7 +153,8 @@ implementation
 
 uses System.IniFiles, Winapi.ShellApi, Winapi.ShlObj, System.StrUtils,
   WinUtils, ListUtils, MsgDialogs, LangUtils, InitProg, WinApiUtils, WinShell,
-  gnugettext, PathUtils, EditStringListDlg, GgtConsts, GgtUtils, EditHistListDlg;
+  gnugettext, PathUtils, EditStringListDlg, GgtConsts, GgtUtils, EditHistListDlg,
+  TextDlg;
 
 { ------------------------------------------------------------------- }
 constructor TText.Create (const AText : string);
@@ -170,6 +173,7 @@ const
   iniCount = 'FileCount';
   iniFilename = 'FileName';
   iniComp = 'CompareName';
+  iniPrj = 'Project';
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
@@ -190,6 +194,7 @@ begin
     Left:=ReadInteger(CfGSekt,iniLeft,Left);
     EditFile:=ReadString(CfGSekt,iniLast,'');
     ElWidth:=ReadInteger(CfgSekt,iniWidth,0);
+    LastPrj:=ReadString(CfgSekt,iniPrj,'');
     n:=ReadInteger(FileSekt,iniCount,0);
     for i:=0 to n-1 do begin
       s:=ReadString(FileSekt,iniFilename+IntToStr(i),'');
@@ -254,6 +259,7 @@ begin
     WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniLast,EditFile);
     WriteInteger(CfgSekt,iniWidth,EditStringListDialog.Width);
+    WriteString(CfgSekt,iniPrj,LastPrj);
     EraseSection(FileSekt);
     with cbEdit.Items do begin
       WriteInteger(FileSekt,iniCount,Count);
@@ -481,6 +487,25 @@ begin
   ShowEntry(IdIndex);
   end;
 
+procedure TfrmMain.bbHeaderClick(Sender: TObject);
+var
+  sn : string;
+begin
+  sn:=ExtractLastDir(ExtractFilePath(cbEdit.Text));   // language shortcut
+  if TextDialog(BottomRightPos(bbHeader),
+      Format(_('%s - Language: %s'),[ExtractFileName(cbEdit.Text),AnsiUpperCase(sn)]),
+      'Project-ID:',LastPrj) then begin
+    with RefList do begin
+      Header[hiProjectId]:=LastPrj;
+      Header[hiRevisionDate]:=CurrentTimestamp;
+      Header[hiLastTranslator]:=EdList.Header[hiLastTranslator];
+      Header[hiLanguageTeam]:=EdList.Header[hiLanguageTeam];
+      Header[hiLanguage]:=EdList.Header[hiLanguage];
+      end;
+    bbSave.Enabled:=true; Changed:=true;
+    end;
+  end;
+
 procedure TfrmMain.bbLastClick(Sender: TObject);
 begin
   IdIndex:=IdList.Count-1;
@@ -677,6 +702,10 @@ begin
     Result:=true;
   except
     laEntry.Caption:=_('Error reading po files!');
+    end;
+  with laEditFile do begin
+    Caption:=_('po file to be edited:');
+    if Result then Caption:=Caption+' ('+Format(_('%u strings'),[RefList.TotalEntries])+')';
     end;
   end;
 
