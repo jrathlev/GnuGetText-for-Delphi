@@ -31,8 +31,8 @@ _new features:_ enhanced command line options
 
 [Download of Windows executable package](https://www.rathlev-home.de/tools/download/ggt-translate-setup.exe)
 
-[English homepage](https://www.rathlev-home.de/?tools/prog-e.html#gettext) / 
-[German homepage](https://www.rathlev-home.de/?tools/progtools.html#language)
+[English homepage](https://www.rathlev-home.de/index-e.html?tools/prog-e.html#gettext) / 
+[German homepage](https://www.rathlev-home.de/tools/progtools.html#language)
 
 #### Notes:
 The following programs from the **GnuGetText** package are required
