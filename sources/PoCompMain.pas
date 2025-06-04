@@ -153,8 +153,8 @@ implementation
 
 uses System.IniFiles, Winapi.ShellApi, Winapi.ShlObj, System.StrUtils,
   WinUtils, ListUtils, MsgDialogs, LangUtils, InitProg, WinApiUtils, WinShell,
-  gnugettext, PathUtils, EditStringListDlg, GgtConsts, GgtUtils, EditHistListDlg,
-  TextDlg;
+  gnugettext, StringUtils, PathUtils, EditStringListDlg, GgtConsts, GgtUtils,
+  EditHistListDlg, TextDlg;
 
 { ------------------------------------------------------------------- }
 constructor TText.Create (const AText : string);
@@ -179,20 +179,20 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 var
   IniFile  : TMemIniFile;
   i,n : integer;
-  s,t : string;
+  s,t,se : string;
 begin
   TranslateComponent (self);
   Application.Title:=_('Compare and merge translations in two po files');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
-  CompFile:='';
+  CompFile:=''; EditFile:='';
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
     Top:=ReadInteger(CfGSekt,iniTop,Top);
     Left:=ReadInteger(CfGSekt,iniLeft,Left);
-    EditFile:=ReadString(CfGSekt,iniLast,'');
+    se:=ReadString(CfGSekt,iniLast,'');
     ElWidth:=ReadInteger(CfgSekt,iniWidth,0);
     LastPrj:=ReadString(CfgSekt,iniPrj,'');
     n:=ReadInteger(FileSekt,iniCount,0);
@@ -206,10 +206,11 @@ begin
     LoadHistory(IniFile,CompSekt,cbComp);
     Free;
     end;
-  if ParamCount>0 then begin
-    EditFile:=ParamStr(1);
-    if ParamCount>1 then CompFile:=ParamStr(2);
+  if ParamCount>0 then for i:=1 to ParamCount do if not IsOption(ParamStr(i)) then begin
+    if EditFile.IsEmpty then EditFile:=ParamStr(i);
+    if not EditFile.IsEmpty and CompFile.IsEmpty then CompFile:=ParamStr(i);
     end;
+  if EditFile.IsEmpty then EditFile:=se;
   with cbEdit do begin
     if Items.Count>0 then ItemIndex:=0;
     if Items.Count<=1 then Style:=csSimple else Style:=csDropDown;

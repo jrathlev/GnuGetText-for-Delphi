@@ -160,14 +160,16 @@ const
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
   IniFile  : TMemIniFile;
+  i : integer;
 begin
   TranslateComponent (self);
   Application.Title:=_('Spell checking of po translations');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
-  Caption:=ProgVersName;
-  if ParamCount>0 then PoFile:=ExpandFileName(ParamStr(1))
-  else PoFile:='';
+  Caption:=ProgVersName; PoFile:='';
+  if ParamCount>0 then for i:=1 to ParamCount do if not IsOption(ParamStr(i)) then begin
+    if PoFile.IsEmpty then PoFile:=ExpandFileName(ParamStr(i));
+    end;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
@@ -519,8 +521,7 @@ begin
       ErrorDialog(BottomLeftPos(bbTranslation),_('No misspelled words found!'));
     end
   else begin
-    meTrans.Text:='';
-    edWord.Text:='';
+    meTrans.Text:=''; edWord.Text:=''; Result:=false;
     end;
   btAdd.Enabled:=ValidPoList and Result;
   btReplace.Enabled:=btAdd.Enabled;

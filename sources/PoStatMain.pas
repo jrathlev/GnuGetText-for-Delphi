@@ -87,7 +87,7 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, System.StrUtils, Winapi.ShellApi, GnuGetText, InitProg,
-  WinUtils, ListUtils, PathUtils, MsgDialogs, GgtConsts, GgtUtils;
+  WinUtils, ListUtils, StringUtils, PathUtils, MsgDialogs, GgtConsts, GgtUtils;
 
 { ------------------------------------------------------------------- }
 const
@@ -97,15 +97,17 @@ const
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
   IniFile  : TMemIniFile;
+  i : integer;
 begin
   TranslateComponent (self);
   DragAcceptFiles(frmMain.Handle, true);
   Application.Title:=_('Statistics of po file');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
-  Caption:=ProgVersName;
-  if ParamCount>0 then PoFile:=ExpandFileName(ParamStr(1))
-  else PoFile:='';
+  Caption:=ProgVersName; PoFile:='';
+  if ParamCount>0 then for i:=1 to ParamCount do if not IsOption(ParamStr(i)) then begin
+    if PoFile.IsEmpty then PoFile:=ExpandFileName(ParamStr(i));
+    end;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
