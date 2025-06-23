@@ -155,6 +155,7 @@ var
       else if DirectoryExists(ProjectDir) then ProjectDir:=IncludeTrailingPathDelimiter(ProjectDir)
       else ProjectDir:='';
       IniName:=ProjectDir+DxGetTextIni;
+      CheckBoxRecurse.Checked:=length(ProjectFile)=0;
       CheckBoxSaveSettings.Checked:=fileexists(IniName);
       if CheckBoxSaveSettings.Checked then LoadFromIni(IniName);
       EditBasepath.Text:=ProjectDir;
