@@ -402,15 +402,16 @@ implementation
 {$endif}
 
 // Olray - June 2025
-function PathCanonicalize(lpszDst: PChar; lpszSrc: PChar): LongBool; stdcall;
-  external 'shlwapi.dll' name 'PathCanonicalizeW';
+//function PathCanonicalize(lpszDst: PChar; lpszSrc: PChar): LongBool; stdcall;
+//  external 'shlwapi.dll' name 'PathCanonicalizeW';
 
 function RelToAbs(const RelPath, BasePath: string): string;
-var
-  Dst: array[0..MAX_PATH-1] of char;
+//var
+//  Dst: array[0..MAX_PATH-1] of char;
 begin
-  PathCanonicalize(@Dst[0], PChar(IncludeTrailingPathDelimiter(BasePath) + RelPath));
-  result := Dst;
+//  PathCanonicalize(@Dst[0], PChar(IncludeTrailingPathDelimiter(BasePath) + RelPath));
+//  result := Dst;
+  Result:=BasePath+RelPath;
 end;
 
 function IsVirtualFileName(filename: string): Boolean;

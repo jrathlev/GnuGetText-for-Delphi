@@ -578,8 +578,9 @@ var
 begin
   SaveLanguage(NewLangCode);
   UseLanguage(NewLangCode);
-  with Application do for i:=0 to ComponentCount-1 do if (Components[i] is TForm) then
-    ReTranslateComponent(Components[i]);
+  with Application do for i:=0 to ComponentCount-1 do if (Components[i] is TForm) then begin
+    try ReTranslateComponent(Components[i]); except; end;
+    end;
   end;
 
 { ------------------------------------------------------------------- }
