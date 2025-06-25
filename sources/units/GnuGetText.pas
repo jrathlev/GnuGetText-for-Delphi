@@ -36,7 +36,7 @@ unit gnugettext;
 //    'locale\DE\LC_MESSAGES\default.mo'
 
 // Information about this file:
-// $LastChangedDate: 2025-06-22 $
+// $LastChangedDate: 2025-06-25 $
 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -414,7 +414,7 @@ begin
   Result:=BasePath+RelPath;
 end;
 
-function IsVirtualFileName(filename: string): Boolean;
+function IsVirtualFileName(const filename: string): Boolean;
 var
   AbsPath : string;
   i       : integer;
@@ -428,7 +428,7 @@ begin
   end;
 end;
 
-function TryGetResourceFileStream(filename: string): TStream;
+function TryGetResourceFileStream(const filename: string): TStream;
 var
   AbsPath: string;
   i       : integer;
@@ -583,7 +583,7 @@ begin
   Assert (sLinebreak=ansistring(#13#10));
   i:=1;
   while i<=length(s) do begin
-    if (s[i]=#10) and (MidStr(s,i-1,1)<>#13) then begin
+    if (s[i]=#10) and (copy(s,i-1,1)<>#13) then begin
       insert (#13,s,i);
       inc (i,2);
     end else
@@ -2671,11 +2671,12 @@ var
   fs:TFileStream;
   fi:TEmbeddedFileInfo;
   filename:AnsiString;        // change from FilenameString to AnsiString, JR - 2010-04-10
+  fn : string;
 begin
 // "ggassemble" will search for this GUI and replace the trailing #0s by a pointer
 // to the begin of the embedded mo files
   s:='6637DB2E-62E1-4A60-AC19-C23867046A89'#0#0#0#0#0#0#0#0;  // constant
-  s:=MidStr(s,length(s)-7,8);
+  s:=copy(s,length(s)-7,8);
   offset:=0;
   for i:=8 downto 1 do
     offset:=offset shl 8+ord(s[i]);
@@ -2696,12 +2697,12 @@ begin
           fi.Size:=ReadInt64(fs);
           SetLength (filename, offset-fs.position);
           fs.ReadBuffer (filename[1],offset-fs.position);
-          filename:=trim(filename);
-          if PreferExternal and System.sysutils.FileExists(basedirectory+filename) then begin
+          fn:=trim(filename);
+          if PreferExternal and System.sysutils.FileExists(basedirectory+fn) then begin
             // Disregard the internal version and use the external version instead
             FreeAndNil (fi);
           end else
-            filelist.AddObject(filename,fi);
+            filelist.AddObject(fn,fi);
         except
           FreeAndNil (fi);
           raise;
@@ -2750,7 +2751,6 @@ procedure EnumerateRCDataResourceNames;
 var
   ExecutableHandle: HMODULE;
   ResourcesList: TStringList;
-  length: Integer;
 begin
   ExecutableHandle := LoadLibraryEx(PChar(ParamStr(0)), 0, LOAD_LIBRARY_AS_DATAFILE);
   try
@@ -2772,7 +2772,7 @@ var
 //  s:ansistring;
 //  offset:int64;
   fi:TEmbeddedFileInfo;
-  filename:AnsiString;
+  filename: String;
   i       : integer;
 begin
   EnumerateRCDataResourceNames;
