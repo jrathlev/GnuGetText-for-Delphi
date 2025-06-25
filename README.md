@@ -15,7 +15,8 @@ _new features:_ enhanced command line options
 - **ggassemble:** Embed po translations into exe file  
 _new features:_ enhanced command line options 
 - **GnuGetText** and **GnuGetTextInit:** GNU gettext translation system for integration 
-  in Delphi and C++ Builder applications 
+  in Delphi and C++ Builder applications  
+_new feature:_ optional embedding as resources
 
 #### Windows GUI programs:
 - **GgtTranslate**: GUI to manage translations
@@ -28,6 +29,9 @@ _new features:_ enhanced command line options
 - **PoToIss:** Convert strings from a po file into format used in InnoSetup scripts
 - **IssToPas:** Convert [CustomMessages] section of iss file to Delphi unit (resourcestring) 
 - **German Translations** for programs and Windows context menus
+
+#### Utilitiy unit:
+- **LangUtils:** Initialization of the translations, language selection via *ini* file, command line and menu extension
 
 [Download of Windows executable package](https://www.rathlev-home.de/tools/download/ggt-translate-setup.exe)
 
