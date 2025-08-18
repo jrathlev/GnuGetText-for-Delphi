@@ -40,7 +40,7 @@
          4.4 - Feb. 2023: extensions to be used with portable devices (June 2022)
                           moved to ExtFileUtils
 
-   last modified: February 2023
+   last modified: August 2025
    *)
 
 unit FileUtils;
@@ -57,6 +57,10 @@ const
   faNoArchive = faReadOnly+faHidden+faSysfile;
   faSuperHidden = faHidden+faSysfile;  //  hidden system dirs and files
   faDirReadonly = faDirectory or faReadOnly;
+  faIndexed = $00002000;
+  faOffline = $00001000;
+  // Attributes processed by SetFileAttributes
+  faChangeable = faArchive+faHidden+faNormal+faReadOnly+faSysfile+faTemporary+faIndexed+faOffline;
 
 type
 { ------------------------------------------------------------------- }
@@ -109,7 +113,7 @@ type
     constructor CreateResFmt(ResStringRec : PResStringRec; const Args: array of const; FError : integer);
     end;
 
-   ECopyError = class(EExtFileStreamError);
+  ECopyError = class(EExtFileStreamError);
 
 { ---------------------------------------------------------------- }
 // Write opt. Debug Log
@@ -367,11 +371,10 @@ uses System.StrUtils, Winapi.PsAPI, WinApi.AccCtrl, WinApi.AclApi,
 
 { ---------------------------------------------------------------- }
 { TExtFileStream }
-
 constructor TExtFileStream.Create(const AFileName: string; Mode: Word);
 begin
   Create(AFilename, Mode, 0);
-end;
+  end;
 
 constructor TExtFileStream.Create(const AFileName: string; Mode: Word; Rights: Cardinal);
 var
@@ -403,7 +406,7 @@ destructor TExtFileStream.Destroy;
 begin
   if FHandle <> INVALID_HANDLE_VALUE then FileClose(FHandle);
   inherited Destroy;
-end;
+  end;
 
 function TExtFileStream.Read(var Buffer; Count: Longint; var ReadCount : Longint) : integer;
 begin
