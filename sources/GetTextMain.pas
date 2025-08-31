@@ -165,7 +165,7 @@ var
     with frmConfig do begin
       ok:=ShowModal=mrOK;
       if ok then begin
-        SaveToIni(length(ProjectFile)=0);
+        SaveToIni(Ininame,length(ProjectFile)=0);
         FOverwrite:=cbOverwrite.Checked;
         try
           xgt:=TXGetText.Create(Format('Delphi Get Text (%s)',[GetProgVersion]));

@@ -54,12 +54,11 @@ type
     procedure btnManualClick(Sender: TObject);
   private
     { Private declarations }
-    IniName : string;
     procedure DoMaskClick (Sender : TObject);
   public
     { Public declarations }
     procedure LoadFromIni(const AIniName : string);
-    procedure SaveToIni(SaveMask : boolean);
+    procedure SaveToIni(const AIniName : string; SaveMask : boolean);
     procedure SetDomain(const DomName : string);
   end;
 
@@ -79,8 +78,7 @@ const
 
 procedure TfrmConfig.LoadFromIni(const AIniName : string);
 begin
-  IniName:=AIniName;
-  with TMemIniFile.Create (IniName) do begin
+  with TMemIniFile.Create (AIniName) do begin
     Left:=ReadInteger(ggtSect,iniLeft,Left);       // JR
     Top:=ReadInteger(ggtSect,iniTop,Top);
     CheckBoxRecurse.Checked:=ReadBool(ggtSect,iniRecurse,false);
@@ -111,10 +109,10 @@ begin
     end;
   end;
 
-procedure TfrmConfig.SaveToIni(SaveMask : boolean);
+procedure TfrmConfig.SaveToIni(const AIniName : string; SaveMask : boolean);
 begin
-  if CheckBoxSaveSettings.Checked and (length(IniName)>0) then begin
-    with TMemIniFile.Create (IniName) do begin
+  if CheckBoxSaveSettings.Checked and (length(AIniName)>0) then begin
+    with TMemIniFile.Create (AIniName) do begin
       WriteInteger(ggtSect,iniLeft,Left);       // JR
       WriteInteger(ggtSect,iniTop,Top);
       WriteBool(ggtSect,iniRecurse,CheckBoxRecurse.Checked);
@@ -152,7 +150,6 @@ begin
   TranslateComponent (self);
   Caption:=Caption+' (ggdxgettext)';
   laVersion.Caption:='Version: '+GetProgVersion;
-  IniName:='';
   with pmMask.Items do begin
     Add(NewItem(_('Delphi files'),0,false,true,DoMaskClick,0,Format('miMask%u',[0])));
     Add(NewItem(_('Lazarus files'),0,false,true,DoMaskClick,0,Format('miMask%u',[1])));
