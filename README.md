@@ -21,7 +21,7 @@ _new feature:_ optional embedding as resources
 #### Windows GUI programs:
 - **GgtTranslate**: GUI to manage translations
 - **PoCompare:** Compare and merge two translations
-- **PoImport:** Import translations from other po file
+- **PoImport:** Import translations from another po file (only not translated strings) 
 - **PoFromPas:** Insert strings from Delphi units (resourcestring) to po file (msgstr) 
 - **TransUnit:** Create translated Delphi unit using strings from po file
 - **PoSpell:** Spell checker for translated strings (msgstr) using HunSpell

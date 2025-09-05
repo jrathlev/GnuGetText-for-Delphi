@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 0
   Anchors = [akRight, akBottom]
   Caption = 'Import translations from po file'
-  ClientHeight = 151
+  ClientHeight = 181
   ClientWidth = 461
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,7 +17,7 @@ object frmMain: TfrmMain
   OnShow = FormShow
   DesignSize = (
     461
-    151)
+    181)
   PixelsPerInch = 96
   TextHeight = 13
   object Label2: TLabel
@@ -163,10 +163,11 @@ object frmMain: TfrmMain
     ExplicitLeft = 346
   end
   object laStatus: TLabel
-    Left = 10
-    Top = 120
+    Left = 20
+    Top = 150
     Width = 18
     Height = 13
+    Anchors = [akLeft, akBottom]
     Caption = 'xxx'
   end
   object cbEdit: TComboBox
@@ -195,7 +196,7 @@ object frmMain: TfrmMain
   end
   object bbSave: TBitBtn
     Left = 290
-    Top = 115
+    Top = 145
     Width = 56
     Height = 31
     Hint = 'Import translations and save edited file'
@@ -328,10 +329,11 @@ object frmMain: TfrmMain
     ShowHint = True
     TabOrder = 2
     OnClick = bbSaveClick
+    ExplicitTop = 115
   end
   object bbInfo: TBitBtn
     Left = 390
-    Top = 115
+    Top = 145
     Width = 31
     Height = 31
     Hint = 'About the program'
@@ -419,10 +421,11 @@ object frmMain: TfrmMain
     ShowHint = True
     TabOrder = 3
     OnClick = bbInfoClick
+    ExplicitTop = 115
   end
   object bbExit: TBitBtn
     Left = 425
-    Top = 115
+    Top = 145
     Width = 31
     Height = 31
     Hint = 'Quit program'
@@ -510,10 +513,11 @@ object frmMain: TfrmMain
     ShowHint = True
     TabOrder = 4
     OnClick = bbExitClick
+    ExplicitTop = 115
   end
   object btnHelp: TBitBtn
     Left = 355
-    Top = 115
+    Top = 145
     Width = 31
     Height = 31
     Anchors = [akRight, akBottom]
@@ -598,9 +602,18 @@ object frmMain: TfrmMain
     NumGlyphs = 2
     TabOrder = 5
     OnClick = btnHelpClick
+    ExplicitTop = 115
+  end
+  object cbFuzzy: TCheckBox
+    Left = 20
+    Top = 115
+    Width = 391
+    Height = 17
+    Caption = 'Replace also entries marked as "fuzzy"'
+    TabOrder = 6
   end
   object OpenDialog: TOpenDialog
-    Left = 95
-    Top = 110
+    Left = 365
+    Top = 10
   end
 end

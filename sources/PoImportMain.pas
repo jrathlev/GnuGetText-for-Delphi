@@ -1,3 +1,20 @@
+(* Tool for GnuGetText for Delphi
+   Import all not translated items from anaothe po file
+
+   © 2024-2025 Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
+
+   The contents of this file may be used under the terms of the
+   Mozilla Public License ("MPL") or
+   GNU Lesser General Public License Version 2 or later (the "LGPL")
+
+   Software distributed under this License is distributed on an "AS IS" basis,
+   WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
+   the specific language governing rights and limitations under the License.
+
+   September 2024
+   last modified: September 2025
+   *)
+
 unit PoImportMain;
 
 interface
@@ -27,6 +44,7 @@ type
     OpenDialog: TOpenDialog;
     laStatus: TLabel;
     btnHelp: TBitBtn;
+    cbFuzzy: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbExitClick(Sender: TObject);
@@ -256,7 +274,7 @@ begin
     while (pe<>nil) do begin
       if not pe.MsgId.IsEmpty and pe.MsgStr.IsEmpty then begin
         pi:=ImportList.FindEntry(pe.MsgId);
-        if (pi<>nil) and pe.MsgStr.IsEmpty then begin
+        if (pi<>nil) and (pe.MsgStr.IsEmpty or (cbFuzzy.Checked and pe.Fuzzy)) then begin
           pe.MsgStr:=pi.MsgStr;
           inc(n);
           end;
