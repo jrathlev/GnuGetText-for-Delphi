@@ -497,8 +497,9 @@ var
   idlength,idoffset:integer;
   idplural:boolean;
 begin
-  if AnsiSameText(extractfilename(sourcefilename),'gnugettext.pas') then exit;
-  if AnsiSameText(extractfilename(sourcefilename),'gnugettextd5.pas') then exit;
+  if MatchesMask(extractfilename(sourcefilename),'gnugettext*.pas') then exit;
+//  if AnsiSameText(extractfilename(sourcefilename),'gnugettext.pas') then exit;
+//  if AnsiSameText(extractfilename(sourcefilename),'gnugettextd5.pas') then exit;
   ClearConstList;
   FileMode:=fmOpenRead;
   if CodePage>0 then AssignFile(src,sourcefilename,CodePage)
@@ -686,7 +687,7 @@ begin
     CloseFile(src);
     end;
 
-  If length (definedDomain) > 0 then
+  if length (definedDomain) > 0 then
     Warning (wtExtendedDirectiveError, _('$gnugettext: end directive is missing !'));
   end;
 

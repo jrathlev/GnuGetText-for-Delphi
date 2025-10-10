@@ -53,7 +53,7 @@ object frmGetText: TfrmGetText
     Top = 275
     Width = 81
     Height = 31
-    Anchors = [akLeft, akBottom]
+    Anchors = [akRight, akBottom]
     Cancel = True
     Caption = 'Close'
     Default = True
