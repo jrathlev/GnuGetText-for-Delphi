@@ -329,7 +329,6 @@ object frmMain: TfrmMain
     ShowHint = True
     TabOrder = 2
     OnClick = bbSaveClick
-    ExplicitTop = 115
   end
   object bbInfo: TBitBtn
     Left = 390
@@ -421,7 +420,6 @@ object frmMain: TfrmMain
     ShowHint = True
     TabOrder = 3
     OnClick = bbInfoClick
-    ExplicitTop = 115
   end
   object bbExit: TBitBtn
     Left = 425
@@ -513,7 +511,6 @@ object frmMain: TfrmMain
     ShowHint = True
     TabOrder = 4
     OnClick = bbExitClick
-    ExplicitTop = 115
   end
   object btnHelp: TBitBtn
     Left = 355
@@ -602,7 +599,6 @@ object frmMain: TfrmMain
     NumGlyphs = 2
     TabOrder = 5
     OnClick = btnHelpClick
-    ExplicitTop = 115
   end
   object cbFuzzy: TCheckBox
     Left = 20

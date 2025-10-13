@@ -58,6 +58,12 @@ type
     btnHelp: TBitBtn;
     edDir: TComboBox;
     edEdit: TComboBox;
+    sbCopy: TSpeedButton;
+    paTop: TPanel;
+    paCenter: TPanel;
+    Label1: TLabel;
+    edSources: TComboBox;
+    sbSources: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbExitClick(Sender: TObject);
@@ -70,6 +76,8 @@ type
     procedure btDirClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
+    procedure sbCopyClick(Sender: TObject);
+    procedure sbSourcesClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -81,7 +89,7 @@ type
     RsList,
     constlist          : TStringList;
     Loaded,Changed     : boolean;
-    function SelectEdit : boolean;
+    function SelectEdit (const ADir : string ='') : boolean;
     function LoadEditFile : boolean;
     procedure ExtractFromPascal(sourcefilename: string);
   public
@@ -111,6 +119,7 @@ const
   (* INI-Variables *)
   iniDir = 'Directory';
   iniTrans = 'Translation';
+  iniUtf = '';
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
@@ -128,11 +137,15 @@ begin
     Left:=ReadInteger(CfGSekt,iniLeft,Left);
     PasDir:=ReadString(CfGSekt,iniDir,'');
     EdFile:=ReadString(CfGSekt,iniTrans,'');
+    rgEncoding.ItemIndex:=ReadInteger(CfgSekt,iniCode,0);
+    cbOverwrite.Checked:=ReadBool(CfGSekt,iniOvwr,false);
     LoadHistory(IniFile,DirSekt,edDir);
+    LoadHistory(IniFile,FileSekt,edSources);
     LoadHistory(IniFile,TransSekt,edEdit);
     Free;
     end;
   AddToHistory(edDir,PasDir);
+  AddToHistory(edSources,'*.'+PasExt);
   AddToHistory(edEdit,EdFile);
   EdList:=TPoEntryList.Create;
   RsList:=TStringList.Create;  // list of resourcestrings
@@ -147,7 +160,10 @@ begin
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
   if DirectoryExists(PasDir) then edDir.Text:=PasDir else edDir.Text:='';
-  if FileExists(EdFile) then LoadEditFile else edEdit.Text:='';
+  if FileExists(EdFile) then LoadEditFile
+  else begin
+    EdFile:=''; edEdit.Text:='';
+    end;
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -160,7 +176,10 @@ begin
     WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniDir,PasDir);
     WriteString(CfGSekt,iniTrans,EdFile);
+    WriteBool(CfGSekt,iniOvwr,cbOverwrite.Checked);
+    WriteInteger(CfgSekt,iniCode,rgEncoding.ItemIndex);
     SaveHistory(IniFile,DirSekt,edDir);
+    SaveHistory(IniFile,FileSekt,edSources);
     SaveHistory(IniFile,TransSekt,edEdit);
     UpdateFile;
     Free;
@@ -187,7 +206,7 @@ var
 
   procedure ShowError (const Msg : string);
   begin
-    ErrorDialog(Msg+sLineBreak+'"'+LastLineRead+'"');
+    ErrorDialog(sourcefilename,Msg+sLineBreak+'"'+LastLineRead+'"');
     end;
 
   procedure dxreadln(var src: TextFile; var line: string);
@@ -501,6 +520,9 @@ var
   co : TConst;
   p,idx : integer;
   cp : word;
+const
+  Utf8Bom : String= #$FEFF; //#$EF#$BB#$BF;
+
 begin
   FreeListObjects(constlist);
   ConstList.Clear;
@@ -515,6 +537,7 @@ begin
     while not eof(src) do begin
       dxreadln(src, line);
       line := trim(line);
+      if line=Utf8Bom then continue;
 
       s := ConvertWhitespaceToSpaces (uppercase(line)) + ' ';
 
@@ -630,20 +653,46 @@ begin
     end;
   end;
 
-function TfrmMain.SelectEdit : boolean;
+function TfrmMain.SelectEdit(const ADir : string) : boolean;
 begin
   with OpenDialog do begin
-    if length(EdFile)>0 then InitialDir:=ExtractFilePath(EdFile)
+    if length(ADir)>0 then InitialDir:=ADir
+    else if length(EdFile)>0 then InitialDir:=ExtractFilePath(EdFile)
     else InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file to be edited');
-    Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
+    Filter:=Format(_('po files|*.%s'),[PoExt])+'|all|*.*';
+    Options:=Options-[ofAllowMultiSelect];
     if Execute then begin
       EdFile:=Filename;
       AddToHistory(edEdit,EdFile);
       Result:=true;
       end
     else Result:=false;
+    end;
+  end;
+
+procedure TfrmMain.sbSourcesClick(Sender: TObject);
+var
+  s : string;
+  i : integer;
+begin
+  with OpenDialog do begin
+    InitialDir:=edDir.Text;
+    Filename:='';
+    Title:=_('Select Pascal sources');
+    Filter:=Format(_('Pascal files|*.%s'),[PasExt])+'|all|*.*';
+    Options:=Options+[ofAllowMultiSelect];
+    if Execute then begin
+      s:=ExtractFilePath(Files.Strings[0]);
+      if s<>edDir.Text then AddToHistory(edDir,s);
+      with Files do begin
+        s:='';
+        for i:=0 to Count-1 do s:=s+ExtractFilename(Strings[i])+';';
+        end;
+      delete (s,length(s),1);
+      AddToHistory(edSources,s);
+      end;
     end;
   end;
 
@@ -668,6 +717,16 @@ begin
   if SelectEdit then LoadEditFile;
   end;
 
+procedure TfrmMain.sbCopyClick(Sender: TObject);
+begin
+  if EdFile.IsEmpty then begin
+    if not SelectEdit(PasDir) then Exit;
+    end
+  else EdFile:=ExtractFilePath(PasDir)+ExtractFileName(EdFile);
+  AddToHistory(edEdit,EdFile);
+  LoadEditFile;
+  end;
+
 function TfrmMain.LoadEditFile : boolean;
 begin
   Result:=false;
@@ -678,10 +737,10 @@ begin
 procedure TfrmMain.bbSaveClick(Sender: TObject);
 var
   pe  : TPoEntry;
-  sn,s,sdir  : string;
-  DirInfo    : TSearchRec;
-  Findresult : integer;
-  n,k        : integer;
+  sn,s,t,sdir : string;
+  DirInfo     : TSearchRec;
+  Findresult  : integer;
+  n,k         : integer;
 
   function GetProgrammerName(ucl : TstringList) : string;
   var
@@ -739,17 +798,25 @@ var
 
 begin
   sdir:=IncludeTrailingPathDelimiter(PasDir);
-  FindResult:=FindFirst (sdir+'*.'+PasExt,faAnyFile,DirInfo);
-  while (FindResult=0) do begin
-    n:=RsList.Count;
-    StatusBar.SimpleText:=DirInfo.Name+': '+IntToStr(RsList.Count-n)+' '+_('strings');
-    Application.ProcessMessages;
-    ExtractFromPascal(sdir+DirInfo.Name);
-    FindResult:=FindNext(DirInfo)
-    end;
-  FindClose(DirInfo);
+  t:=edSources.Text;
+  repeat
+    s:=ReadNxtStr (t,';');
+    FindResult:=FindFirst (AddPath(sdir,s),faAnyFile,DirInfo);
+    FreeListObjects(RsList); RsList.Clear;
+    while (FindResult=0) do begin
+      if NotSpecialDir(DirInfo.Name) then begin
+        n:=RsList.Count;
+        ExtractFromPascal(sdir+DirInfo.Name);
+        StatusBar.SimpleText:=DirInfo.Name+': '+IntToStr(RsList.Count-n)+' '+_('strings');
+        Application.ProcessMessages;
+        end;
+      FindResult:=FindNext(DirInfo)
+      end;
+    FindClose(DirInfo);
+    until t.IsEmpty;
   k:=0;
   with EdList do begin
+    Header[hiLanguage]:=ExtractLastDir(PasDir);
     pe:=FindFirst;
     while pe<>nil do begin
       s:=GetProgrammerName(pe.AutoCommentList);

@@ -1,5 +1,5 @@
 (* Tool for GnuGetText for Delphi
-   Import all not translated items from anaothe po file
+   Import all not translated items from another po file
 
    © 2024-2025 Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
 

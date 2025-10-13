@@ -18,7 +18,7 @@ unit xgettext;
 //   https://mlocati.github.io/articles/gettext-iconv-windows.html
 //   removed: ExtractFromEXE, linux sections, casesentive lists
 //   added: Load list with left most characters of possible unrenamed objects (IgnoreObjects.txt)
-// last modified: November 2024
+// last modified: October 2025
 
 interface
 
