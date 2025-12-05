@@ -136,6 +136,8 @@ type
     laSaveLanguage: TLabel;
     sbSetAllBu: TSpeedButton;
     bbImport: TBitBtn;
+    btEdit: TBitBtn;
+    gbEdit: TGroupBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -183,6 +185,7 @@ type
     procedure MergeOptionClick(Sender: TObject);
     procedure sbSetAllBuClick(Sender: TObject);
     procedure bbImportClick(Sender: TObject);
+    procedure btEditClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -253,7 +256,7 @@ const
   iniLast     = 'LastDir';
   IniEditor   = 'Editor';
 
-// old language indexes (before Vers. 3.2 to shortcut
+// old language indexes (before Vers. 3.2) to shortcut
   MaxLang = 29;
   LangShortNames : array [0..MaxLang-1] of string = (
     'bg','cs','da','de','el','en','es','et','fi','fr','hr','hu','it','lt','lv',
@@ -1463,6 +1466,8 @@ begin
     else for i:=0 to Count-1 do if Selected[i] then begin
       CopyMo(i,nf,ne);
       inc(n);
+      laProgress.Caption:=Format(_('Copying mo file %u'),[n]);
+      Application.ProcessMessages;
       end;
     if n>0 then laProgress.Caption:=Format(_('%u files processed (%u copies - %u errors)'),[n,nf,ne])
     else laProgress.Caption:=_('No files processed');
@@ -1560,6 +1565,12 @@ begin
   SetLangMarker(lbLang.ItemIndex,CheckPoFile(PoFile));
   lbLang.Invalidate;
 //  ShellExecute (0,'open',PChar(PoFile),nil,nil,SW_SHOWNORMAL);
+  end;
+
+procedure TfrmTransMain.btEditClick(Sender: TObject);
+begin
+  ShellExecute (0,'open',PChar(TextEditor),
+    PChar(NewExt(IncludeTrailingPathDelimiter(cbProjDir.Text)+GetTemplName,PoExt)),nil,SW_SHOWNORMAL);
   end;
 
 procedure TfrmTransMain.btEditIgnoreClick(Sender: TObject);

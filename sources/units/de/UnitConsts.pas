@@ -24,6 +24,15 @@ resourcestring
 { ------------------------------------------------------------------- }
 // Strings from ExtSysUtils
   rsFormatError  = 'Format-Fehler: ';
+  rsUnknownError = 'Unbekannter Systemfehler';
+  rsErrorCode = 'Fehlercode';
+  rsWindowsError = 'Windows-Fehler';
+  rsStorageError = 'Storage-Fehler';
+  rsRpcError = 'Fehler beim Remote Procedure Call';
+  rsInterfaceError = 'Interface-Fehler';
+  rsDispatchError = 'Dispatch-Fehler';
+  rsPreWin32Error = 'Fehler in SHFileOperation';
+  rsShellExec = 'ShellExecute-Fehler';
 
 { ------------------------------------------------------------------- }
 // Strings from NumberUtil
@@ -57,17 +66,6 @@ resourcestring
   rsComSetupError = 'Fehler beim Initialisieren des COM-Ports';
 
 { ------------------------------------------------------------------- }
-// Strings from WinUtils
-  rsUnknownError = 'Unbekannter Systemfehler';
-  rsWindowsError = 'Windows-Fehler';
-  rsStorageError = 'Storage-Fehler';
-  rsRpcError = 'Fehler beim Remote Procedure Call';
-  rsInterfaceError = 'Interface-Fehler';
-  rsDispatchError = 'Dispatch-Fehler';
-  rsPreWin32Error = 'Fehler in SHFileOperation';
-  rsShellExec = 'ShellExecute-Fehler';
-
-{ ------------------------------------------------------------------- }
 // Strings from SystemInfo
   rsVersionLongStr = '%s%s (Version %d.%d, Build %d, %6:s)';
   rsSPVersionLongStr = '%s%s - Service Pack %5:d (Version %2:d.%3:d, Build %4:d, %6:s)';
@@ -77,6 +75,20 @@ resourcestring
   rsVersion10ShortStr = '%s (Version %d, %s)';
   rsVersion10Str = '%s (Version %d, Build %d, %s)';
   rsWindows11 = 'Windows 11';
+
+  rsVersionText   = 'Produktname         : %s%s'+sLineBreak+
+                    'Version             : %d.%d'+sLineBreak+
+                    'Build               : %d'+sLineBreak+
+                    'Ausgabe             : %6:s';
+  rsSPVersionText = 'Produktname         : %s%s'+sLineBreak+
+                    'Service Pack        : %5:d'+sLineBreak+
+                    'Version             : %2:d.%3:d'+sLineBreak+
+                    'Build               : %4:d'+sLineBreak+
+                    'Ausgabe             : %6:s';
+  rsVersion10Text = 'Produktname         : %s%s'+sLineBreak+
+                    'Version             : %s'+sLineBreak+
+                    'Build               : %d'+sLineBreak+
+                    'Ausgabe             : %s';
 
   rsProfessionalN = 'Professional';
   rsProfessionalMC = 'Professional mit Media Center';
@@ -112,6 +124,13 @@ resourcestring
   rsWebServer = 'Web Server Edition';
   rsWebServerC = 'Web Server Edition (core)';
   rsUnlicensed = 'Nicht lizensiertes Produkt';
+
+{ ------------------------------------------------------------------- }
+// Strings from DateUtilEx
+  rsBegSpring = 'Frühlingsanfang';
+  rsBegSummer = 'Sommeranfang';
+  rsBegAutumn = 'Herbstanfang';
+  rsBegWinter = 'Winteranfang';
 
 { ------------------------------------------------------------------- }
 // Misc.

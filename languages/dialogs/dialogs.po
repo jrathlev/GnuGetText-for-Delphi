@@ -1952,7 +1952,7 @@ msgstr ""
 
 #. SelectColorDialog.Label2.Caption
 #: SelectColorDlg.dfm:32
-msgid "Basic colors::"
+msgid "Basic colors:"
 msgstr ""
 
 #. SelectColorDialog.Label3.Caption

@@ -90,7 +90,7 @@ type
     Attr,Res : cardinal;
     end;
 
-  TReparseType = (rtNone,rtJunction,rtSymbolic);
+  TReparseType = (rtNone,rtJunction,rtSymbolic,rtOther);
 
 { ------------------------------------------------------------------- }
 // similar to TFileStream but different error handling
@@ -1525,6 +1525,7 @@ begin
 // get the type of the reparse point (junction or symbolic)
 // fr = IO_REPARSE_TAG_MOUNT_POINT    mklink /j ..
 //    = IO_REPARSE_TAG_SYMLINK        mklink /d ..
+// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/c8e77b37-3909-4fe6-a4ea-2b9d423b1ee4
 function GetReparsePointType(const FileName : string) : TReparseType;
 var
   fs : int64;
@@ -1534,12 +1535,12 @@ begin
   if GetFileInfo(FileName,fs,ft,fa,fr,true) then begin
     if fr=IO_REPARSE_TAG_MOUNT_POINT then Result:=rtJunction
     else if fr=IO_REPARSE_TAG_SYMLINK then Result:=rtSymbolic
-    else Result:=rtNone;
+    else Result:=rtOther;
     end
   else Result:=rtNone;
   end;
 
-// Check if reparse point and return linked path if not recursive
+// Check if reparse point is junction or symbolic and return linked path if not recursive
 function CheckForReparsePoint (const Path : string; Attr : integer;
                                var LinkPath : string; var RpType : TReparseType) : boolean;
 begin
@@ -1548,7 +1549,7 @@ begin
   if (Attr and FILE_ATTRIBUTE_REPARSE_POINT <>0) then begin  //directory entry is a reparse point
     RpType:=GetReparsePointType(ExcludeTrailingPathDelimiter(Path));
     LinkPath:=GetLinkPath(ExcludeTrailingPathDelimiter(Path));
-    Result:=RpType<>rtNone;
+    Result:=RpType<>rtNone; // all types (RpType=rtJunction) or (RpType=rtSymbolic);
     end;
   end;
 

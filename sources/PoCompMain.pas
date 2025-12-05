@@ -689,7 +689,8 @@ begin
           si:=pr.MsgId;
           pe:=EdList.FindEntry(si);
           if (pe<>nil) and (length(pe.MsgStr)>0) then begin
-            if not pe.Fuzzy and (pr.MsgStr<>pe.MsgStr) then IdList.Add(si);
+            if not pe.Fuzzy and (pr.MsgStr<>pe.MsgStr) then
+              IdList.Add(si);
             end;
           end;
         pr:=FindNext(pr);

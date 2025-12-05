@@ -2,7 +2,7 @@
 #. frmMain.pmFileList.N21.Caption
 #: PoCompMain.dfm:2156
 #. frmTransMain.pmDirectorytList.N21.Caption
-#: TransMain.dfm:3627
+#: TransMain.dfm:3739
 msgid "-"
 msgstr ""
 
@@ -20,11 +20,11 @@ msgid "..."
 msgstr ""
 
 #. frmTransMain.paTop.pcOptions.tsLang.cbLanguage.Font.Name
-#: TransMain.dfm:627
+#: TransMain.dfm:623
 #. frmTransMain.paTop.pcOptions.tsLang.lbLang.Font.Name
-#: TransMain.dfm:652
+#: TransMain.dfm:648
 #. frmTransMain.pnStatus.meProgress.Font.Name
-#: TransMain.dfm:1770
+#: TransMain.dfm:1773
 msgid "Courier New"
 msgstr ""
 
@@ -36,10 +36,10 @@ msgstr ""
 #  Doesn't look like text
 #. frmConfig.rgEncoding.Items.Strings
 #: GetTextConfig.dfm:500
-#. frmMain.rgEncoding.Items.Strings
-#: PoFromPasMain.dfm:496
+#. frmMain.paCenter.rgEncoding.Items.Strings
+#: PoFromPasMain.dfm:891
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1527
+#: TransMain.dfm:1523
 msgid "ISO-8859-1"
 msgstr ""
 
@@ -112,7 +112,7 @@ msgstr ""
 #. frmTransMain.Font.Name
 #: TransMain.dfm:11
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.laMergeLanguage.Font.Name
-#: TransMain.dfm:1564
+#: TransMain.dfm:1560
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.laSaveLanguage.Font.Name
 #: TransMain.dfm:1653
 msgid "Tahoma"
@@ -121,10 +121,10 @@ msgstr ""
 #  Doesn't look like text
 #. frmConfig.rgEncoding.Items.Strings
 #: GetTextConfig.dfm:501
-#. frmMain.rgEncoding.Items.Strings
-#: PoFromPasMain.dfm:497
+#. frmMain.paCenter.rgEncoding.Items.Strings
+#: PoFromPasMain.dfm:892
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1528
+#: TransMain.dfm:1524
 msgid "UTF-8"
 msgstr ""
 
@@ -138,7 +138,7 @@ msgstr ""
 
 #  Seems like unrenamed label placeholder
 #. frmMain.laStatus.Caption
-#: PoImportMain.dfm:170
+#: PoImportMain.dfm:171
 #. frmMain.laStatus.Caption
 #: PoInsComMain.dfm:40
 #. PoStatDialog.laPoFile.Caption
@@ -164,7 +164,7 @@ msgstr ""
 #. frmMain.gbStat.laNumChars.Caption
 #: PoStatMain.dfm:296
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.laMergeLanguage.Caption
-#: TransMain.dfm:1560
+#: TransMain.dfm:1556
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.laSaveLanguage.Caption
 #: TransMain.dfm:1649
 msgid "xxx"
@@ -178,7 +178,7 @@ msgstr ""
 
 #  Seems like unrenamed tab sheet
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.Caption
-#: TransMain.dfm:299
+#: TransMain.dfm:295
 msgid "tsFiles"
 msgstr ""
 
