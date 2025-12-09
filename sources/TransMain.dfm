@@ -135,6 +135,10 @@ object frmTransMain: TfrmTransMain
         object tsMask: TTabSheet
           Caption = 'tsMask'
           TabVisible = False
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           DesignSize = (
             338
             121)
@@ -1737,7 +1741,6 @@ object frmTransMain: TfrmTransMain
     Height = 285
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 270
     DesignSize = (
       826
       285)
@@ -1777,7 +1780,6 @@ object frmTransMain: TfrmTransMain
       ScrollBars = ssVertical
       TabOrder = 4
       WordWrap = False
-      ExplicitHeight = 233
     end
     object btExtract: TBitBtn
       Left = 530
@@ -2223,7 +2225,6 @@ object frmTransMain: TfrmTransMain
       NumGlyphs = 2
       TabOrder = 7
       OnClick = btnInfoClick
-      ExplicitTop = 232
     end
     object EndeBtn: TBitBtn
       Left = 789
@@ -2315,7 +2316,6 @@ object frmTransMain: TfrmTransMain
       ShowHint = True
       TabOrder = 6
       OnClick = EndeBtnClick
-      ExplicitTop = 232
     end
     object btnClipBoard: TBitBtn
       Left = 529
@@ -2407,7 +2407,6 @@ object frmTransMain: TfrmTransMain
       ShowHint = True
       TabOrder = 5
       OnClick = btnClipBoardClick
-      ExplicitTop = 232
     end
     object btnHelp: TBitBtn
       Left = 719
@@ -2499,7 +2498,6 @@ object frmTransMain: TfrmTransMain
       ShowHint = True
       TabOrder = 8
       OnClick = btnHelpClick
-      ExplicitTop = 232
     end
     object btnManual: TBitBtn
       Left = 684
@@ -2591,7 +2589,6 @@ object frmTransMain: TfrmTransMain
       ShowHint = True
       TabOrder = 9
       OnClick = btnManualClick
-      ExplicitTop = 232
     end
     object gbEdit: TGroupBox
       Left = 530
@@ -2893,7 +2890,7 @@ object frmTransMain: TfrmTransMain
     Left = 680
     Top = 25
     Bitmap = {
-      494C01010400A400000228001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010400A400040228001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000A00000002800000001002000000000000064
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

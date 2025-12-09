@@ -1568,9 +1568,16 @@ begin
   end;
 
 procedure TfrmTransMain.btEditClick(Sender: TObject);
+var
+  PoFile,ss : string;
 begin
-  ShellExecute (0,'open',PChar(TextEditor),
-    PChar(NewExt(IncludeTrailingPathDelimiter(cbProjDir.Text)+GetTemplName,PoExt)),nil,SW_SHOWNORMAL);
+  ss:=IncludeTrailingPathDelimiter(cbProjDir.Text)+IncludeTrailingPathDelimiter(GetLangSubDir(lbLang.ItemIndex));
+  PoFile:=NewExt(ss+GetTemplName,PoExt);
+  StartAndWait(TextEditor,PoFile);
+  SetLangMarker(lbLang.ItemIndex,CheckPoFile(PoFile));
+  lbLang.Invalidate;
+//  ShellExecute (0,'open',PChar(TextEditor),
+//    PChar(NewExt(IncludeTrailingPathDelimiter(cbProjDir.Text)+GetTemplName,PoExt)),nil,SW_SHOWNORMAL);
   end;
 
 procedure TfrmTransMain.btEditIgnoreClick(Sender: TObject);

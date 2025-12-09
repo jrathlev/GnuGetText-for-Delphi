@@ -1633,7 +1633,7 @@ begin
   AssignFile(F,excludefile);
   Reset(F);
   try
-    DoProgress(Format(_('Reading %s'),[excludefile]),excludefile,0);
+    DoProgress(Format(_('Reading exclude file (%s)'),[excludefile]),excludefile,0);
     while not EOF(F) do begin
       Readln(F, line);
       line:=Trim(line);
