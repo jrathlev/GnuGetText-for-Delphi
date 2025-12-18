@@ -2,7 +2,7 @@
 #. frmMain.pmFileList.N21.Caption
 #: PoCompMain.dfm:2156
 #. frmTransMain.pmDirectorytList.N21.Caption
-#: TransMain.dfm:3739
+#: TransMain.dfm:3745
 msgid "-"
 msgstr ""
 
@@ -20,11 +20,11 @@ msgid "..."
 msgstr ""
 
 #. frmTransMain.paTop.pcOptions.tsLang.cbLanguage.Font.Name
-#: TransMain.dfm:623
+#: TransMain.dfm:635
 #. frmTransMain.paTop.pcOptions.tsLang.lbLang.Font.Name
-#: TransMain.dfm:648
+#: TransMain.dfm:660
 #. frmTransMain.pnStatus.meProgress.Font.Name
-#: TransMain.dfm:1773
+#: TransMain.dfm:1784
 msgid "Courier New"
 msgstr ""
 
@@ -39,7 +39,7 @@ msgstr ""
 #. frmMain.paCenter.rgEncoding.Items.Strings
 #: PoFromPasMain.dfm:891
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1523
+#: TransMain.dfm:1535
 msgid "ISO-8859-1"
 msgstr ""
 
@@ -112,9 +112,9 @@ msgstr ""
 #. frmTransMain.Font.Name
 #: TransMain.dfm:11
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.laMergeLanguage.Font.Name
-#: TransMain.dfm:1560
+#: TransMain.dfm:1572
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.laSaveLanguage.Font.Name
-#: TransMain.dfm:1653
+#: TransMain.dfm:1665
 msgid "Tahoma"
 msgstr ""
 
@@ -124,7 +124,7 @@ msgstr ""
 #. frmMain.paCenter.rgEncoding.Items.Strings
 #: PoFromPasMain.dfm:892
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1524
+#: TransMain.dfm:1536
 msgid "UTF-8"
 msgstr ""
 
@@ -164,9 +164,9 @@ msgstr ""
 #. frmMain.gbStat.laNumChars.Caption
 #: PoStatMain.dfm:296
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.laMergeLanguage.Caption
-#: TransMain.dfm:1556
+#: TransMain.dfm:1568
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.laSaveLanguage.Caption
-#: TransMain.dfm:1649
+#: TransMain.dfm:1661
 msgid "xxx"
 msgstr ""
 
@@ -178,7 +178,7 @@ msgstr ""
 
 #  Seems like unrenamed tab sheet
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.Caption
-#: TransMain.dfm:295
+#: TransMain.dfm:299
 msgid "tsFiles"
 msgstr ""
 

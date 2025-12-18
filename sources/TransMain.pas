@@ -1443,7 +1443,7 @@ begin
       SetLangMarker(AIndex,CheckPoFile(PoFile));
 //      ShellExecute (Application.Handle,'open',PChar(PoFile),nil,nil,SW_SHOWNORMAL)
       end
-    else CompileToMo(PoFile,MergePath);
+//    else CompileToMo(PoFile,MergePath);
     end
   else laProgress.Caption:=_('Merging of template failed');
   meProgress.Lines.Add('');
@@ -1464,9 +1464,9 @@ begin
       inc(n);
       end
     else for i:=0 to Count-1 do if Selected[i] then begin
-      CopyMo(i,nf,ne);
       inc(n);
-      laProgress.Caption:=Format(_('Copying mo file %u'),[n]);
+      laProgress.Caption:=Format(_('Copying mo file (%u)'),[n]);
+      CopyMo(i,nf,ne);
       Application.ProcessMessages;
       end;
     if n>0 then laProgress.Caption:=Format(_('%u files processed (%u copies - %u errors)'),[n,nf,ne])

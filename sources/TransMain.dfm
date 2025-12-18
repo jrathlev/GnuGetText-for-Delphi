@@ -299,6 +299,10 @@ object frmTransMain: TfrmTransMain
           Caption = 'tsFiles'
           ImageIndex = 1
           TabVisible = False
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label2: TLabel
             Left = 0
             Top = 10
@@ -607,6 +611,10 @@ object frmTransMain: TfrmTransMain
       TabOrder = 3
       object tsLang: TTabSheet
         Caption = 'Languages'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Label4: TLabel
           Left = 265
           Top = 57
@@ -2890,7 +2898,7 @@ object frmTransMain: TfrmTransMain
     Left = 680
     Top = 25
     Bitmap = {
-      494C01010400A400040228001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010400A4000C0228001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000A00000002800000001002000000000000064
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -18,7 +18,7 @@ unit xgettext;
 //   https://mlocati.github.io/articles/gettext-iconv-windows.html
 //   removed: ExtractFromEXE, linux sections, casesentive lists
 //   added: Load list with left most characters of possible unrenamed objects (IgnoreObjects.txt)
-// last modified: October 2025
+// last modified: December 2025
 
 interface
 
@@ -1623,17 +1623,14 @@ begin
   lnr:=0;
   Excludes.Clear;
   Excludes.Basedirectory:=BaseDirectory;
-  excludefile :=BaseDirectory;
-  if RightStr(excludefile, 1) <> PathDelim then
-    excludefile:=excludefile + PathDelim;
-  excludefile:=ExpandFilename(excludefile + cExcludeFilename);
+  excludefile:=ExpandFilename(AddPath(BaseDirectory,cExcludeFilename));
   if not FileExists(excludefile) then Exit;
   section:='';
   FileMode:=fmOpenRead;
   AssignFile(F,excludefile);
   Reset(F);
   try
-    DoProgress(Format(_('Reading exclude file (%s)'),[excludefile]),excludefile,0);
+    DoProgress(Format(_('Read exclude file: %s'),[excludefile]),excludefile,0);
     while not EOF(F) do begin
       Readln(F, line);
       line:=Trim(line);
