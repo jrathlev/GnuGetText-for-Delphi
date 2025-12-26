@@ -1494,8 +1494,8 @@ begin
       end;
     if n>0 then laProgress.Caption:=Format(_('%s processed (%s - %s)'),
       [GetPluralString('',_('1 file'),_('%u files'),n),
-      GetPluralString(_('No copies'),_('1 copy'),_('%u copies'),nf),
-      GetPluralString(_('No error'),_('1 error'),_('%u errors'),ne)])
+       GetPluralString(_('No copy'),_('1 copy'),_('%u copies'),nf),
+       GetPluralString(_('No error'),_('1 error'),_('%u errors'),ne)])
     else laProgress.Caption:=_('No files processed');
     end
   else ErrorDialog(Format(_('Folder for executables not found: '),[edTargetDir.Text]));

@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GnuGetText Translate 3.4\n"
-"POT-Creation-Date: 2025-12-25 19:38+0100\n"
-"PO-Revision-Date: 2025-12-25 19:39+0100\n"
+"POT-Creation-Date: 2025-12-26 13:34+0100\n"
+"PO-Revision-Date: 2025-12-26 13:36+0100\n"
 "Last-Translator: J. Rathlev <kontakt@rathlev-home.de>\n"
 "Language-Team: J. Rathlev\n"
 "Language: de\n"
@@ -37,7 +37,7 @@ msgstr "Ausführbare Datei:"
 #. frmMain.pmFileList.pmiCancel.Caption
 #. frmTransMain.pmDirectorytList.pmiCancel.Caption
 #: AssembleMain.dfm:253 GetTextConfig.dfm:425 PoCompMain.dfm:2159
-#: TransMain.dfm:3745
+#: TransMain.dfm:3757
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -51,7 +51,7 @@ msgstr "Starten"
 #. frmMerge.btnHelp.Hint
 #. frmTransMain.pnStatus.btnHelp.Hint
 #: AssembleMain.dfm:379 GetTextConfig.dfm:509 MergeMain.dfm:406
-#: TransMain.dfm:2421
+#: TransMain.dfm:2433
 msgid "Show program help"
 msgstr "Programmhilfe anzeigen"
 
@@ -60,7 +60,7 @@ msgstr "Programmhilfe anzeigen"
 #. frmMerge.btnManual.Hint
 #. frmTransMain.pnStatus.btnManual.Hint
 #: AssembleMain.dfm:470 GetTextConfig.dfm:600 MergeMain.dfm:497
-#: TransMain.dfm:2512
+#: TransMain.dfm:2524
 msgid "Show DxGetText manual"
 msgstr "DxGetText-Handbuch anzeigen"
 
@@ -76,7 +76,7 @@ msgstr "Anpassen"
 
 #. frmConfig.EditMask.Hint
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.EditMask.Hint
-#: GetTextConfig.dfm:224 TransMain.dfm:274
+#: GetTextConfig.dfm:224 TransMain.dfm:278
 msgid "Here you can specify which files you want to scan."
 msgstr "Hier können Sie angeben, welche Dateien durchsucht werden sollen."
 
@@ -108,7 +108,7 @@ msgstr "Einstellungen behalten"
 
 #. frmConfig.cbCreateIgnore.Hint
 #. frmTransMain.paTop.pcOptions.tsOptions.cbCreateIgnore.Hint
-#: GetTextConfig.dfm:275 TransMain.dfm:1493
+#: GetTextConfig.dfm:275 TransMain.dfm:1505
 msgid ""
 "Create a new ignore.po file or add likely ignores to existing ignore.po file "
 "(default domain)"
@@ -118,7 +118,7 @@ msgstr ""
 
 #. frmConfig.cbCreateIgnore.Caption
 #. frmTransMain.paTop.pcOptions.tsOptions.cbCreateIgnore.Caption
-#: GetTextConfig.dfm:276 TransMain.dfm:1494
+#: GetTextConfig.dfm:276 TransMain.dfm:1506
 msgid "Add likely ignores to ignore.po file"
 msgstr "Füge wahrscheinliche Ausnahmen zu ignore.po hinzu"
 
@@ -135,31 +135,31 @@ msgstr "Einträge aus ignore.po in der Vorlage löschen"
 
 #. frmConfig.gbDomain.Caption
 #. frmTransMain.paTop.gbDomain.Caption
-#: GetTextConfig.dfm:298 TransMain.dfm:469
+#: GetTextConfig.dfm:298 TransMain.dfm:477
 msgid "Text domain"
 msgstr "Text-Domäne"
 
 #. frmConfig.gbDomain.rbDefault.Caption
 #. frmTransMain.paTop.gbDomain.rbDefault.Caption
-#: GetTextConfig.dfm:308 TransMain.dfm:476
+#: GetTextConfig.dfm:308 TransMain.dfm:484
 msgid "default"
 msgstr "default"
 
 #. frmConfig.gbDomain.rbOther.Caption
 #. frmTransMain.paTop.gbDomain.rbOther.Caption
-#: GetTextConfig.dfm:319 TransMain.dfm:487
+#: GetTextConfig.dfm:319 TransMain.dfm:495
 msgid "other"
 msgstr "andere"
 
 #. frmConfig.gbDomain.OutputName.EditLabel.Caption
 #. frmTransMain.paTop.gbDomain.OutputName.EditLabel.Caption
-#: GetTextConfig.dfm:331 TransMain.dfm:498
+#: GetTextConfig.dfm:331 TransMain.dfm:506
 msgid "Name:"
 msgstr "Name:"
 
 #. frmConfig.ExcludeDirs.EditLabel.Caption
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.ExcludeDirs.EditLabel.Caption
-#: GetTextConfig.dfm:343 TransMain.dfm:290
+#: GetTextConfig.dfm:343 TransMain.dfm:294
 msgid "Exclude subdirectories (comma separated):"
 msgstr "Auszuschließende Unterverzeichnisse (mit Komma getrennt):"
 
@@ -175,20 +175,20 @@ msgstr "OK"
 
 #. frmConfig.cbOrder.Caption
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.cbOrder.Caption
-#: GetTextConfig.dfm:487 TransMain.dfm:1643
+#: GetTextConfig.dfm:487 TransMain.dfm:1655
 msgid "Sort entries by original strings (msgid)"
 msgstr "Einträge nach Originaltexten (msgid) sortieren"
 
 #. frmConfig.rgEncoding.Caption
 #. frmMain.paCenter.rgEncoding.Caption
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Caption
-#: GetTextConfig.dfm:495 PoFromPasMain.dfm:887 TransMain.dfm:1527
+#: GetTextConfig.dfm:495 PoFromPasMain.dfm:887 TransMain.dfm:1539
 msgid "Encoding of source files:"
 msgstr "Kodierung der Quelltexte:"
 
 #. frmConfig.rgEncoding.Items.Strings
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: GetTextConfig.dfm:499 TransMain.dfm:1531
+#: GetTextConfig.dfm:499 TransMain.dfm:1543
 msgid "US-ASCII"
 msgstr "US-ASCII"
 
@@ -277,7 +277,7 @@ msgstr "Über das Programm"
 #: IssToPasMain.dfm:307 PoCompMain.dfm:1463 PoFromPasMain.dfm:459
 #: PoImportMain.dfm:429 PoInsComMain.dfm:139 PoInsMain.dfm:131
 #: PoSpellMain.dfm:297 PoStatDlg.dfm:50 PoStatMain.dfm:134 PoToDfmMain.dfm:56
-#: PoToIssMain.dfm:149 PoTransMain.dfm:189 TransMain.dfm:2239
+#: PoToIssMain.dfm:149 PoTransMain.dfm:189 TransMain.dfm:2251
 msgid "Quit program"
 msgstr "Programm beenden"
 
@@ -354,19 +354,19 @@ msgstr "Andere"
 
 #. frmMerge.cbMergeAutoComments.Caption
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.cbMergeAutoComments.Caption
-#: MergeMain.dfm:588 TransMain.dfm:1578
+#: MergeMain.dfm:588 TransMain.dfm:1590
 msgid "Retain automatic comments"
 msgstr "Automatische Kommentare beibehalten"
 
 #. frmMerge.cbMergeHistory.Caption
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.cbMergeHistory.Caption
-#: MergeMain.dfm:598 TransMain.dfm:1589
+#: MergeMain.dfm:598 TransMain.dfm:1601
 msgid "Retain obsolete translations"
 msgstr "Veraltete Übersetzungen behalten"
 
 #. frmMerge.cbMergeSimilar.Caption
 #. frmTransMain.paTop.pcOptions.tsMerge.cbMergeSimilar.Caption
-#: MergeMain.dfm:608 TransMain.dfm:1549
+#: MergeMain.dfm:608 TransMain.dfm:1561
 msgid "Accept similar strings and mark as Fuzzy"
 msgstr "Ähnliche Strings akzeptieren und als Fuzzy markieren"
 
@@ -374,7 +374,7 @@ msgstr "Ähnliche Strings akzeptieren und als Fuzzy markieren"
 #. frmMerge.udSimLength.Hint
 #. frmTransMain.paTop.pcOptions.tsMerge.edSimLength.Hint
 #. frmTransMain.paTop.pcOptions.tsMerge.udSimLength.Hint
-#: MergeMain.dfm:616 MergeMain.dfm:628 TransMain.dfm:1601 TransMain.dfm:1613
+#: MergeMain.dfm:616 MergeMain.dfm:628 TransMain.dfm:1613 TransMain.dfm:1625
 msgid "Similarity measure"
 msgstr "Ähnlichkeitsmaß"
 
@@ -499,13 +499,13 @@ msgstr "po-Datei bearbeiten"
 
 #. frmMain.pmFileList.pmiEdit.Caption
 #. frmTransMain.pmDirectorytList.pmiEdit.Caption
-#: PoCompMain.dfm:2148 TransMain.dfm:3734
+#: PoCompMain.dfm:2148 TransMain.dfm:3746
 msgid "Edit list"
 msgstr "Liste bearbeiten"
 
 #. frmMain.pmFileList.pmiClear.Caption
 #. frmTransMain.pmDirectorytList.pmiClear.Caption
-#: PoCompMain.dfm:2152 TransMain.dfm:3738
+#: PoCompMain.dfm:2152 TransMain.dfm:3750
 msgid "Clear list"
 msgstr "Liste löschen"
 
@@ -833,247 +833,247 @@ msgid "Only the following files"
 msgstr "Nur die folgenden Dateien"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.cbRecurse.Caption
-#: TransMain.dfm:265
+#: TransMain.dfm:269
 msgid "Also scan subdirectories"
 msgstr "Auch Unterverzeichnisse durchsuchen"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.EditMask.EditLabel.Caption
-#: TransMain.dfm:277
+#: TransMain.dfm:281
 msgid "Filemask:"
 msgstr "Dateimaske:"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.EditMask.Text
-#: TransMain.dfm:281
+#: TransMain.dfm:285
 msgid "*.pas *.dfm *.inc *.rc *.xfm *.dpr"
 msgstr "*.pas *.dfm *.inc *.rc *.xfm *.dpr"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.Label2.Caption
-#: TransMain.dfm:303
+#: TransMain.dfm:311
 msgid "Files to be scanned:"
 msgstr "Zu durchsuchende Dateien:"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.btnNew.Hint
 #. new file list
-#: TransMain.dfm:310 TransMain.pas:901 TransMain.pas:917
+#: TransMain.dfm:318 TransMain.pas:901 TransMain.pas:917
 msgid "Create new file list"
 msgstr "Neue Dateiliste erstellen"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.btnEdit.Hint
-#: TransMain.dfm:373 PoCompMain.pas:335 TransMain.pas:918
+#: TransMain.dfm:381 PoCompMain.pas:335 TransMain.pas:918
 msgid "Edit file list"
 msgstr "Dateiliste bearbeiten"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.cbFiles.Hint
 #. cbCheckNonAscii.Checked:=not ReadBool(ggtSect,iniAAscii,true);
-#: TransMain.dfm:436 TransMain.pas:539 TransMain.pas:906 TransMain.pas:924
+#: TransMain.dfm:444 TransMain.pas:539 TransMain.pas:906 TransMain.pas:924
 msgid "Insert filenames separated by commas"
 msgstr "Durch Kommas getrennte Dateinamen einfügen"
 
 #. frmTransMain.paTop.paFiles.ProjectName.EditLabel.Caption
-#: TransMain.dfm:460
+#: TransMain.dfm:468
 msgid "Project name and version:"
 msgstr "Projektname und -version:"
 
 #. frmTransMain.paTop.gbCopy.Caption
-#: TransMain.dfm:508
+#: TransMain.dfm:516
 msgid "Copy mo file to \"locale\\..\\LC_MESSAGES\\\""
 msgstr "Kopiere mo-Datei nach \"locale\\..\\LC_MESSAGES\\\""
 
 #. frmTransMain.paTop.gbCopy.rbSingle.Caption
-#: TransMain.dfm:578
+#: TransMain.dfm:586
 msgid "In single directory"
 msgstr "In einem Verzeichnis"
 
 #. frmTransMain.paTop.gbCopy.rbMulti.Caption
-#: TransMain.dfm:589
+#: TransMain.dfm:597
 msgid "In multiple directories"
 msgstr "In mehreren Verzeichnissen"
 
 #. frmTransMain.paTop.gbCopy.edTargetDir.EditLabel.Caption
-#: TransMain.dfm:601
+#: TransMain.dfm:609
 msgid "Folder of project executables:"
 msgstr "Ordner mit den ausführbaren Dateien des Projekts:"
 
 #. frmTransMain.paTop.pcOptions.tsLang.Caption
-#: TransMain.dfm:614
+#: TransMain.dfm:622
 msgid "Languages"
 msgstr "Sprachen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.Label4.Caption
-#: TransMain.dfm:620
+#: TransMain.dfm:632
 msgid "Available languages:"
 msgstr "Verfügbare Sprachen:"
 
 #. frmTransMain.paTop.pcOptions.tsLang.edLangSubDir.EditLabel.Caption
-#: TransMain.dfm:645
+#: TransMain.dfm:657
 msgid "Translations subdirectory:"
 msgstr "Unterverzeichnis für Übersetzungen:"
 
 #. frmTransMain.paTop.pcOptions.tsLang.btSelNone.Hint
-#: TransMain.dfm:672
+#: TransMain.dfm:684
 msgid "Deselect all"
 msgstr "Alle abwählen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.btSelAll.Hint
-#: TransMain.dfm:762
+#: TransMain.dfm:774
 msgid "Select all"
 msgstr "Alle auswählen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbAdd.Hint
-#: TransMain.dfm:852
+#: TransMain.dfm:864
 msgid "Add selected language to list"
 msgstr "Ausgewählte Sprache zur Liste hinzufügen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbAdd.Caption
-#: TransMain.dfm:853
+#: TransMain.dfm:865
 msgid "Add to list"
 msgstr "Zur Liste hinzufügen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbRem.Hint
-#: TransMain.dfm:943
+#: TransMain.dfm:955
 msgid "Remove selected language from list"
 msgstr "Ausgewählte Sprache von der Liste entfernen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbUp.Hint
-#: TransMain.dfm:1033
+#: TransMain.dfm:1045
 msgid "Move item up"
 msgstr "Eintrag nach oben schieben"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbDown.Hint
-#: TransMain.dfm:1123
+#: TransMain.dfm:1135
 msgid "Move item down"
 msgstr "Eintrag nach unten schieben"
 
 #. frmTransMain.paTop.pcOptions.tsLang.btStatus.Hint
-#: TransMain.dfm:1213
+#: TransMain.dfm:1225
 msgid "Show statitstics of selected translation"
 msgstr "Statistik der ausgewählten Übersetzung anzeigen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.btUpdate.Hint
-#: TransMain.dfm:1303
+#: TransMain.dfm:1315
 msgid "Check for incomplete translations"
 msgstr "Prüfe auf unvollständige Übersetzungen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbImport.Hint
-#: TransMain.dfm:1393
+#: TransMain.dfm:1405
 msgid "Import language list from another project"
 msgstr "Sprachenliste aus einem anderen Projekt importieren"
 
 #. frmTransMain.paTop.pcOptions.tsOptions.Caption
-#: TransMain.dfm:1480
+#: TransMain.dfm:1492
 msgid "Processing"
 msgstr "Verarbeitung"
 
 #. frmTransMain.paTop.pcOptions.tsOptions.cbRemoveIgnore.Hint
-#: TransMain.dfm:1504
+#: TransMain.dfm:1516
 msgid "Don't store items from text domain that are present in ignore.po"
 msgstr ""
 "Keine Einträge im Textbereich speichern, die in ignore.po zu finden sind"
 
 #. frmTransMain.paTop.pcOptions.tsOptions.cbRemoveIgnore.Caption
-#: TransMain.dfm:1505
+#: TransMain.dfm:1517
 msgid "Remove items from text domain present in ignore.po file"
 msgstr "Einträge aus dem Textbereich löschen, die in ignore.po zu finden sind"
 
 #. frmTransMain.paTop.pcOptions.tsOptions.cbPoEdit.Hint
-#: TransMain.dfm:1515
+#: TransMain.dfm:1527
 msgid "Open the merged file with the assigned po editor"
 msgstr "Öffne die zusammengeführte Datei mit dem zugewiesenen po-Editor"
 
 #. frmTransMain.paTop.pcOptions.tsOptions.cbPoEdit.Caption
-#: TransMain.dfm:1516
+#: TransMain.dfm:1528
 msgid "Edit translation immediately after merging"
 msgstr "Übersetzung nach dem Zusammenführen sofort bearbeiten"
 
 #. frmTransMain.paTop.pcOptions.tsMerge.Caption
-#: TransMain.dfm:1538
+#: TransMain.dfm:1550
 msgid "Merging"
 msgstr "Zusammenführen"
 
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.Caption
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.Caption
-#: TransMain.dfm:1558 TransMain.dfm:1651
+#: TransMain.dfm:1570 TransMain.dfm:1663
 msgid "Language-dependent settings"
 msgstr "Sprachabhängige Einstellungen"
 
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.Caption
-#: TransMain.dfm:1624
+#: TransMain.dfm:1636
 msgid "Saving"
 msgstr "Speichern"
 
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.cbOverwrite.Caption
-#: TransMain.dfm:1635
+#: TransMain.dfm:1647
 msgid "Overwrite template file"
 msgstr "Schablone überschreiben"
 
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.sbSetAllBu.Hint
-#: TransMain.dfm:1671
+#: TransMain.dfm:1683
 msgid "Tick for all languages"
 msgstr "Für alle Sprachen ankreuzen"
 
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.cbBackup.Caption
-#: TransMain.dfm:1734
+#: TransMain.dfm:1746
 msgid "Create backup file of old translation"
 msgstr "Backup der alten Übersetzung herstellen"
 
 #. frmTransMain.pnStatus.btExtract.Caption
-#: TransMain.dfm:1795
+#: TransMain.dfm:1807
 msgid "Create template from project sources"
 msgstr "Schablone aus den Projekt-Quellen erstellen"
 
 #. frmTransMain.pnStatus.btMerge.Caption
 #. n-1 is index for old language list
-#: TransMain.dfm:1885 TransMain.pas:579 TransMain.pas:689
+#: TransMain.dfm:1897 TransMain.pas:579 TransMain.pas:689
 msgid "Merge translation with template"
 msgstr "Übersetzung mit Schablone zusammenführen"
 
 #. frmTransMain.pnStatus.btCopy.Caption
-#: TransMain.dfm:1974
+#: TransMain.dfm:1986
 msgid "Copy mo files to binary folder of project"
 msgstr "mo-Dateien in den Binärordner kopieren"
 
 #. frmTransMain.pnStatus.btAssemble.Caption
-#: TransMain.dfm:2063
+#: TransMain.dfm:2075
 msgid "Embed translations in executables"
 msgstr "Übersetzungen in exe-Dateien einbetten"
 
 #. frmTransMain.pnStatus.btnClipBoard.Hint
-#: TransMain.dfm:2330
+#: TransMain.dfm:2342
 msgid "Copy log to clipboard"
 msgstr "Protokoll in Zwischenablage kopieren"
 
 #. frmTransMain.pnStatus.gbEdit.Caption
-#: TransMain.dfm:2604
+#: TransMain.dfm:2616
 msgid "Edit translation"
 msgstr "Übersetzung bearbeiten"
 
 #. frmTransMain.pnStatus.gbEdit.btEdit.Hint
-#: TransMain.dfm:2614
+#: TransMain.dfm:2626
 msgid "Edit translation in text editor"
 msgstr "Übersetzung im Texteditor bearbeiten"
 
 #. frmTransMain.pnStatus.gbEdit.btEdit.Caption
-#: TransMain.dfm:2616
+#: TransMain.dfm:2628
 msgid "As text"
 msgstr "Als Text"
 
 #. frmTransMain.pnStatus.gbEdit.btEditIgnore.Hint
-#: TransMain.dfm:2706
+#: TransMain.dfm:2718
 msgid "Edit ignore.po"
 msgstr "ignore.po bearbeiten"
 
 #. frmTransMain.pnStatus.gbEdit.btEditIgnore.Caption
-#: TransMain.dfm:2708
+#: TransMain.dfm:2720
 msgid "Ignores"
 msgstr "Ignores"
 
 #. frmTransMain.pnStatus.gbEdit.btPoEdit.Hint
-#: TransMain.dfm:2798
+#: TransMain.dfm:2810
 msgid "Edit translation (po file)"
 msgstr "Übersetzung bearbeiten (po-Dateien)"
 
 #. frmTransMain.pnStatus.gbEdit.btPoEdit.Caption
-#: TransMain.dfm:2800
+#: TransMain.dfm:2812
 msgid "Po editor"
 msgstr "Po-Editor"
 
@@ -1700,8 +1700,8 @@ msgid "%u files"
 msgstr "%u Dateien"
 
 #: TransMain.pas:1497
-msgid "No copies"
-msgstr "Keine Kopien"
+msgid "No copy"
+msgstr "Keine Kopie"
 
 #: TransMain.pas:1497
 msgid "1 copy"
@@ -1926,32 +1926,6 @@ msgstr "StreamReadln braucht einen Stream der nicht nil ist"
 #~ msgid "Po file loaded!"
 #~ msgstr "Po-Datei wurde geladen!"
 
-#~ msgid "Merging of template failed"
-#~ msgstr "Das Zusammenführen mit der Schablone ist fehlgeschlagen"
-
-#~ msgid "Merging of template successful"
-#~ msgstr "Zusammenführen mit der Schablone war erfolgreich"
-
-#~ msgid "Ignore upper/lower case for MsgIds"
-#~ msgstr "Groß-/Kleinschreibung für MsgIds ignorieren"
-
-#~ msgid "The template is merged with the former translations"
-#~ msgstr "Die Schablone wird mit den vorherigen Übersetzungen zusammengeführt"
-
-#, fuzzy
-#~ msgid "The template was successfully merged with %u translations"
-#~ msgstr "Die Schablone wurde mit der Übersetzung zusammengeführt"
-
-#, fuzzy
-#~ msgid "Number of legacy copies to be kept"
-#~ msgstr "Anzahl der Zeichen:"
-
-#~ msgid "Merge also similar strings and mark as Fuzzy"
-#~ msgstr "Auch ähnliche Strings zusammenführen und als Fuzzy markieren"
-
-#~ msgid "Check for all languages"
-#~ msgstr "Für alle Sprachen ankreuzen"
-
 #~ msgid "PO file to be checked:"
 #~ msgstr "Zu prüfende po-Datei:"
 
@@ -1984,6 +1958,9 @@ msgstr "StreamReadln braucht einen Stream der nicht nil ist"
 #~ msgid "Selected language:"
 #~ msgstr "Ausgewählte Sprache:"
 
+#~ msgid "Merging of template failed"
+#~ msgstr "Das Zusammenführen mit der Schablone ist fehlgeschlagen"
+
 #~ msgid "Spell checking of PO translations"
 #~ msgstr "Rechtschreibprüfung  einer po-Übersetzung"
 
@@ -1992,3 +1969,29 @@ msgstr "StreamReadln braucht einen Stream der nicht nil ist"
 
 #~ msgid "Statistics of PO file"
 #~ msgstr "Statistik der po-Datei"
+
+#~ msgid "Merging of template successful"
+#~ msgstr "Zusammenführen mit der Schablone war erfolgreich"
+
+#~ msgid "Ignore upper/lower case for MsgIds"
+#~ msgstr "Groß-/Kleinschreibung für MsgIds ignorieren"
+
+#~ msgid "The template is merged with the former translations"
+#~ msgstr "Die Schablone wird mit den vorherigen Übersetzungen zusammengeführt"
+
+#, fuzzy
+#~ msgid "The template was successfully merged with %u translations"
+#~ msgstr "Die Schablone wurde mit der Übersetzung zusammengeführt"
+
+#, fuzzy
+#~ msgid "Number of legacy copies to be kept"
+#~ msgstr "Anzahl der Zeichen:"
+
+#~ msgid "Merge also similar strings and mark as Fuzzy"
+#~ msgstr "Auch ähnliche Strings zusammenführen und als Fuzzy markieren"
+
+#~ msgid "Check for all languages"
+#~ msgstr "Für alle Sprachen ankreuzen"
+
+#~ msgid "No copies"
+#~ msgstr "Keine Kopien"

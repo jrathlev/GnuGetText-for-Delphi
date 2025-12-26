@@ -135,6 +135,10 @@ object frmTransMain: TfrmTransMain
         object tsMask: TTabSheet
           Caption = 'tsMask'
           TabVisible = False
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           DesignSize = (
             338
             116)
@@ -295,6 +299,10 @@ object frmTransMain: TfrmTransMain
           Caption = 'tsFiles'
           ImageIndex = 1
           TabVisible = False
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label2: TLabel
             Left = 0
             Top = 10
@@ -612,6 +620,10 @@ object frmTransMain: TfrmTransMain
       TabOrder = 3
       object tsLang: TTabSheet
         Caption = 'Languages'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Label4: TLabel
           Left = 265
           Top = 97
@@ -2895,7 +2907,7 @@ object frmTransMain: TfrmTransMain
     Left = 680
     Top = 25
     Bitmap = {
-      494C01010400A400140228001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010400A400180228001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000A00000002800000001002000000000000064
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
