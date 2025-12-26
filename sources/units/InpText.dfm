@@ -13,9 +13,11 @@ object InputTextDialog: TInputTextDialog
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = True
+  Position = poDesigned
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
   DesignSize = (
     311
     106)

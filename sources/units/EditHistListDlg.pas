@@ -19,7 +19,7 @@
    Vers. 3 - Dez. 2021: zugeordnete Objekte werden verarbeitet
    Vers. 3.1 - July 2022: define compiler switch "ACCESSIBLE" to make dialog
                         messages accessible to screenreaders
-   last modified: July 2022
+   last modified: July 2025
     *)
 
 unit EditHistListDlg;
@@ -47,6 +47,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     DelList : TStringList;
@@ -99,6 +100,11 @@ begin
     with ActiveControl do if length(Hint)>0 then ShowHintInfo(Hint);
     end;
 {$ENDIF}
+  end;
+
+procedure TEditHistListDialog.FormShow(Sender: TObject);
+begin
+  FitToScreen(Screen,self);
   end;
 
 {$IFDEF HDPI}   // scale glyphs and images for High DPI

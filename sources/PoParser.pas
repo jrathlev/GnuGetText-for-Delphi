@@ -36,6 +36,7 @@ const
 
   HistMarker = '#*';
   defSimMeasure = 5;     // length for SoundEx
+  defId = 'PACKAGE VERSION';
 
 type
   TPoHeaderIds = (hiProjectId,hiCreationDate,hiRevisionDate,hiLastTranslator,hiLanguageTeam,
@@ -149,7 +150,7 @@ function FindBestBreak (const s : string;LineWidth:integer):integer;
 procedure StreamWrite (s : TStream; const line : string);
 procedure StreamWriteln (s   : TStream; const line : string='');
 procedure StreamWriteMinimumPoHeader (s : TStream; const appname : string);
-procedure StreamWriteDefaultPoTemplateHeader (s : TStream; const appname : string);
+procedure StreamWriteDefaultPoTemplateHeader (s : TStream; const appname,name : string);
 
 
 implementation
@@ -187,7 +188,9 @@ begin
   Streamwriteln(s, '');
 end;
 
-procedure StreamWriteDefaultPoTemplateHeader (s : TStream; const appname : string);
+procedure StreamWriteDefaultPoTemplateHeader (s : TStream; const appname,name : string);
+var
+  sn : string;
 begin
   StreamWriteln(s, '# SOME DESCRIPTIVE TITLE.');
   StreamWriteln(s, '# Copyright (C) YEAR THE PACKAGE''S COPYRIGHT HOLDER');
@@ -197,7 +200,8 @@ begin
   StreamWriteln(s, '#, fuzzy');
   StreamWriteln(s, 'msgid ""');
   StreamWriteln(s, 'msgstr ""');
-  StreamWriteln(s, '"'+HeaderIds[hiProjectId]+' PACKAGE VERSION\n"');
+  if length(name)=0 then sn:=defId else sn:=name;
+  StreamWriteln(s, '"'+HeaderIds[hiProjectId]+' '+sn+'\n"');
   StreamWriteln(s, '"'+HeaderIds[hiCreationDate]+' '+CurrentTimestamp+'\n"');
   StreamWriteln(s, '"'+HeaderIds[hiRevisionDate]+' '+CurrentTimestamp+'\n"');
   StreamWriteln(s, '"'+HeaderIds[hiLastTranslator]+' '+'Somebody <your.email@address.com>\n"');

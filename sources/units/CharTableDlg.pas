@@ -13,7 +13,7 @@
    the specific language governing rights and limitations under the License.
     
    Vers. 1 - Sep. 2002 
-   last modified: Nov. 2021
+   last modified: July 2025
    *)
     
 unit CharTableDlg;
@@ -35,6 +35,7 @@ type
     procedure CharGridDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure leValueChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     DefFontName,GridFontName : TFontName;
@@ -61,6 +62,11 @@ procedure TCharTableDialog.FormCreate(Sender: TObject);
 begin
   TranslateComponent (self,'dialogs');
   DefFontName:=CharGrid.Font.Name;
+  end;
+
+procedure TCharTableDialog.FormShow(Sender: TObject);
+begin
+  FitToScreen(Screen,self);
   end;
 
 {$IFDEF HDPI}   // scale glyphs and images for High DPI

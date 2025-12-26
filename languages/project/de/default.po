@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: dxgettext\n"
-"POT-Creation-Date: 2025-12-18 12:47+0100\n"
-"PO-Revision-Date: 2025-12-18 12:48+0100\n"
+"Project-Id-Version: GnuGetText Translate 3.4\n"
+"POT-Creation-Date: 2025-12-25 19:38+0100\n"
+"PO-Revision-Date: 2025-12-25 19:39+0100\n"
 "Last-Translator: J. Rathlev <kontakt@rathlev-home.de>\n"
 "Language-Team: J. Rathlev\n"
 "Language: de\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.8\n"
-"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 
 #. frmAssemble.Caption
 #: AssembleMain.dfm:4
@@ -37,7 +37,7 @@ msgstr "Ausführbare Datei:"
 #. frmMain.pmFileList.pmiCancel.Caption
 #. frmTransMain.pmDirectorytList.pmiCancel.Caption
 #: AssembleMain.dfm:253 GetTextConfig.dfm:425 PoCompMain.dfm:2159
-#: TransMain.dfm:3748
+#: TransMain.dfm:3745
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -51,7 +51,7 @@ msgstr "Starten"
 #. frmMerge.btnHelp.Hint
 #. frmTransMain.pnStatus.btnHelp.Hint
 #: AssembleMain.dfm:379 GetTextConfig.dfm:509 MergeMain.dfm:406
-#: TransMain.dfm:2424
+#: TransMain.dfm:2421
 msgid "Show program help"
 msgstr "Programmhilfe anzeigen"
 
@@ -60,7 +60,7 @@ msgstr "Programmhilfe anzeigen"
 #. frmMerge.btnManual.Hint
 #. frmTransMain.pnStatus.btnManual.Hint
 #: AssembleMain.dfm:470 GetTextConfig.dfm:600 MergeMain.dfm:497
-#: TransMain.dfm:2515
+#: TransMain.dfm:2512
 msgid "Show DxGetText manual"
 msgstr "DxGetText-Handbuch anzeigen"
 
@@ -76,7 +76,7 @@ msgstr "Anpassen"
 
 #. frmConfig.EditMask.Hint
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.EditMask.Hint
-#: GetTextConfig.dfm:224 TransMain.dfm:278
+#: GetTextConfig.dfm:224 TransMain.dfm:274
 msgid "Here you can specify which files you want to scan."
 msgstr "Hier können Sie angeben, welche Dateien durchsucht werden sollen."
 
@@ -108,7 +108,7 @@ msgstr "Einstellungen behalten"
 
 #. frmConfig.cbCreateIgnore.Hint
 #. frmTransMain.paTop.pcOptions.tsOptions.cbCreateIgnore.Hint
-#: GetTextConfig.dfm:275 TransMain.dfm:1496
+#: GetTextConfig.dfm:275 TransMain.dfm:1493
 msgid ""
 "Create a new ignore.po file or add likely ignores to existing ignore.po file "
 "(default domain)"
@@ -118,7 +118,7 @@ msgstr ""
 
 #. frmConfig.cbCreateIgnore.Caption
 #. frmTransMain.paTop.pcOptions.tsOptions.cbCreateIgnore.Caption
-#: GetTextConfig.dfm:276 TransMain.dfm:1497
+#: GetTextConfig.dfm:276 TransMain.dfm:1494
 msgid "Add likely ignores to ignore.po file"
 msgstr "Füge wahrscheinliche Ausnahmen zu ignore.po hinzu"
 
@@ -135,31 +135,31 @@ msgstr "Einträge aus ignore.po in der Vorlage löschen"
 
 #. frmConfig.gbDomain.Caption
 #. frmTransMain.paTop.gbDomain.Caption
-#: GetTextConfig.dfm:298 TransMain.dfm:467
+#: GetTextConfig.dfm:298 TransMain.dfm:469
 msgid "Text domain"
 msgstr "Text-Domäne"
 
 #. frmConfig.gbDomain.rbDefault.Caption
 #. frmTransMain.paTop.gbDomain.rbDefault.Caption
-#: GetTextConfig.dfm:308 TransMain.dfm:474
+#: GetTextConfig.dfm:308 TransMain.dfm:476
 msgid "default"
 msgstr "default"
 
 #. frmConfig.gbDomain.rbOther.Caption
 #. frmTransMain.paTop.gbDomain.rbOther.Caption
-#: GetTextConfig.dfm:319 TransMain.dfm:485
+#: GetTextConfig.dfm:319 TransMain.dfm:487
 msgid "other"
 msgstr "andere"
 
 #. frmConfig.gbDomain.OutputName.EditLabel.Caption
 #. frmTransMain.paTop.gbDomain.OutputName.EditLabel.Caption
-#: GetTextConfig.dfm:331 TransMain.dfm:496
+#: GetTextConfig.dfm:331 TransMain.dfm:498
 msgid "Name:"
 msgstr "Name:"
 
 #. frmConfig.ExcludeDirs.EditLabel.Caption
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.ExcludeDirs.EditLabel.Caption
-#: GetTextConfig.dfm:343 TransMain.dfm:294
+#: GetTextConfig.dfm:343 TransMain.dfm:290
 msgid "Exclude subdirectories (comma separated):"
 msgstr "Auszuschließende Unterverzeichnisse (mit Komma getrennt):"
 
@@ -175,20 +175,20 @@ msgstr "OK"
 
 #. frmConfig.cbOrder.Caption
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.cbOrder.Caption
-#: GetTextConfig.dfm:487 TransMain.dfm:1646
+#: GetTextConfig.dfm:487 TransMain.dfm:1643
 msgid "Sort entries by original strings (msgid)"
 msgstr "Einträge nach Originaltexten (msgid) sortieren"
 
 #. frmConfig.rgEncoding.Caption
 #. frmMain.paCenter.rgEncoding.Caption
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Caption
-#: GetTextConfig.dfm:495 PoFromPasMain.dfm:887 TransMain.dfm:1530
+#: GetTextConfig.dfm:495 PoFromPasMain.dfm:887 TransMain.dfm:1527
 msgid "Encoding of source files:"
 msgstr "Kodierung der Quelltexte:"
 
 #. frmConfig.rgEncoding.Items.Strings
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: GetTextConfig.dfm:499 TransMain.dfm:1534
+#: GetTextConfig.dfm:499 TransMain.dfm:1531
 msgid "US-ASCII"
 msgstr "US-ASCII"
 
@@ -277,7 +277,7 @@ msgstr "Über das Programm"
 #: IssToPasMain.dfm:307 PoCompMain.dfm:1463 PoFromPasMain.dfm:459
 #: PoImportMain.dfm:429 PoInsComMain.dfm:139 PoInsMain.dfm:131
 #: PoSpellMain.dfm:297 PoStatDlg.dfm:50 PoStatMain.dfm:134 PoToDfmMain.dfm:56
-#: PoToIssMain.dfm:149 PoTransMain.dfm:189 TransMain.dfm:2242
+#: PoToIssMain.dfm:149 PoTransMain.dfm:189 TransMain.dfm:2239
 msgid "Quit program"
 msgstr "Programm beenden"
 
@@ -354,19 +354,19 @@ msgstr "Andere"
 
 #. frmMerge.cbMergeAutoComments.Caption
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.cbMergeAutoComments.Caption
-#: MergeMain.dfm:588 TransMain.dfm:1581
+#: MergeMain.dfm:588 TransMain.dfm:1578
 msgid "Retain automatic comments"
 msgstr "Automatische Kommentare beibehalten"
 
 #. frmMerge.cbMergeHistory.Caption
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.cbMergeHistory.Caption
-#: MergeMain.dfm:598 TransMain.dfm:1592
+#: MergeMain.dfm:598 TransMain.dfm:1589
 msgid "Retain obsolete translations"
 msgstr "Veraltete Übersetzungen behalten"
 
 #. frmMerge.cbMergeSimilar.Caption
 #. frmTransMain.paTop.pcOptions.tsMerge.cbMergeSimilar.Caption
-#: MergeMain.dfm:608 TransMain.dfm:1552
+#: MergeMain.dfm:608 TransMain.dfm:1549
 msgid "Accept similar strings and mark as Fuzzy"
 msgstr "Ähnliche Strings akzeptieren und als Fuzzy markieren"
 
@@ -374,7 +374,7 @@ msgstr "Ähnliche Strings akzeptieren und als Fuzzy markieren"
 #. frmMerge.udSimLength.Hint
 #. frmTransMain.paTop.pcOptions.tsMerge.edSimLength.Hint
 #. frmTransMain.paTop.pcOptions.tsMerge.udSimLength.Hint
-#: MergeMain.dfm:616 MergeMain.dfm:628 TransMain.dfm:1604 TransMain.dfm:1616
+#: MergeMain.dfm:616 MergeMain.dfm:628 TransMain.dfm:1601 TransMain.dfm:1613
 msgid "Similarity measure"
 msgstr "Ähnlichkeitsmaß"
 
@@ -499,13 +499,13 @@ msgstr "po-Datei bearbeiten"
 
 #. frmMain.pmFileList.pmiEdit.Caption
 #. frmTransMain.pmDirectorytList.pmiEdit.Caption
-#: PoCompMain.dfm:2148 TransMain.dfm:3737
+#: PoCompMain.dfm:2148 TransMain.dfm:3734
 msgid "Edit list"
 msgstr "Liste bearbeiten"
 
 #. frmMain.pmFileList.pmiClear.Caption
 #. frmTransMain.pmDirectorytList.pmiClear.Caption
-#: PoCompMain.dfm:2152 TransMain.dfm:3741
+#: PoCompMain.dfm:2152 TransMain.dfm:3738
 msgid "Clear list"
 msgstr "Liste löschen"
 
@@ -808,7 +808,7 @@ msgid "Translate item"
 msgstr "Eintrag übersetzen"
 
 #. frmTransMain.Caption
-#: TransMain.dfm:4 TransMain.pas:277
+#: TransMain.dfm:4 TransMain.pas:279
 msgid "Process GnuGetText translations for Delphi"
 msgstr "GnuGetText-Übersetzungen für Delphi bearbeiten"
 
@@ -818,7 +818,7 @@ msgid "Project directory:"
 msgstr "Projektverzeichnis:"
 
 #. frmTransMain.paTop.paFiles.btProjDir.Hint
-#: TransMain.dfm:50 TransMain.pas:414
+#: TransMain.dfm:50 TransMain.pas:416
 msgid "Select project directory"
 msgstr "Projekt-Verzeichnis auswählen"
 
@@ -833,242 +833,247 @@ msgid "Only the following files"
 msgstr "Nur die folgenden Dateien"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.cbRecurse.Caption
-#: TransMain.dfm:269
+#: TransMain.dfm:265
 msgid "Also scan subdirectories"
 msgstr "Auch Unterverzeichnisse durchsuchen"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.EditMask.EditLabel.Caption
-#: TransMain.dfm:281
+#: TransMain.dfm:277
 msgid "Filemask:"
 msgstr "Dateimaske:"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.EditMask.Text
-#: TransMain.dfm:285
+#: TransMain.dfm:281
 msgid "*.pas *.dfm *.inc *.rc *.xfm *.dpr"
 msgstr "*.pas *.dfm *.inc *.rc *.xfm *.dpr"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.Label2.Caption
-#: TransMain.dfm:311
+#: TransMain.dfm:303
 msgid "Files to be scanned:"
 msgstr "Zu durchsuchende Dateien:"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.btnNew.Hint
 #. new file list
-#: TransMain.dfm:318 TransMain.pas:894 TransMain.pas:910
+#: TransMain.dfm:310 TransMain.pas:901 TransMain.pas:917
 msgid "Create new file list"
 msgstr "Neue Dateiliste erstellen"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.btnEdit.Hint
-#: TransMain.dfm:381 PoCompMain.pas:335 TransMain.pas:911
+#: TransMain.dfm:373 PoCompMain.pas:335 TransMain.pas:918
 msgid "Edit file list"
 msgstr "Dateiliste bearbeiten"
 
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.cbFiles.Hint
 #. cbCheckNonAscii.Checked:=not ReadBool(ggtSect,iniAAscii,true);
-#: TransMain.dfm:444 TransMain.pas:536 TransMain.pas:899 TransMain.pas:917
+#: TransMain.dfm:436 TransMain.pas:539 TransMain.pas:906 TransMain.pas:924
 msgid "Insert filenames separated by commas"
 msgstr "Durch Kommas getrennte Dateinamen einfügen"
 
+#. frmTransMain.paTop.paFiles.ProjectName.EditLabel.Caption
+#: TransMain.dfm:460
+msgid "Project name and version:"
+msgstr "Projektname und -version:"
+
 #. frmTransMain.paTop.gbCopy.Caption
-#: TransMain.dfm:506
+#: TransMain.dfm:508
 msgid "Copy mo file to \"locale\\..\\LC_MESSAGES\\\""
 msgstr "Kopiere mo-Datei nach \"locale\\..\\LC_MESSAGES\\\""
 
 #. frmTransMain.paTop.gbCopy.rbSingle.Caption
-#: TransMain.dfm:577
+#: TransMain.dfm:578
 msgid "In single directory"
 msgstr "In einem Verzeichnis"
 
 #. frmTransMain.paTop.gbCopy.rbMulti.Caption
-#: TransMain.dfm:588
+#: TransMain.dfm:589
 msgid "In multiple directories"
 msgstr "In mehreren Verzeichnissen"
 
 #. frmTransMain.paTop.gbCopy.edTargetDir.EditLabel.Caption
-#: TransMain.dfm:600
+#: TransMain.dfm:601
 msgid "Folder of project executables:"
 msgstr "Ordner mit den ausführbaren Dateien des Projekts:"
 
 #. frmTransMain.paTop.pcOptions.tsLang.Caption
-#: TransMain.dfm:613
+#: TransMain.dfm:614
 msgid "Languages"
 msgstr "Sprachen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.Label4.Caption
-#: TransMain.dfm:623
+#: TransMain.dfm:620
 msgid "Available languages:"
 msgstr "Verfügbare Sprachen:"
 
 #. frmTransMain.paTop.pcOptions.tsLang.edLangSubDir.EditLabel.Caption
-#: TransMain.dfm:648
+#: TransMain.dfm:645
 msgid "Translations subdirectory:"
 msgstr "Unterverzeichnis für Übersetzungen:"
 
 #. frmTransMain.paTop.pcOptions.tsLang.btSelNone.Hint
-#: TransMain.dfm:675
+#: TransMain.dfm:672
 msgid "Deselect all"
 msgstr "Alle abwählen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.btSelAll.Hint
-#: TransMain.dfm:765
+#: TransMain.dfm:762
 msgid "Select all"
 msgstr "Alle auswählen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbAdd.Hint
-#: TransMain.dfm:855
+#: TransMain.dfm:852
 msgid "Add selected language to list"
 msgstr "Ausgewählte Sprache zur Liste hinzufügen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbAdd.Caption
-#: TransMain.dfm:856
+#: TransMain.dfm:853
 msgid "Add to list"
 msgstr "Zur Liste hinzufügen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbRem.Hint
-#: TransMain.dfm:946
+#: TransMain.dfm:943
 msgid "Remove selected language from list"
 msgstr "Ausgewählte Sprache von der Liste entfernen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbUp.Hint
-#: TransMain.dfm:1036
+#: TransMain.dfm:1033
 msgid "Move item up"
 msgstr "Eintrag nach oben schieben"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbDown.Hint
-#: TransMain.dfm:1126
+#: TransMain.dfm:1123
 msgid "Move item down"
 msgstr "Eintrag nach unten schieben"
 
 #. frmTransMain.paTop.pcOptions.tsLang.btStatus.Hint
-#: TransMain.dfm:1216
+#: TransMain.dfm:1213
 msgid "Show statitstics of selected translation"
 msgstr "Statistik der ausgewählten Übersetzung anzeigen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.btUpdate.Hint
-#: TransMain.dfm:1306
+#: TransMain.dfm:1303
 msgid "Check for incomplete translations"
 msgstr "Prüfe auf unvollständige Übersetzungen"
 
 #. frmTransMain.paTop.pcOptions.tsLang.bbImport.Hint
-#: TransMain.dfm:1396
+#: TransMain.dfm:1393
 msgid "Import language list from another project"
 msgstr "Sprachenliste aus einem anderen Projekt importieren"
 
 #. frmTransMain.paTop.pcOptions.tsOptions.Caption
-#: TransMain.dfm:1483
+#: TransMain.dfm:1480
 msgid "Processing"
 msgstr "Verarbeitung"
 
 #. frmTransMain.paTop.pcOptions.tsOptions.cbRemoveIgnore.Hint
-#: TransMain.dfm:1507
+#: TransMain.dfm:1504
 msgid "Don't store items from text domain that are present in ignore.po"
 msgstr ""
 "Keine Einträge im Textbereich speichern, die in ignore.po zu finden sind"
 
 #. frmTransMain.paTop.pcOptions.tsOptions.cbRemoveIgnore.Caption
-#: TransMain.dfm:1508
+#: TransMain.dfm:1505
 msgid "Remove items from text domain present in ignore.po file"
 msgstr "Einträge aus dem Textbereich löschen, die in ignore.po zu finden sind"
 
 #. frmTransMain.paTop.pcOptions.tsOptions.cbPoEdit.Hint
-#: TransMain.dfm:1518
+#: TransMain.dfm:1515
 msgid "Open the merged file with the assigned po editor"
 msgstr "Öffne die zusammengeführte Datei mit dem zugewiesenen po-Editor"
 
 #. frmTransMain.paTop.pcOptions.tsOptions.cbPoEdit.Caption
-#: TransMain.dfm:1519
+#: TransMain.dfm:1516
 msgid "Edit translation immediately after merging"
 msgstr "Übersetzung nach dem Zusammenführen sofort bearbeiten"
 
 #. frmTransMain.paTop.pcOptions.tsMerge.Caption
-#: TransMain.dfm:1541
+#: TransMain.dfm:1538
 msgid "Merging"
 msgstr "Zusammenführen"
 
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.Caption
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.Caption
-#: TransMain.dfm:1561 TransMain.dfm:1654
+#: TransMain.dfm:1558 TransMain.dfm:1651
 msgid "Language-dependent settings"
 msgstr "Sprachabhängige Einstellungen"
 
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.Caption
-#: TransMain.dfm:1627
+#: TransMain.dfm:1624
 msgid "Saving"
 msgstr "Speichern"
 
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.cbOverwrite.Caption
-#: TransMain.dfm:1638
+#: TransMain.dfm:1635
 msgid "Overwrite template file"
 msgstr "Schablone überschreiben"
 
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.sbSetAllBu.Hint
-#: TransMain.dfm:1674
+#: TransMain.dfm:1671
 msgid "Tick for all languages"
 msgstr "Für alle Sprachen ankreuzen"
 
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.cbBackup.Caption
-#: TransMain.dfm:1737
+#: TransMain.dfm:1734
 msgid "Create backup file of old translation"
 msgstr "Backup der alten Übersetzung herstellen"
 
 #. frmTransMain.pnStatus.btExtract.Caption
-#: TransMain.dfm:1798
+#: TransMain.dfm:1795
 msgid "Create template from project sources"
 msgstr "Schablone aus den Projekt-Quellen erstellen"
 
 #. frmTransMain.pnStatus.btMerge.Caption
 #. n-1 is index for old language list
-#: TransMain.dfm:1888 TransMain.pas:574 TransMain.pas:682
+#: TransMain.dfm:1885 TransMain.pas:579 TransMain.pas:689
 msgid "Merge translation with template"
 msgstr "Übersetzung mit Schablone zusammenführen"
 
 #. frmTransMain.pnStatus.btCopy.Caption
-#: TransMain.dfm:1977
+#: TransMain.dfm:1974
 msgid "Copy mo files to binary folder of project"
 msgstr "mo-Dateien in den Binärordner kopieren"
 
 #. frmTransMain.pnStatus.btAssemble.Caption
-#: TransMain.dfm:2066
+#: TransMain.dfm:2063
 msgid "Embed translations in executables"
 msgstr "Übersetzungen in exe-Dateien einbetten"
 
 #. frmTransMain.pnStatus.btnClipBoard.Hint
-#: TransMain.dfm:2333
+#: TransMain.dfm:2330
 msgid "Copy log to clipboard"
 msgstr "Protokoll in Zwischenablage kopieren"
 
 #. frmTransMain.pnStatus.gbEdit.Caption
-#: TransMain.dfm:2607
+#: TransMain.dfm:2604
 msgid "Edit translation"
 msgstr "Übersetzung bearbeiten"
 
 #. frmTransMain.pnStatus.gbEdit.btEdit.Hint
-#: TransMain.dfm:2617
+#: TransMain.dfm:2614
 msgid "Edit translation in text editor"
 msgstr "Übersetzung im Texteditor bearbeiten"
 
 #. frmTransMain.pnStatus.gbEdit.btEdit.Caption
-#: TransMain.dfm:2619
+#: TransMain.dfm:2616
 msgid "As text"
 msgstr "Als Text"
 
 #. frmTransMain.pnStatus.gbEdit.btEditIgnore.Hint
-#: TransMain.dfm:2709
+#: TransMain.dfm:2706
 msgid "Edit ignore.po"
 msgstr "ignore.po bearbeiten"
 
 #. frmTransMain.pnStatus.gbEdit.btEditIgnore.Caption
-#: TransMain.dfm:2711
+#: TransMain.dfm:2708
 msgid "Ignores"
 msgstr "Ignores"
 
 #. frmTransMain.pnStatus.gbEdit.btPoEdit.Hint
-#: TransMain.dfm:2801
+#: TransMain.dfm:2798
 msgid "Edit translation (po file)"
 msgstr "Übersetzung bearbeiten (po-Dateien)"
 
 #. frmTransMain.pnStatus.gbEdit.btPoEdit.Caption
-#: TransMain.dfm:2803
+#: TransMain.dfm:2800
 msgid "Po editor"
 msgstr "Po-Editor"
 
@@ -1155,11 +1160,11 @@ msgstr ""
 msgid "Filenames with Unicode characters are not supported"
 msgstr "Dateinamen mit Unicode-Zeichen werden nicht unterstützt"
 
-#: AssembleMain.pas:137 TransMain.pas:762
+#: AssembleMain.pas:137 TransMain.pas:769
 msgid "File not found: \"%s\""
 msgstr "Datei nicht gefunden: \"%s\""
 
-#: AssembleMain.pas:154 TransMain.pas:1610
+#: AssembleMain.pas:154 TransMain.pas:1636
 msgid "No translations (.mo files) found"
 msgstr "Keine Übersetzungen (.mo-Dateien) gefunden"
 
@@ -1167,15 +1172,15 @@ msgstr "Keine Übersetzungen (.mo-Dateien) gefunden"
 msgid "Translations were embedded in \"%s\""
 msgstr "Die Übersetzungen wurden in \"%s\" eingebettet"
 
-#: GetTextConfig.pas:154 TransMain.pas:366 TransMain.pas:940
+#: GetTextConfig.pas:154 TransMain.pas:368 TransMain.pas:947
 msgid "Delphi files"
 msgstr "Delphi-Dateien"
 
-#: GetTextConfig.pas:155 TransMain.pas:367 TransMain.pas:941
+#: GetTextConfig.pas:155 TransMain.pas:369 TransMain.pas:948
 msgid "Lazarus files"
 msgstr "Lazarus-Dateien"
 
-#: GetTextConfig.pas:156 TransMain.pas:368 TransMain.pas:942
+#: GetTextConfig.pas:156 TransMain.pas:370 TransMain.pas:949
 msgid "Cpp Builder files"
 msgstr "Cpp-Builder-Dateien"
 
@@ -1183,11 +1188,11 @@ msgstr "Cpp-Builder-Dateien"
 msgid "Select basic directory"
 msgstr "Basisverzeichnis auswählen"
 
-#: GetTextConfig.pas:208 GetTextConfig.pas:225 TransMain.pas:828
+#: GetTextConfig.pas:208 GetTextConfig.pas:225 TransMain.pas:835
 msgid "Select"
 msgstr "Auswählen"
 
-#: GetTextConfig.pas:223 TransMain.pas:826
+#: GetTextConfig.pas:223 TransMain.pas:833
 msgid "Select subdirectories to be excluded"
 msgstr "Auszuschließende Unterverzeichnisse auswählen"
 
@@ -1195,11 +1200,11 @@ msgstr "Auszuschließende Unterverzeichnisse auswählen"
 msgid "Do you want to overwrite \"%s\"?"
 msgstr "Wollen Sie \"%s\" überschreiben?"
 
-#: GetTextMain.pas:105 TransMain.pas:1041
+#: GetTextMain.pas:105 TransMain.pas:1048
 msgid "Line: %u"
 msgstr "Zeile: %u"
 
-#: GetTextMain.pas:106 TransMain.pas:1042
+#: GetTextMain.pas:106 TransMain.pas:1049
 msgid "Last line read: %s"
 msgstr "Letzte gelesene Zeile: %s"
 
@@ -1267,7 +1272,7 @@ msgstr "Schablonendateien (*.po;*.pot)|*.po;*.pot|Alle Dateien (*.*)|*.*"
 #. from former unit "msgmergedxengine"
 #. if rgEncoding.ItemIndex=0 then cp:=cpUtf8 else cp:=cpLatin1;
 #: MergeMain.pas:289 PoInsComMain.pas:221 PoInsComMain.pas:235
-#: TransMain.pas:1315
+#: TransMain.pas:1337
 msgid "Error in line %u of file \"%s\""
 msgstr "Fehler in Zeile %u der Datei \"%s\""
 
@@ -1278,7 +1283,7 @@ msgstr "Die angegebene Schablonendatei existiert nicht."
 
 #. end;
 #. check for entries no longer used in template
-#: MergeMain.pas:453 MergeMain.pas:455 TransMain.pas:1422 TransMain.pas:1432
+#: MergeMain.pas:453 MergeMain.pas:455 TransMain.pas:1446 TransMain.pas:1456
 msgid "Cannot rename %s to %s"
 msgstr "Kann %s nicht in %s umbenennen"
 
@@ -1340,7 +1345,7 @@ msgstr "Zeilennummer: "
 #: PoCompMain.pas:667 PoFromPasMain.pas:734 PoInsComMain.pas:223
 #: PoInsComMain.pas:237 PoInsMain.pas:250 PoSpellMain.pas:393
 #: PoSpellMain.pas:417 PoStatDlg.pas:194 PoStatMain.pas:248 PoToDfmMain.pas:241
-#: PoToIssMain.pas:250 PoTransMain.pas:196 xgettext.pas:1156
+#: PoToIssMain.pas:250 PoTransMain.pas:196 xgettext.pas:1158
 msgid "File not found: %s"
 msgstr "Datei nicht gefunden: %s"
 
@@ -1425,16 +1430,16 @@ msgid "Select po file used for comparison"
 msgstr "Für den Vergleich zu verwendende po-Datei"
 
 #. use always UTF-8 encoding for template
-#: poparser.pas:225
+#: poparser.pas:229
 msgid "Error when writing to stream."
 msgstr "Fehler beim Schreiben zum Stream."
 
-#: poparser.pas:395
+#: poparser.pas:399
 msgid "Illegal line: %s"
 msgstr "Ungültige Zeile: %s"
 
 #. Do nothing - the character was just escaped.
-#: poparser.pas:427
+#: poparser.pas:431
 msgid ""
 "Exception %s in line %d:\n"
 "%s"
@@ -1442,7 +1447,7 @@ msgstr ""
 "Ausnahmefehler %s in der Zeile %d:\n"
 "%s"
 
-#: poparser.pas:684
+#: poparser.pas:688
 msgid ""
 "This list of translations cannot handle MsgId duplicates. Please remove the "
 "duplicate of \"%s\"."
@@ -1450,7 +1455,7 @@ msgstr ""
 "Diese Übersetzungsliste kann keine MsgId-Duplikate verarbeiten. Bitte "
 "entfernen sie das Duplikat von \"%s\"."
 
-#: poparser.pas:785 poparser.pas:806 poparser.pas:839
+#: poparser.pas:789 poparser.pas:810 poparser.pas:843
 msgid ""
 "Internal error in TPoEntryList data structure. Sublist for searchkey was "
 "empty."
@@ -1458,7 +1463,7 @@ msgstr ""
 "Interner Fehler in TPoEntryList Datenstruktur. Unterliste für Suchschlüssel "
 "war leer."
 
-#: poparser.pas:800
+#: poparser.pas:804
 msgid "Error: Specified TPoEntry was not found in list."
 msgstr "Fehler: Angegebene TPoEntry wurde nicht in Liste gefunden."
 
@@ -1560,82 +1565,100 @@ msgstr "po-Datei mit Übersetzung auswählen"
 msgid "Translate PO file"
 msgstr "PO-Datei übersetzen"
 
-#: TransMain.pas:397
+#: TransMain.pas:399
 msgid "Select text editor"
 msgstr "Text-Editor auswählen"
 
-#: TransMain.pas:399
+#: TransMain.pas:401
 msgid "Programs"
 msgstr "Programme"
 
-#: TransMain.pas:399 TransMain.pas:943
+#: TransMain.pas:401 TransMain.pas:950
 msgid "all"
 msgstr "alle"
 
-#: TransMain.pas:460
+#: TransMain.pas:462
 msgid "Project directories"
 msgstr "Projektverzeichnisse"
 
 #. btMerge.Enabled:=false;
-#: TransMain.pas:590
+#: TransMain.pas:595
 msgid "Settings loaded for this project"
 msgstr "Einstellungen für dieses Projekt geladen"
 
-#: TransMain.pas:683
+#: TransMain.pas:690
 msgid "Merge translations with template"
 msgstr "Übersetzungen mit Schablone zusammenführen"
 
-#: TransMain.pas:684
+#: TransMain.pas:691
 msgid "Copy MO file to binary folder of project"
 msgstr "MO-Datei in den Binärordner kopieren"
 
-#: TransMain.pas:685
+#: TransMain.pas:692
 msgid "Copy MO files to binary folder of project"
 msgstr "MO-Dateien in den Binärordner kopieren"
 
-#: TransMain.pas:757
+#: TransMain.pas:764
 msgid "Select project directory for the import"
 msgstr "Projektverzeichnis für den Import auswählen"
 
-#: TransMain.pas:845
+#: TransMain.pas:852
 msgid "Select project source directory"
 msgstr "Quellverzeichnis des Projekts auswählen"
 
-#: TransMain.pas:982
+#: TransMain.pas:989
 msgid "Select program directory of project"
 msgstr "Programm-Verzeichnis des Projekts auswählen"
 
-#: TransMain.pas:1006
+#: TransMain.pas:1013
 msgid "Parent directory holding the project executables:"
 msgstr "Übergeordnetes Verzeichnis für die ausführbaren Dateien des Projekts:"
 
-#: TransMain.pas:1012
+#: TransMain.pas:1019
 msgid "Directory of project executables:"
 msgstr "Verzeichnis mit den ausführbaren Dateien des Projekts:"
 
 #. laLineNr.Caption:=_('Line:')+' 1';
-#: TransMain.pas:1025
+#: TransMain.pas:1032
 msgid "Line:"
 msgstr "Zeile:"
 
-#: TransMain.pas:1052
+#: TransMain.pas:1059
 msgid "Do you want to overwrite the file named %s?"
 msgstr "Wollen Sie die Datei mit Namen %s überschreiben?"
 
 #. end;
-#: TransMain.pas:1135
+#: TransMain.pas:1143
 msgid "%u warnings or errors"
 msgstr "%u Warnungen oder Fehler"
 
-#: TransMain.pas:1137
+#: TransMain.pas:1145
 msgid "Template was created"
 msgstr "Die Schablone wurde erstellt"
 
-#: TransMain.pas:1203
+#: TransMain.pas:1162
+msgid "The former translations are merged with the current template"
+msgstr ""
+"Die vorherigen Übersetzungen werden mit der aktuellen Schablone "
+"zusammengeführt"
+
+#: TransMain.pas:1165
+msgid "Merging with template was successful"
+msgstr "Das Zusammenführen mit der Schablone war erfolgreich"
+
+#: TransMain.pas:1166 TransMain.pas:1175
+msgid "Merging with template failed"
+msgstr "Das Zusammenführen mit der Schablone ist fehlgeschlagen"
+
+#: TransMain.pas:1174
+msgid "%u translations were successfully merged with template"
+msgstr "% Übersetzungen wurden erfolgreich mit der Schablone zusammengeführt"
+
+#: TransMain.pas:1225
 msgid "Compiled to MO file: %s"
 msgstr "Übersetzt in MO-Datei: %s"
 
-#: TransMain.pas:1206
+#: TransMain.pas:1228
 msgid ""
 "Compiling to MO file failed:\n"
 "\"%s\" reports exitcode %u"
@@ -1643,228 +1666,251 @@ msgstr ""
 "Das Übersetzen in die MO-Datei ist fehlgeschlagen:\n"
 "\"%s\" meldet den Exitcode %u"
 
-#: TransMain.pas:1207
+#: TransMain.pas:1229
 msgid "Execution of \"%s\" failed:"
 msgstr "Die Ausführung von \"%s\" ist fehlgeschlagen:"
 
-#: TransMain.pas:1209
+#: TransMain.pas:1231
 msgid "  *** Error compiling to MO file: %s"
 msgstr "  *** Fehler beim Übersetzen in MO-Datei: %s"
 
 #. Init translation
-#: TransMain.pas:1305
+#: TransMain.pas:1327
 msgid "Merging with %s template"
 msgstr "Zusammenführen mit Schablone %s"
 
-#: TransMain.pas:1426
+#: TransMain.pas:1450
 msgid "Cannot delete %s"
 msgstr "Kann %s nicht löschen"
 
-#: TransMain.pas:1440
-msgid "The template was merged into the translation file"
-msgstr "Die Schablone wurde mit der Übersetzung zusammengeführt"
-
-#. else CompileToMo(PoFile,MergePath);
-#: TransMain.pas:1448
-msgid "Merging of template failed"
-msgstr "Das Zusammenführen mit der Schablone ist fehlgeschlagen"
-
-#: TransMain.pas:1468
+#: TransMain.pas:1490
 msgid "Copying mo file (%u)"
 msgstr "Kopiere MO-Datei (%u)"
 
-#: TransMain.pas:1472
-msgid "%u files processed (%u copies - %u errors)"
-msgstr "%u Dateien verarbeitet (%u Kopien - %u Fehler)"
+#: TransMain.pas:1495
+msgid "%s processed (%s - %s)"
+msgstr "%s verarbeitet (%s - %s)"
 
-#: TransMain.pas:1473 TransMain.pas:1658
+#: TransMain.pas:1496
+msgid "1 file"
+msgstr "1 Datei"
+
+#: TransMain.pas:1496
+msgid "%u files"
+msgstr "%u Dateien"
+
+#: TransMain.pas:1497
+msgid "No copies"
+msgstr "Keine Kopien"
+
+#: TransMain.pas:1497
+msgid "1 copy"
+msgstr "1 Kopie"
+
+#: TransMain.pas:1497
+msgid "%u copies"
+msgstr "%u Kopien"
+
+#: TransMain.pas:1498
+msgid "No error"
+msgstr "Keine Fehler"
+
+#: TransMain.pas:1498
+msgid "1 error"
+msgstr "1 Fehler"
+
+#: TransMain.pas:1498
+msgid "%u errors"
+msgstr "%u Fehler"
+
+#: TransMain.pas:1499 TransMain.pas:1684
 msgid "No files processed"
 msgstr "Keine Dateien verarbeitet"
 
-#: TransMain.pas:1475 TransMain.pas:1661
+#: TransMain.pas:1501 TransMain.pas:1687
 msgid "Folder for executables not found: "
 msgstr "Ordner für ausführbare Dateien nicht gefunden: "
 
-#: TransMain.pas:1506 TransMain.pas:1536
+#: TransMain.pas:1532 TransMain.pas:1562
 msgid "  *** Error copying file:"
 msgstr "  *** Fehler beim Kopieren der Datei:"
 
-#: TransMain.pas:1523
+#: TransMain.pas:1549
 msgid "Copying MO file %s"
 msgstr "Kopiere MO-Datei %s"
 
-#: TransMain.pas:1544
+#: TransMain.pas:1570
 msgid "  *** Error file not found:"
 msgstr "  *** Datei nicht gefunden:"
 
 #. multi copy
-#: TransMain.pas:1553
+#: TransMain.pas:1579
 msgid "MO file was copied"
 msgstr "MO-Datei wurde kopiert"
 
-#: TransMain.pas:1554
+#: TransMain.pas:1580
 msgid "Copying of MO file failed"
 msgstr "Das Kopieren der MO-Datei ist fehlgeschlagen"
 
-#: TransMain.pas:1613
+#: TransMain.pas:1639
 msgid "Embed translations"
 msgstr "Übersetzungen einbetten"
 
-#: TransMain.pas:1614
+#: TransMain.pas:1640
 msgid "Select the translations you want to embed into your executables"
 msgstr ""
 "Übersetzungen auswählen, die in die ausführbaren Dateien eingebettet werden "
 "sollen"
 
-#: TransMain.pas:1634
+#: TransMain.pas:1660
 msgid "Executable files"
 msgstr "Ausführbare Dateien"
 
-#: TransMain.pas:1635
+#: TransMain.pas:1661
 msgid "Select all executables where you want to embed the translations"
 msgstr ""
 "Alle ausfürhbaren Dateien auswählen, in die die Übersetzungen eingebettet "
 "werden sollen"
 
-#: TransMain.pas:1639
+#: TransMain.pas:1665
 msgid "Embedding translation in %s"
 msgstr "Übersetzungen einbetten in %s"
 
-#: TransMain.pas:1647
+#: TransMain.pas:1673
 msgid "  *** Error on embedding translations:"
 msgstr "  *** Fehler beim Einbetten der Übersetzungen:"
 
-#: TransMain.pas:1657
+#: TransMain.pas:1683
 msgid "%u files processed"
 msgstr "%u Dateien verarbeitet"
 
 #. This is a multi-line string
-#: xgettext.pas:451
+#: xgettext.pas:453
 msgid "This line is not connected with the previous line using a plus (+)"
 msgstr ""
 "Diese Zeile ist nicht mit einem Plus (+) mit der vorangehenden verbunden"
 
 #. First parameter is line number, second is the contents of the line
-#: xgettext.pas:590
+#: xgettext.pas:592
 msgid "resourcestring does not end in semicolon"
 msgstr "Resourcestring endet nicht mit einem Semikolon"
 
 #. First parameter is line number, second is line contents
 #. Get parameter that contains the msgid
-#: xgettext.pas:660 xgettext.pas:672
+#: xgettext.pas:662 xgettext.pas:674
 msgid "Missing comma after first parameter"
 msgstr "Fehlendes Komma nach erstem Parameter"
 
-#: xgettext.pas:691
+#: xgettext.pas:693
 msgid "$gnugettext: end directive is missing !"
 msgstr "$gnugettext: end-Direktive fehlt!"
 
-#: xgettext.pas:703 xgettext.pas:1133
+#: xgettext.pas:705 xgettext.pas:1135
 msgid "Reading %s"
 msgstr "Lese aus %s"
 
-#: xgettext.pas:716
+#: xgettext.pas:718
 msgid "Error on execution"
 msgstr "Fehler bei der Ausführung"
 
 #. Check, that all parts of msgid are nonempty, if there are multiple parts
-#: xgettext.pas:949
+#: xgettext.pas:951
 msgid "Illegal msgid_plural value: It containes empty strings"
 msgstr "Ungültiger msgid_plural-Wert: Er entält leere Zeichenfolgen"
 
 #. Check for non-ascii characters
-#: xgettext.pas:957
+#: xgettext.pas:959
 msgid "msgid contains non-ascii characters: \"%s\""
 msgstr "msgid enthält nicht-ASCII Zeichen: \"%s\""
 
 #. Check for overwriting. Call custom handler if present, and abort if overwriting is not permitted.
-#: xgettext.pas:1052
+#: xgettext.pas:1054
 msgid "Overwrite %s aborted"
 msgstr "Überschreiben von %s abgebrochen"
 
-#: xgettext.pas:1058
+#: xgettext.pas:1060
 msgid "Writing %s"
 msgstr "Schreibe nach %s"
 
-#: xgettext.pas:1143
+#: xgettext.pas:1145
 msgid "WARNING: Unknown file extension % - reading file as being pascal source"
 msgstr ""
 "WARNUNG: Unbekannte Dateierweiterung %s. Lese Datei als Delphi Quellcode"
 
 #. process c/cpp files
-#: xgettext.pas:1473
+#: xgettext.pas:1475
 msgid "Extract strings from C/CPP files:"
 msgstr "Extrahiere Texte aus C/CPP-Dateien:"
 
-#: xgettext.pas:1483
+#: xgettext.pas:1485
 msgid "XGetText.exe not found!"
 msgstr "XGetText.exe nicht gefunden!"
 
-#: xgettext.pas:1488
+#: xgettext.pas:1490
 msgid "Updating %s"
 msgstr "Aktualisiere %s"
 
-#: xgettext.pas:1565
+#: xgettext.pas:1567
 msgid "gnugettext: error in the domain name definition"
 msgstr "gnugettext: Fehler in der Domänennamendefinition"
 
-#: xgettext.pas:1570
+#: xgettext.pas:1572
 msgid "gnugettext: reset found without scan-all"
 msgstr "gnugettext: Reset ohne Scan-all gefunden"
 
-#: xgettext.pas:1573
+#: xgettext.pas:1575
 msgid "gnugettext: Unknown option"
 msgstr "gnugettext: Unbekannte Option"
 
-#: xgettext.pas:1633
+#: xgettext.pas:1635
 msgid "Read exclude file: %s"
 msgstr "Lese Exclude-Datei %s"
 
 #. entering new section
-#: xgettext.pas:1649
+#: xgettext.pas:1651
 msgid "Line %d: Unknown section"
 msgstr "Zeile %d: Unbekannter Abschnitt"
 
-#: xgettext.pas:1652
+#: xgettext.pas:1654
 msgid "Line %d: Looks like a section but has no closing square brackets"
 msgstr "Zeile %d: Sieht wie ein Abschnitt aus, hat aber keine eckigen Klammern"
 
-#: xgettext.pas:1666
+#: xgettext.pas:1668
 msgid "Line %d: %s"
 msgstr "Zeile %d: %s"
 
-#: xgettext.pas:1728
+#: xgettext.pas:1730
 msgid "Directory %s doesn't exist"
 msgstr "Verzeichnis %s existiert nicht"
 
-#: xgettext.pas:1740
+#: xgettext.pas:1742
 msgid "Wrong section: %s is a property name and not a class"
 msgstr "Falscher Abschnitt: %s ist der Name einer Eigenschaft und keine Klasse"
 
-#: xgettext.pas:1754
+#: xgettext.pas:1756
 msgid "Wrong section: %s seems to be a class and not a property name"
 msgstr ""
 "Falscher Abschnitt: %s scheint eine Klasse zu sein und nicht der Name "
 "einerEigenschaft"
 
 #. if a wildcard is used, add all possible Delphi- or Kylix-files to the list
-#: xgettext.pas:1786
+#: xgettext.pas:1788
 msgid "No file found for \"%s.*\""
 msgstr "Keine Datei gefunden für \"%s.*\""
 
-#: xgettext.pas:1794
+#: xgettext.pas:1796
 msgid "File %s doesn't exist"
 msgstr "Datei %s existiert nicht"
 
-#: xgettext.pas:1824
+#: xgettext.pas:1826
 msgid "Wrong syntax: No \":\" found in %s"
 msgstr "Falsche Syntax: Kein \":\" in %s gefunden"
 
-#: xgettext.pas:1830
+#: xgettext.pas:1832
 msgid "Wrong syntax: \":\" is at the end of the line of %s"
 msgstr "Falsche Syntax: \":\" steht am Ende der Zeile %s"
 
-#: xgettext.pas:1837
+#: xgettext.pas:1839
 msgid "File \"%s\" doesn't exist"
 msgstr "Datei \"%s\" existiert nicht"
 
@@ -1880,20 +1926,21 @@ msgstr "StreamReadln braucht einen Stream der nicht nil ist"
 #~ msgid "Po file loaded!"
 #~ msgstr "Po-Datei wurde geladen!"
 
-#~ msgid "Selected language:"
-#~ msgstr "Ausgewählte Sprache:"
+#~ msgid "Merging of template failed"
+#~ msgstr "Das Zusammenführen mit der Schablone ist fehlgeschlagen"
 
-#~ msgid "Spell checking of PO translations"
-#~ msgstr "Rechtschreibprüfung  einer po-Übersetzung"
-
-#~ msgid "Directory with translated pas files"
-#~ msgstr "Verzeichnis mit übersetzten pas-Dateien"
-
-#~ msgid "Statistics of PO file"
-#~ msgstr "Statistik der po-Datei"
+#~ msgid "Merging of template successful"
+#~ msgstr "Zusammenführen mit der Schablone war erfolgreich"
 
 #~ msgid "Ignore upper/lower case for MsgIds"
 #~ msgstr "Groß-/Kleinschreibung für MsgIds ignorieren"
+
+#~ msgid "The template is merged with the former translations"
+#~ msgstr "Die Schablone wird mit den vorherigen Übersetzungen zusammengeführt"
+
+#, fuzzy
+#~ msgid "The template was successfully merged with %u translations"
+#~ msgstr "Die Schablone wurde mit der Übersetzung zusammengeführt"
 
 #, fuzzy
 #~ msgid "Number of legacy copies to be kept"
@@ -1914,6 +1961,17 @@ msgstr "StreamReadln braucht einen Stream der nicht nil ist"
 #~ msgid "PO file to be translated:"
 #~ msgstr "Zu übersetzende po-Datei:"
 
+#, fuzzy
+#~ msgid "The template was merged with %u translations"
+#~ msgstr "Die Schablone wurde mit der Übersetzung zusammengeführt"
+
+#, fuzzy
+#~ msgid "The template was merged with the translation"
+#~ msgstr "Die Schablone wurde mit der Übersetzung zusammengeführt"
+
+#~ msgid "%u files processed (%u copies - %u errors)"
+#~ msgstr "%u Dateien verarbeitet (%u Kopien - %u Fehler)"
+
 #~ msgid "Edit ignores"
 #~ msgstr "Ignores bearbeiten"
 
@@ -1922,3 +1980,15 @@ msgstr "StreamReadln braucht einen Stream der nicht nil ist"
 
 #~ msgid "Reading exclude file (%s)"
 #~ msgstr "Lese Exclude-Datei (%s)"
+
+#~ msgid "Selected language:"
+#~ msgstr "Ausgewählte Sprache:"
+
+#~ msgid "Spell checking of PO translations"
+#~ msgstr "Rechtschreibprüfung  einer po-Übersetzung"
+
+#~ msgid "Directory with translated pas files"
+#~ msgstr "Verzeichnis mit übersetzten pas-Dateien"
+
+#~ msgid "Statistics of PO file"
+#~ msgstr "Statistik der po-Datei"

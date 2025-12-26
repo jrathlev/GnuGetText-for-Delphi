@@ -13,6 +13,7 @@ object CharTableDialog: TCharTableDialog
   OldCreateOrder = True
   Position = poScreenCenter
   OnCreate = FormCreate
+  OnShow = FormShow
   DesignSize = (
     401
     255)

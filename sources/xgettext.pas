@@ -151,6 +151,7 @@ type
       procedure SetIgnoreListFile (const FileName : string);
     public
       // When set, only default domain is written to a file, and this file has it's filename from this variable
+      ProjectId,
       SingleOutputFilename : String;
       ExePath : string;
       CodePage : integer;
@@ -285,6 +286,7 @@ begin
   Excludes:=TXExcludes.Create;
   ExcludeDirs:=TStringList.Create; // JR
   defaultDomain:='default';
+  ProjectId:='';
   Generator:=AGenerator; //Format(_('dxgettext %s'),[GgtVersion])   // JR
   FCanceled:=false;
   end;
@@ -1059,7 +1061,7 @@ begin
   destination:=TFileSTream.Create (filename, fmCreate);
   try
     // Write a dummy header that the user can modify
-    StreamWriteDefaultPoTemplateHeader(destination,Generator);
+    StreamWriteDefaultPoTemplateHeader(destination,Generator,ProjectId);
 
     // Write out all msgids - use always dom.order because dom.msgid has no ignore processing
     if OrderbyMsgid then dom.order.Sort;

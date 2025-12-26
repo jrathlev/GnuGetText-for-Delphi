@@ -15,7 +15,7 @@
    the specific language governing rights and limitations under the License.
 
    Vers. 1 - Aug. 2018
-   last modified: September 2024
+   last modified: July 2025
 *)
 
 unit ListSelectDlg;
@@ -37,6 +37,7 @@ type
       var Height: Integer);
     procedure lbSelectDrawItem(Control: TWinControl; Index: Integer;
       Rect: TRect; State: TOwnerDrawState);
+    procedure FormShow(Sender: TObject);
   private
     { Private-Deklarationen }
     FWidth : integer;
@@ -52,6 +53,7 @@ type
     procedure Add (const AItem : string);
     procedure AddItem (const AItem : string; AIndex : integer);
     procedure AddList (AItems : TStrings; const Prefix : string = '');
+    function GetItem (Index : integer) : string;
     procedure ShowList (APos : TPoint; AHeight : integer = 0);
     property BakColor : TColor read GetBakColor write SetBakColor;
     property Sorted : boolean read GetSorted write SetSorted;
@@ -79,6 +81,11 @@ begin
 procedure TListSelectDialog.FormDeactivate(Sender: TObject);
 begin
   Close;
+  end;
+
+procedure TListSelectDialog.FormShow(Sender: TObject);
+begin
+  FitToScreen(Screen,self);
   end;
 
 function TListSelectDialog.GetBakColor : TColor;
@@ -126,13 +133,22 @@ begin
   end;
 
 procedure TListSelectDialog.Add (const AItem : string);
+var
+  n : integer;
 begin
-  lbSelect.Items.Add(AItem);
+  with lbSelect do begin
+    n:=Items.Add(AItem); Items.Objects[n]:=pointer(n);
+    end;
   end;
 
 procedure TListSelectDialog.AddItem (const AItem : string; AIndex : integer);
 begin
   lbSelect.AddItem(AItem,pointer(AIndex));
+  end;
+
+function TListSelectDialog.GetItem (Index : integer) : string;
+begin
+  Result:=lbSelect.Items[Index];
   end;
 
 procedure TListSelectDialog.lbSelectClick (Sender: TObject);

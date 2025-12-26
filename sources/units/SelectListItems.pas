@@ -13,7 +13,7 @@
    the specific language governing rights and limitations under the License.
     
    Vers. 1 - Oct. 2010
-   last modified: Aug. 2022
+   last modified: July 2025
     *)
 
 unit SelectListItems;
@@ -32,10 +32,14 @@ type
     btSelAll: TBitBtn;
     laDesc: TStaticText;
     laName: TStaticText;
+    paTop: TPanel;
+    paBottom: TPanel;
+    paCenter: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure btSelNoneClick(Sender: TObject);
     procedure btSelAllClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -75,6 +79,11 @@ begin
 {$ENDIF}
 end;
 
+procedure TSelectListItemsDialog.FormShow(Sender: TObject);
+begin
+  FitToScreen(Screen,self);
+  end;
+
 {$IFDEF HDPI}   // scale glyphs and images for High DPI
 procedure TSelectListItemsDialog.AfterConstruction;
 begin
@@ -105,6 +114,7 @@ var
 begin
   AdjustFormPosition(Screen,self,APos);
   Caption:=ATitle;
+  paTop.Visible:=not ADesc.IsEmpty;
   laDesc.Caption:=ADesc;
   laName.Caption:=AName;
   clItems.Clear;

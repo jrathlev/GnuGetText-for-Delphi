@@ -17,6 +17,7 @@ object EditHistListDialog: TEditHistListDialog
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
   DesignSize = (
     336
     276)

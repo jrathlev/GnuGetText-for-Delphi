@@ -13,7 +13,7 @@
    the specific language governing rights and limitations under the License.
 
    Vers. 1 - Sep. 2002 
-   last modified: July 2022
+   last modified: July 2025
    *)
 
 unit InpText;
@@ -35,6 +35,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure TextFeldKeyPress(Sender: TObject; var Key: Char);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     FIniName,FIniSection : string;
@@ -121,6 +122,11 @@ begin
     with ActiveControl do if length(Hint)>0 then ShowHintInfo(Hint);
     end;
 {$ENDIF}
+  end;
+
+procedure TInputTextDialog.FormShow(Sender: TObject);
+begin
+  FitToScreen(Screen,self);
   end;
 
 { ------------------------------------------------------------------- }

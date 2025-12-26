@@ -3,7 +3,7 @@
    - ggdxgettext
    - ggmerge
 
-   © 2015 - 2024 Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
+   © 2015 - 2025 Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
 
    The contents of this file may be used under the terms of the
    Mozilla Public License ("MPL") or
@@ -19,15 +19,16 @@
    Vers. 3.0   - July 2023 : template creation also from c/cpp files
        requires XGetText.exe Windows binary from
        https://mlocati.github.io/articles/gettext-iconv-windows.html
-   Vers. 3.1   - August 2023:  enhanced po header management
-                               highlighting of languages which need revision
-               - April 2024:   TMemInFile instead aof TIniFile
-   Vers. 3.2   - August 2024:  external loadable language list
-                               language selections are saved by shortcuts instead of index
-   Vers. 3.3   - October 2024: optional merging of AutoComments and HistComments
-                               optional merging with similar msgids
+   Vers. 3.1   - August 2023:   enhanced po header management
+                                highlighting of languages which need revision
+               - April 2024:    TMemInFile instead aof TIniFile
+   Vers. 3.2   - August 2024:   external loadable language list
+                                language selections are saved by shortcuts instead of index
+   Vers. 3.3   - October 2024:  optional merging of AutoComments and HistComments
+                                optional merging with similar msgids
+   Vers. 3.4   - December 2025: Entry for Project-Id-Version added
 
-   last modified: October 2024
+   last modified: December 2025
    *)
 
 unit TransMain;
@@ -138,6 +139,7 @@ type
     bbImport: TBitBtn;
     btEdit: TBitBtn;
     gbEdit: TGroupBox;
+    ProjectName: TLabeledEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -213,7 +215,7 @@ type
     procedure SaveMergeSettings(const AFilename : string; ac,hc,bu : boolean);
     procedure RemoveBOM(const PoName : string);
     function CompileToMo (const PoFile,MergePath : string) : boolean;
-    procedure Merge (AIndex : integer);
+    function Merge (AIndex : integer) : boolean;
     procedure CopyMo (AIndex : integer; var FCount,ECount : integer);
     procedure Progress (const CurrentTask,CurrentFileName:string; LineNumber:Integer);
     procedure Warning (WarningType:TWarningType; const Msg,Line,Filename:string;LineNumber:Integer);
@@ -491,6 +493,7 @@ const
   iniSimLen = 'SimMeasure';
   iniSimilar = 'MergeSimilar';
   iniSelLang  = 'SelectedLanguages';
+  iniPrjName  = 'ProjectName';
   iniLangCnt = 'LanguageCount';
   iniLang = 'Language';
 
@@ -539,6 +542,8 @@ begin
     if rbMask.Checked then pcMode.ActivePageIndex:=0
     else pcMode.ActivePageIndex:=1;
     cbOverwrite.Checked:=ReadBool(dxSect,iniOvwr,false);
+
+    ProjectName.Text:=ReadString(trSect,iniPrjName,'');
     with edLangSubdir do Text:=ReadString(trSect,iniLangDir,Text);
     nl:=ReadInteger(trSect,iniLangCnt,0);
     lbLang.Clear;
@@ -611,6 +616,8 @@ begin
     WriteBool(dxSect,iniOrder,cbOrder.Checked);
     WriteString(ggtSect,iniFilenames,cbFiles.Text);
     WriteBool(dxSect,iniOvwr,cbOverwrite.Checked);
+
+    WriteString(trSect,iniPrjName,ProjectName.Text);
     WriteString(trSect,iniLangDir,edLangSubdir.Text);
     WriteInteger(trSect,iniLangCnt,lbLang.Count);
     with lbLang do for i:=0 to Count-1 do begin
@@ -1095,6 +1102,7 @@ begin
     meProgress.Clear;
     WarnCount:=0;
     with XGetText do begin
+      ProjectId:=ProjectName.Text;
       ExePath:=PrgPath;
       Recurse:=cbRecurse.Checked;
       OrderbyMsgid:=cbOrder.Checked;
@@ -1149,9 +1157,23 @@ begin
 procedure TfrmTransMain.btMergeClick(Sender: TObject);
 var
   i    : integer;
+  ok   : boolean;
 begin
-  with lbLang do if SelCount=1 then Merge(ItemIndex)
-  else for i:=0 to Count-1 do if Selected[i] then Merge(i);
+  laProgress.Caption:=_('The former translations are merged with the current template');
+  Application.ProcessMessages;
+  with lbLang do if SelCount=1 then begin
+    if Merge(ItemIndex) then laProgress.Caption:=_('Merging with template was successful')
+    else laProgress.Caption:=_('Merging with template failed');
+    end
+  else begin
+    ok:=true;
+    for i:=0 to Count-1 do if Selected[i] then begin
+      ok:=Merge(i) and ok;
+      if not ok then Break;
+      end;
+    if ok then laProgress.Caption:=Format(_('%u translations were successfully merged with template'),[Count])
+    else laProgress.Caption:=_('Merging with template failed');
+    end;
   end;
 
 {******************************************************************************}
@@ -1270,7 +1292,7 @@ begin
     end;
   end;
 
-procedure TfrmTransMain.Merge (AIndex : integer);
+function TfrmTransMain.Merge (AIndex : integer) : boolean;
 var
   translist : TPoEntryList;
   pe,petr   : TPoEntry;
@@ -1283,7 +1305,7 @@ var
   st,s      : string;
   i,n       : integer;
   ac,hc,bu,
-  ok,cphd   : boolean;
+  cphd      : boolean;
 begin
   st:=GetTemplName;
   MergePath:=IncludeTrailingPathDelimiter(cbProjDir.Text)+IncludeTrailingPathDelimiter(GetLangSubDir(AIndex));
@@ -1303,7 +1325,7 @@ begin
   if not cphd then CopyFileTS(sv,PoFile); // Init translation
   sx:=NewExt(PoFile,PoxExt);
   meProgress.Lines.Add(Format(_('Merging with %s template'),[GetLangName(AIndex)]));
-  ok:=true;
+  Result:=true;
 // Always use internal merge function
   FileMode:=fmOpenRead;
 //  if rgEncoding.ItemIndex=0 then cp:=cpUtf8 else cp:=cpLatin1;
@@ -1313,9 +1335,9 @@ begin
     i:=translist.LoadFromFile(PoFile);
     if i>0 then begin
       ErrorDialog(Format(_('Error in line %u of file "%s"'),[i,PoFile]));
-      ok:=false;
+      Result:=false;
       end;
-    if ok then begin
+    if Result then begin
       scd:=CurrentTimestamp;
       AssignFile (tf,sv,cpUtf8);    // read template always as Utf-8
       Reset (tf);
@@ -1334,6 +1356,8 @@ begin
               petr:=translist.FindEntry(pe.MsgId);
               if petr<>nil then begin
                 if pe.MsgId.IsEmpty then with translist do begin  // header
+                  if (Header[hiProjectId]=defId) and (length(ProjectName.Text)>0) then
+                    Header[hiProjectId]:=ProjectName.Text;
                   Header[hiCreationDate]:=scd;
                   Header[hiRevisionDate]:=CurrentTimestamp;
                   Header[hiLanguage]:=GetLangId(AIndex);
@@ -1413,39 +1437,37 @@ begin
   finally
     FreeAndNil (translist);
     end;
-  if ok then begin
+  if Result then begin
     sv:=NewExt(PoFile,'~'+PoExt);
     if FileExists(sv) then DeleteFile(sv);
     if bu then begin
-      if FileExists(PoFile) then ok:=RenameFile(PoFile,sv)
-      else ok:=true;
-      if not ok then ErrorDialog(Format(_('Cannot rename %s to %s'),[PoFile,sv]));
+      if FileExists(PoFile) then Result:=RenameFile(PoFile,sv)
+      else Result:=true;
+      if not Result then ErrorDialog(Format(_('Cannot rename %s to %s'),[PoFile,sv]));
       end
     else begin
-      ok:=deletefile (PoFile);
-      if not ok then ErrorDialog(Format(_('Cannot delete %s'),[PoFile]));
+      Result:=deletefile (PoFile);
+      if not Result then ErrorDialog(Format(_('Cannot delete %s'),[PoFile]));
       end;
-    if ok then begin
-      ok:=FileExists(sx);
-      if ok then begin
-        ok:=RenameFile(sx,PoFile);
-        if not ok then ErrorDialog(Format(_('Cannot rename %s to %s'),[sx,PoFile]))
+    if Result then begin
+      Result:=FileExists(sx);
+      if Result then begin
+        Result:=RenameFile(sx,PoFile);
+        if not Result then ErrorDialog(Format(_('Cannot rename %s to %s'),[sx,PoFile]))
         end
       end;
     end;
-  if ok then begin
+  if Result then begin
     SetLangMarker(AIndex,CheckPoFile(PoFile));
     lbLang.Invalidate;
     SaveMergeSettings(MergePath+st,ac,hc,bu);
-    laProgress.Caption:=_('The template was merged into the translation file');
     if cbPoEdit.Checked then begin // and (lbLang.SelCount=1) then
       StartAndWait(PoFile,'');
       SetLangMarker(AIndex,CheckPoFile(PoFile));
 //      ShellExecute (Application.Handle,'open',PChar(PoFile),nil,nil,SW_SHOWNORMAL)
       end
 //    else CompileToMo(PoFile,MergePath);
-    end
-  else laProgress.Caption:=_('Merging of template failed');
+    end;
   meProgress.Lines.Add('');
   end;
 
@@ -1466,10 +1488,14 @@ begin
     else for i:=0 to Count-1 do if Selected[i] then begin
       inc(n);
       laProgress.Caption:=Format(_('Copying mo file (%u)'),[n]);
+      Application.ProcessMessages;
       CopyMo(i,nf,ne);
       Application.ProcessMessages;
       end;
-    if n>0 then laProgress.Caption:=Format(_('%u files processed (%u copies - %u errors)'),[n,nf,ne])
+    if n>0 then laProgress.Caption:=Format(_('%s processed (%s - %s)'),
+      [GetPluralString('',_('1 file'),_('%u files'),n),
+      GetPluralString(_('No copies'),_('1 copy'),_('%u copies'),nf),
+      GetPluralString(_('No error'),_('1 error'),_('%u errors'),ne)])
     else laProgress.Caption:=_('No files processed');
     end
   else ErrorDialog(Format(_('Folder for executables not found: '),[edTargetDir.Text]));

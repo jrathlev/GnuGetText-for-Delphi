@@ -13,7 +13,7 @@
    the specific language governing rights and limitations under the License.
 
    Vers. 1.0 - May 2018
-   last modified: December 2022
+   last modified: February 2024
    *)
 
 unit ExtSysUtils;
@@ -74,7 +74,11 @@ begin
       end;
     Result:=Result+Format(' (0x%.8x)',[ASysError]);
     end
-  else Result:=SysErrorMessage(ASysError)+Format(' (0x%.8x)',[ASysError]);
+  else begin
+    Result:=SysErrorMessage(ASysError);
+    if length(Result)=0 then Result:=rsErrorCode+Format(' = 0x%.8x',[ASysError])
+    else Result:=Result+Format(' (0x%.8x)',[ASysError]);
+    end;
   end;
 
 function NoError(ASysError : cardinal) : boolean;

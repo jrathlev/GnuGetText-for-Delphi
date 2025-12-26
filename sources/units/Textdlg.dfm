@@ -14,8 +14,10 @@ object TextEingabe: TTextEingabe
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = True
+  Position = poDesigned
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Rahmen: TBevel

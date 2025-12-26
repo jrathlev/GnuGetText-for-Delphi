@@ -2,7 +2,7 @@ object frmTransMain: TfrmTransMain
   Left = 381
   Top = 208
   Caption = 'Process GnuGetText translations for Delphi'
-  ClientHeight = 586
+  ClientHeight = 631
   ClientWidth = 826
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,18 +21,18 @@ object frmTransMain: TfrmTransMain
     Left = 0
     Top = 0
     Width = 826
-    Height = 301
+    Height = 346
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     DesignSize = (
       826
-      301)
+      346)
     object paFiles: TPanel
       Left = 5
       Top = 0
       Width = 356
-      Height = 211
+      Height = 246
       BevelOuter = bvNone
       TabOrder = 0
       object Label1: TLabel
@@ -44,9 +44,9 @@ object frmTransMain: TfrmTransMain
       end
       object btProjDir: TSpeedButton
         Left = 320
-        Top = 23
-        Width = 24
-        Height = 24
+        Top = 21
+        Width = 26
+        Height = 26
         Hint = 'Select project directory'
         Glyph.Data = {
           36060000424D3606000000000000360000002800000020000000100000000100
@@ -106,7 +106,7 @@ object frmTransMain: TfrmTransMain
       end
       object rbMask: TRadioButton
         Left = 10
-        Top = 55
+        Top = 100
         Width = 171
         Height = 17
         Caption = 'All files matching to mask'
@@ -117,7 +117,7 @@ object frmTransMain: TfrmTransMain
       end
       object rbFiles: TRadioButton
         Left = 190
-        Top = 55
+        Top = 100
         Width = 161
         Height = 17
         Caption = 'Only the following files'
@@ -126,27 +126,23 @@ object frmTransMain: TfrmTransMain
       end
       object pcMode: TPageControl
         Left = 5
-        Top = 75
+        Top = 120
         Width = 346
-        Height = 131
-        ActivePage = tsFiles
+        Height = 126
+        ActivePage = tsMask
         Style = tsButtons
         TabOrder = 3
         object tsMask: TTabSheet
           Caption = 'tsMask'
           TabVisible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           DesignSize = (
             338
-            121)
+            116)
           object btDefMask: TSpeedButton
             Left = 310
-            Top = 13
-            Width = 24
-            Height = 24
+            Top = 11
+            Width = 26
+            Height = 26
             Glyph.Data = {
               36060000424D3606000000000000360000002800000020000000100000000100
               18000000000000060000120B0000120B00000000000000000000C0DCC0C0DCC0
@@ -203,10 +199,10 @@ object frmTransMain: TfrmTransMain
           end
           object bbExclude: TSpeedButton
             Left = 310
-            Top = 88
-            Width = 24
-            Height = 24
-            Anchors = [akLeft, akRight]
+            Top = 86
+            Width = 26
+            Height = 26
+            Anchors = [akTop, akRight]
             Glyph.Data = {
               36060000424D3606000000000000360000002800000020000000100000000100
               18000000000000060000120B0000120B00000000000000000000C0DCC0CC9762
@@ -299,10 +295,6 @@ object frmTransMain: TfrmTransMain
           Caption = 'tsFiles'
           ImageIndex = 1
           TabVisible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Label2: TLabel
             Left = 0
             Top = 10
@@ -458,11 +450,21 @@ object frmTransMain: TfrmTransMain
         TabOrder = 0
         OnCloseUp = cbProjDirCloseUp
       end
+      object ProjectName: TLabeledEdit
+        Left = 10
+        Top = 70
+        Width = 336
+        Height = 21
+        EditLabel.Width = 126
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Project name and version:'
+        TabOrder = 4
+      end
     end
     object gbDomain: TGroupBox
       Left = 15
-      Top = 215
-      Width = 336
+      Top = 255
+      Width = 341
       Height = 81
       Caption = 'Text domain'
       TabOrder = 1
@@ -489,7 +491,7 @@ object frmTransMain: TfrmTransMain
       object OutputName: TLabeledEdit
         Left = 110
         Top = 40
-        Width = 191
+        Width = 201
         Height = 21
         EditLabel.Width = 31
         EditLabel.Height = 13
@@ -501,16 +503,16 @@ object frmTransMain: TfrmTransMain
       Left = 365
       Top = 5
       Width = 454
-      Height = 101
+      Height = 106
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Copy mo file to "locale\..\LC_MESSAGES\"'
       TabOrder = 2
       DesignSize = (
         454
-        101)
+        106)
       object btCopyDir: TSpeedButton
         Left = 420
-        Top = 58
+        Top = 68
         Width = 24
         Height = 24
         Anchors = [akTop, akRight]
@@ -567,11 +569,10 @@ object frmTransMain: TfrmTransMain
           DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0C0DCC0}
         NumGlyphs = 2
         OnClick = btCopyDirClick
-        ExplicitLeft = 341
       end
       object rbSingle: TRadioButton
         Left = 15
-        Top = 20
+        Top = 25
         Width = 146
         Height = 17
         Caption = 'In single directory'
@@ -582,7 +583,7 @@ object frmTransMain: TfrmTransMain
       end
       object rbMulti: TRadioButton
         Left = 180
-        Top = 20
+        Top = 25
         Width = 176
         Height = 17
         Caption = 'In multiple directories'
@@ -591,7 +592,7 @@ object frmTransMain: TfrmTransMain
       end
       object edTargetDir: TLabeledEdit
         Left = 15
-        Top = 60
+        Top = 70
         Width = 399
         Height = 21
         Anchors = [akLeft, akTop, akRight]
@@ -603,28 +604,24 @@ object frmTransMain: TfrmTransMain
     end
     object pcOptions: TPageControl
       Left = 365
-      Top = 115
+      Top = 120
       Width = 454
-      Height = 176
+      Height = 216
       ActivePage = tsLang
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
       object tsLang: TTabSheet
         Caption = 'Languages'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label4: TLabel
           Left = 265
-          Top = 57
+          Top = 97
           Width = 99
           Height = 13
           Caption = 'Available languages:'
         end
         object cbLanguage: TComboBox
           Left = 265
-          Top = 74
+          Top = 114
           Width = 176
           Height = 22
           Style = csOwnerDrawVariable
@@ -652,7 +649,7 @@ object frmTransMain: TfrmTransMain
           Left = 5
           Top = 5
           Width = 181
-          Height = 136
+          Height = 176
           Style = lbOwnerDrawFixed
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -669,7 +666,7 @@ object frmTransMain: TfrmTransMain
         end
         object btSelNone: TBitBtn
           Left = 225
-          Top = 109
+          Top = 115
           Width = 31
           Height = 31
           Hint = 'Deselect all'
@@ -754,12 +751,12 @@ object frmTransMain: TfrmTransMain
           NumGlyphs = 2
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 5
+          TabOrder = 6
           OnClick = btSelNoneClick
         end
         object btSelAll: TBitBtn
           Left = 190
-          Top = 109
+          Top = 115
           Width = 31
           Height = 31
           Hint = 'Select all'
@@ -844,12 +841,12 @@ object frmTransMain: TfrmTransMain
           NumGlyphs = 2
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 6
+          TabOrder = 7
           OnClick = btSelAllClick
         end
         object bbAdd: TBitBtn
           Left = 265
-          Top = 105
+          Top = 145
           Width = 176
           Height = 36
           Hint = 'Add selected language to list'
@@ -940,7 +937,7 @@ object frmTransMain: TfrmTransMain
         end
         object bbRem: TBitBtn
           Left = 190
-          Top = 75
+          Top = 80
           Width = 31
           Height = 31
           Hint = 'Remove selected language from list'
@@ -1025,7 +1022,7 @@ object frmTransMain: TfrmTransMain
           NumGlyphs = 2
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 9
+          TabOrder = 10
           OnClick = bbRemClick
         end
         object bbUp: TBitBtn
@@ -1115,7 +1112,7 @@ object frmTransMain: TfrmTransMain
           NumGlyphs = 2
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 7
+          TabOrder = 8
           OnClick = bbUpClick
         end
         object bbDown: TBitBtn
@@ -1205,12 +1202,12 @@ object frmTransMain: TfrmTransMain
           NumGlyphs = 2
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 8
+          TabOrder = 9
           OnClick = bbDownClick
         end
         object btStatus: TBitBtn
           Left = 225
-          Top = 74
+          Top = 150
           Width = 31
           Height = 31
           Hint = 'Show statitstics of selected translation'
@@ -1299,8 +1296,8 @@ object frmTransMain: TfrmTransMain
           OnClick = btStatusClick
         end
         object btUpdate: TBitBtn
-          Left = 225
-          Top = 39
+          Left = 190
+          Top = 150
           Width = 31
           Height = 31
           Hint = 'Check for incomplete translations'
@@ -1385,12 +1382,12 @@ object frmTransMain: TfrmTransMain
           NumGlyphs = 2
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 10
+          TabOrder = 5
           OnClick = btUpdateClick
         end
         object bbImport: TBitBtn
           Left = 225
-          Top = 5
+          Top = 80
           Width = 31
           Height = 31
           Hint = 'Import language list from another project'
@@ -1485,7 +1482,7 @@ object frmTransMain: TfrmTransMain
         ExplicitLeft = 0
         ExplicitTop = 0
         ExplicitWidth = 0
-        ExplicitHeight = 0
+        ExplicitHeight = 198
         object cbCreateIgnore: TCheckBox
           Left = 20
           Top = 70
@@ -1543,7 +1540,7 @@ object frmTransMain: TfrmTransMain
         ExplicitLeft = 0
         ExplicitTop = 0
         ExplicitWidth = 0
-        ExplicitHeight = 0
+        ExplicitHeight = 198
         object cbMergeSimilar: TCheckBox
           Left = 15
           Top = 12
@@ -1629,7 +1626,7 @@ object frmTransMain: TfrmTransMain
         ExplicitLeft = 0
         ExplicitTop = 0
         ExplicitWidth = 0
-        ExplicitHeight = 0
+        ExplicitHeight = 198
         object cbOverwrite: TCheckBox
           Left = 20
           Top = 40
@@ -1744,7 +1741,7 @@ object frmTransMain: TfrmTransMain
   end
   object pnStatus: TPanel
     Left = 0
-    Top = 301
+    Top = 346
     Width = 826
     Height = 285
     Align = alClient
@@ -2898,7 +2895,7 @@ object frmTransMain: TfrmTransMain
     Left = 680
     Top = 25
     Bitmap = {
-      494C01010400A4000C0228001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010400A400140228001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000A00000002800000001002000000000000064
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
