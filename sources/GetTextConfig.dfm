@@ -14,7 +14,6 @@ object frmConfig: TfrmConfig
   Font.Style = []
   OldCreateOrder = False
   Position = poDesigned
-  Scaled = False
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (

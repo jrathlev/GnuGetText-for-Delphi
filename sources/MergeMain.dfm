@@ -13,7 +13,6 @@ object frmMerge: TfrmMerge
   Font.Style = []
   OldCreateOrder = False
   Position = poDesigned
-  Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
