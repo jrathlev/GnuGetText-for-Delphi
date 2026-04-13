@@ -1,6 +1,13 @@
 Gnu GetText for Delphi - Command line reference
 ===============================================
 
+Common options for all programs
+-------------------------------
+calling: <program> <arg> [options]
+     /lang:<id>    - <id> = language ID (en, de, fr, ...)
+     /design:<ds>  - <ds> = none : default icons
+                          = plain: plain icons
+
 ggdxgettext
 -----------
 calling: ggdxgettext.exe <name> [options]
@@ -30,11 +37,12 @@ ggassemble
 ----------
 calling: ggassemble.exe <filename> [options] 
     <filename>   - Name of exe file where the mo files are to be embedded
-    /lang:<list> - List of languages to be embedded 
-                   <list> comma separated list of language codes (ISO 639)
-                   Example: /lang:de,fr,es
+    /emb:<list>  - List of languages to be embedded: 
+                   <list> is a comma separated list of language codes (ISO 639)
+                   Example: /emb:de,fr,es
     /dom:<list>  - List of additional domains (other than default)
-                   <list> comma separated list of domain names
+                   <list> is a comma separated list of domain names.
+                   If "*" is specified, all domains found will be selected.
                    Example: /dom:delphi10,dialogs,units
     /force       - No interactive window, start embedding immediately
 
@@ -51,7 +59,7 @@ Examples:
                  immediately 
                  
      
-November 2023
+April 2026
 J. Rathlev
 Mail: kontakt(a)rathlev-home.de
 

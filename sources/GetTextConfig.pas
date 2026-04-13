@@ -149,7 +149,6 @@ procedure TfrmConfig.FormCreate(Sender: TObject);
 begin
   TranslateComponent (self);
   Caption:=Caption+' (ggdxgettext)';
-  laVersion.Caption:='Version: '+GetProgVersion;
   with pmMask.Items do begin
     Add(NewItem(_('Delphi files'),0,false,true,DoMaskClick,0,Format('miMask%u',[0])));
     Add(NewItem(_('Lazarus files'),0,false,true,DoMaskClick,0,Format('miMask%u',[1])));

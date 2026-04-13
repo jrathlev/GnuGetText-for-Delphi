@@ -31,8 +31,17 @@ _new feature:_ optional embedding as resources
 - **IssToPas:** Convert [CustomMessages] section of iss file to Delphi unit (resourcestring) 
 - **German Translations** for programs and Windows context menus
 
-#### Utilitiy unit:
+#### New in version 4:
+- Integrated editor for **exclude conditions** (*exclude.cfg*)
+- Selection of **desktop language**
+- Selection of an **alternative icon design**
+- Support for **dark display mode**
+- Improved display on **high-resolution screens**
+
+#### Utility units:
 - **LangUtils:** Initialization of the translations, language selection via *ini* file, command line and menu extension
+- **ImageLoader:** Loading an alternative set of SVG icons when the program starts 
+- **StyleUtils:** Support for loading and changing the display style (e.g. *light* or *dark*)
 
 [Download of Windows executable package](https://www.rathlev-home.de/tools/download/ggt-translate-setup.exe)
 

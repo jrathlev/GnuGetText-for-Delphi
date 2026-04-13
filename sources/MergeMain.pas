@@ -137,7 +137,7 @@ begin
       end
     else EditTranslation.Text:=ExpandFileName(sn); // file to be merged
     end;
-  laVersion.Caption:='Version: '+GetProgVersion;
+  laVersion.Caption:=GetProgVersion;
   FormResize (self);
   Caption:=Caption+' (ggmerge)';
   wx:=Left; wy:=Top+Height+10;

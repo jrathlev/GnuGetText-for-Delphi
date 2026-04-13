@@ -36,6 +36,7 @@ type
     procedure TimerActivateTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     FOverwrite : boolean;
@@ -65,7 +66,6 @@ begin
   TranslateComponent (self);
   TimerActivate.Enabled:=True;
   Caption:=Caption+' (ggdxgettext)';
-  laVersion.Caption:='Version: '+GetProgVersion;
   FOverwrite:=false;
   end;
 
@@ -84,6 +84,11 @@ begin
 procedure TfrmGetText.FormResize(Sender: TObject);
 begin
 //  ButtonOK.Left:=(Width-ButtonOK.Width) div 2;
+  end;
+
+procedure TfrmGetText.FormShow(Sender: TObject);
+begin
+  laVersion.Caption:=GetProgVersion;
   end;
 
 procedure TfrmGetText.Progress(const CurrentTask, CurrentFileName: string;
@@ -147,6 +152,7 @@ var
       else ProjectDir:=ExpandFileName(sn); // root directory with source files to be scanned
       end;
     frmConfig:=TfrmConfig.Create (self);
+    frmConfig.laVersion.Caption:=laVersion.Caption;
     with frmConfig do begin
       if FileExists(ProjectDir) then begin          // is single file
        ProjectFile:=ExtractFileName(ProjectDir);

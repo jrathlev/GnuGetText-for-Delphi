@@ -92,7 +92,7 @@ var
 begin
   TranslateComponent (self);
   Caption:=Caption+' (ggassemble)';
-  laVersion.Caption:='Version: '+GetProgVersion;
+  laVersion.Caption:=GetProgVersion;
   ErrMsg:=''; ok:=true;
   if ParamCount=0 then with OpenDialog do begin
     Title:=_('Select the exe file in which you want to embed the translations');

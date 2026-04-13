@@ -15,6 +15,7 @@ object frmGetText: TfrmGetText
   OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
+  OnShow = FormShow
   DesignSize = (
     421
     315)

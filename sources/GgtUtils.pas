@@ -43,22 +43,26 @@ uses Winapi.ShellApi, InitProg, MsgDialogs, GgtConsts;
 
 {------------------------------------------------------------------}
 function GetProgVersion : string;
-var
-  rs : TResourceStream;
-  verbuf : PVSFIXEDFILEINFO;
-  verlen : cardinal;
 begin
-  Result:='???';
-  try
-    rs:=TResourceStream.CreateFromID(HInstance,1,RT_VERSION);
-    if VerQueryValue(rs.Memory,'\',pointer(verbuf),verlen) then
-      Result:=IntToStr(HiWord(verbuf.dwFileVersionMS))+'.'
-        +IntToStr(LoWord(verbuf.dwFileVersionMS))+'.'
-        +IntToStr(HiWord(verbuf.dwFileVersionLS));
-  finally
-    rs.Free;
-    end;
+  Result:=GetVersion(3);
   end;
+// the following code does not work under Windows XP
+//var
+//  rs : TResourceStream;
+//  verbuf : PVSFIXEDFILEINFO;
+//  verlen : cardinal;
+//begin
+//  Result:='???';
+//  try
+//    rs:=TResourceStream.CreateFromID(HInstance,1,RT_VERSION);
+//    if VerQueryValue(rs.Memory,'\',pointer(verbuf),verlen) then
+//      Result:=IntToStr(HiWord(verbuf.dwFileVersionMS))+'.'
+//        +IntToStr(LoWord(verbuf.dwFileVersionMS))+'.'
+//        +IntToStr(HiWord(verbuf.dwFileVersionLS));
+//  finally
+//    rs.Free;
+//    end;
+//  end;
 
 { ------------------------------------------------------------------- }
 procedure ShowHelp(const Topic : string);
