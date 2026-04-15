@@ -15,12 +15,12 @@ unit GetTextMain;
 //         <filename>    - Name of basic directory or file to be scanned
 //         /dom:<domain> - use this domain instead of default
 
-// Last modified: October 2023 J. Rathlev, D-24222 Schwentinental
+// Last modified: April 2026 J. Rathlev, D-24222 Schwentinental
 
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Windows, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   xgettext, GgtConsts, Vcl.Buttons;
 

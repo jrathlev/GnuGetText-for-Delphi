@@ -239,6 +239,7 @@ object frmConfig: TfrmConfig
     Checked = True
     State = cbChecked
     TabOrder = 1
+    OnClick = CheckBoxRecurseClick
   end
   object EditBasepath: TLabeledEdit
     Left = 10
@@ -681,13 +682,6 @@ object frmConfig: TfrmConfig
     ShowHint = True
     TabOrder = 14
     OnClick = btnManualClick
-  end
-  object FileOpenDialog: TFileOpenDialog
-    FavoriteLinks = <>
-    FileTypes = <>
-    Options = [fdoPickFolders, fdoForceFileSystem]
-    Left = 305
-    Top = 350
   end
   object pmMask: TPopupMenu
     Left = 245

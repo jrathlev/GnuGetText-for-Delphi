@@ -14,7 +14,7 @@ unit GetTextConfig;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Windows, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   Vcl.Buttons, Vcl.Menus;
 
@@ -36,7 +36,6 @@ type
     ButtonOK: TBitBtn;
     ButtonCancel: TBitBtn;
     bbBaseDir: TSpeedButton;
-    FileOpenDialog: TFileOpenDialog;
     bbExclude: TSpeedButton;
     btDefMask: TSpeedButton;
     pmMask: TPopupMenu;
@@ -52,9 +51,12 @@ type
     procedure btDefMaskClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
     procedure btnManualClick(Sender: TObject);
+    procedure CheckBoxRecurseClick(Sender: TObject);
   private
     { Private declarations }
+    IsVista : boolean;
     procedure DoMaskClick (Sender : TObject);
+    procedure ShowExclude;
   public
     { Public declarations }
     procedure LoadFromIni(const AIniName : string);
@@ -65,7 +67,7 @@ type
 implementation
 
 uses
-  System.inifiles, gnugettext, GgtConsts, GgtUtils, PathUtils, WinShell;
+  System.inifiles, Vcl.FileCtrl, gnugettext, GgtConsts, GgtUtils, PathUtils, WinShell;
 
 {$R *.dfm}
 
@@ -76,13 +78,30 @@ const
   defOutput = 'default';
   Masks : array [0..2] of string =(defDelphiMask,defLazarusMask,defCppMask);
 
+procedure TfrmConfig.FormCreate(Sender: TObject);
+begin
+  TranslateComponent (self);
+  Caption:=Caption+' (ggdxgettext)';
+  with pmMask.Items do begin
+    Add(NewItem(_('Delphi files'),0,false,true,DoMaskClick,0,Format('miMask%u',[0])));
+    Add(NewItem(_('Lazarus files'),0,false,true,DoMaskClick,0,Format('miMask%u',[1])));
+    Add(NewItem(_('Cpp Builder files'),0,false,true,DoMaskClick,0,Format('miMask%u',[2])));
+    end;
+  EditMask.Text:='';
+  IsVista:=(Win32Platform = VER_PLATFORM_WIN32_NT) and (Win32MajorVersion >= 6);
+  end;
+
+procedure TfrmConfig.FormShow(Sender: TObject);
+begin
+  if length(EditBasepath.Text)=0 then bbBaseDirClick(self);
+  end;
+
 procedure TfrmConfig.LoadFromIni(const AIniName : string);
 begin
   with TMemIniFile.Create (AIniName) do begin
     Left:=ReadInteger(ggtSect,iniLeft,Left);       // JR
     Top:=ReadInteger(ggtSect,iniTop,Top);
     CheckBoxRecurse.Checked:=ReadBool(ggtSect,iniRecurse,false);
-    ExcludeDirs.Enabled:=CheckBoxRecurse.Checked;
     ExcludeDirs.Text:=ReadString(ggtSect,iniExclude,'');
     cbCreateIgnore.Checked:=ReadBool(ggtSect,iniUpdate,false);
     cbRemoveIgnore.Checked:=ReadBool(ggtSect,iniIgnore,false);
@@ -107,6 +126,7 @@ begin
     cbOverwrite.Checked:=ReadBool(dxSect,iniOvwr,false);
     Free;
     end;
+  ShowExclude;
   end;
 
 procedure TfrmConfig.SaveToIni(const AIniName : string; SaveMask : boolean);
@@ -133,6 +153,12 @@ begin
     end;
   end;
 
+procedure TfrmConfig.ShowExclude;
+begin
+  bbExclude.Enabled:=CheckBoxRecurse.Checked;
+  ExcludeDirs.Enabled:=CheckBoxRecurse.Checked;
+  end;
+
 procedure TfrmConfig.SetDomain(const DomName : string);
 begin
   if AnsiSameText(DomName,defOutput) then begin
@@ -143,23 +169,6 @@ begin
     rbOther.Checked:=true;
     OutputName.Text:=DomName;
     end;
-  end;
-
-procedure TfrmConfig.FormCreate(Sender: TObject);
-begin
-  TranslateComponent (self);
-  Caption:=Caption+' (ggdxgettext)';
-  with pmMask.Items do begin
-    Add(NewItem(_('Delphi files'),0,false,true,DoMaskClick,0,Format('miMask%u',[0])));
-    Add(NewItem(_('Lazarus files'),0,false,true,DoMaskClick,0,Format('miMask%u',[1])));
-    Add(NewItem(_('Cpp Builder files'),0,false,true,DoMaskClick,0,Format('miMask%u',[2])));
-    end;
-  EditMask.Text:='';
-  end;
-
-procedure TfrmConfig.FormShow(Sender: TObject);
-begin
-  if length(EditBasepath.Text)=0 then bbBaseDirClick(self);
   end;
 
 procedure TfrmConfig.rbDefaultClick(Sender: TObject);
@@ -195,19 +204,23 @@ begin
   ShowManual(Application.Handle);
   end;
 
+procedure TfrmConfig.CheckBoxRecurseClick(Sender: TObject);
+begin
+  ShowExclude;
+  end;
+
 procedure TfrmConfig.bbBaseDirClick(Sender: TObject);
 var
   sd : string;
+  dirs : TArray<string>;
 begin
   sd:=EditBasepath.Text;
   if length(sd)=0 then sd:=GetPersonalFolder;
-  with FileOpenDialog do begin
-    Title:=_('Select basic directory');
-    Options := [fdoPickFolders,fdoForceFileSystem];
-    OkButtonLabel:=_('Select');
-    DefaultFolder:=sd;
-    FileName:=sd;
-    if Execute then EditBasepath.Text:=Filename;
+  if IsVista then begin
+    if SelectDirectory(sd,dirs,[],_('Select basic directory')) then EditBasepath.Text:=Dirs[0];
+    end
+  else begin
+    if SelectDirectory(_('Select basic directory'),sd,sd,[],self) then EditBasepath.Text:=sd;
     end;
   end;
 
@@ -215,20 +228,22 @@ procedure TfrmConfig.bbExcludeClick(Sender: TObject);
 var
   sd : string;
   i  : integer;
+  dirs : TArray<string>;
 begin
   sd:=EditBasepath.Text;
   if length(sd)=0 then sd:=GetPersonalFolder;
-  with FileOpenDialog do begin
-    Title:=_('Select subdirectories to be excluded');
-    Options := [fdoPickFolders,fdoAllowMultiSelect,fdoForceFileSystem];
-    OkButtonLabel:=_('Select');
-    DefaultFolder:=sd;
-    FileName:=sd;
-    if Execute then begin
-      sd:=MakeRelativePath(EditBasepath.Text,Files[0]);
-      for i:=1 to Files.Count-1 do sd:=sd+','+MakeRelativePath(EditBasepath.Text,Files[i]);
+  if IsVista then begin
+    if SelectDirectory(sd,dirs,[sdAllowMultiselect],_('Select subdirectories to be excluded')) then begin
+      sd:=MakeRelativePath(EditBasepath.Text,Dirs[0]);
+      for i:=1 to High(Dirs) do sd:=sd+','+MakeRelativePath(EditBasepath.Text,Dirs[i]);
       if length(ExcludeDirs.Text)>0 then ExcludeDirs.Text:=ExcludeDirs.Text+',';
       ExcludeDirs.Text:=ExcludeDirs.Text+sd;
+      end;
+    end
+  else begin
+    if SelectDirectory(_('Select subdirectories to be excluded'),sd,sd,[],self) then begin
+      if length(ExcludeDirs.Text)>0 then ExcludeDirs.Text:=ExcludeDirs.Text+',';
+      ExcludeDirs.Text:=ExcludeDirs.Text+MakeRelativePath(EditBasepath.Text,sd);
       end;
     end;
   end;
