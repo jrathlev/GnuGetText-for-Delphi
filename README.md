@@ -31,7 +31,7 @@ _new feature:_ optional embedding as resources
 - **IssToPas:** Convert [CustomMessages] section of iss file to Delphi unit (resourcestring) 
 - **German Translations** for programs and Windows context menus
 
-#### New in version 4:
+#### Features planned for version 4:
 - Integrated editor for **exclude conditions** (*exclude.cfg*)
 - Selection of **desktop language**
 - Selection of an **alternative icon design**
