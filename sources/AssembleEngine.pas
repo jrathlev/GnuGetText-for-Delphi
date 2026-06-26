@@ -222,6 +222,7 @@ var
   i,j   : integer;
   ss    : string;
   ll,ld : TStringList;
+  auto  : boolean;
 
   procedure AddFile (const fn : string);
   var
@@ -234,14 +235,34 @@ var
       end;
     end;
 
+  procedure AddDomains (const sd : string);
+  var
+    sr : TSearchRec;
+    more : boolean;
+    s : string;
+  begin
+    more:=FindFirst (basedirectory+sd+'*.mo',faAnyFile,sr)=0;
+    while more do begin
+      if (sr.Name<>'.') and (sr.Name<>'..') then begin
+        s:=ChangeFileExt(sr.Name,'');
+        if not AnsiSameText(s,sDefDom) then ld.Add(s);
+        end;
+      more:=Findnext(sr)=0;
+      end;
+    FindClose (sr);
+    end;
+
 begin
   Result:=IsAnsiStr(sl) and IsAnsiStr(sd);
   if Result then begin
     ll:=TStringList.Create; ld:=TStringList.Create;
-    ll.CommaText:=sl; ld.CommaText:=sd;
+    ll.CommaText:=sl;
+    auto:=sd='*';
+    if not auto then ld.CommaText:=sd;
     with ll do for i:=0 to Count-1 do begin
       ss:=sLocDir+Strings[i]+sMsgDir;
       AddFile(ss+sDefDom+sMoExt);
+      if auto then AddDomains(ss);  // search for all domains
       with ld do for j:=0 to Count-1 do AddFile(ss+Strings[j]+sMoExt);
       end;
     ll.Free; ld.Free;

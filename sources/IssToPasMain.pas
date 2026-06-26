@@ -28,7 +28,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ComCtrls, Vcl.ExtCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ComCtrls, Vcl.ExtCtrls,
+  JrButtons, System.ImageList, Vcl.ImgList, SVGIconImageListBase,
+  SVGIconImageList;
 
 const
   Vers = ' - Vers. 3.1';
@@ -36,19 +38,20 @@ const
 type
   TfrmMain = class(TForm)
     Label2: TLabel;
-    bbIssFile: TBitBtn;
     Label1: TLabel;
-    bbSave: TBitBtn;
-    bbInfo: TBitBtn;
-    bbExit: TBitBtn;
     OpenDialog: TOpenDialog;
     StatusBar: TStatusBar;
     laTitle: TLabel;
     edOutName: TLabeledEdit;
-    bbCopyName: TBitBtn;
-    btnHelp: TBitBtn;
     edIssFile: TComboBox;
     edLanguage: TComboBox;
+    imlGlyphs: TSVGIconImageList;
+    bbSave: TJrButton;
+    bbInfo: TJrButton;
+    bbExit: TJrButton;
+    btnHelp: TJrButton;
+    bbIssFile: TJrSpeedButton;
+    bbCopyName: TJrSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure bbExitClick(Sender: TObject);
     procedure bbInfoClick(Sender: TObject);
@@ -59,6 +62,9 @@ type
     procedure bbCopyNameClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
     procedure bbIssFileClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
+    procedure edIssFileCloseUp(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -80,7 +86,8 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, Winapi.ShlObj, System.StrUtils, gnugettext, ggtconsts, ggtutils,
-  WinUtils, ListUtils, LangUtils, InitProg, WinApiUtils, PathUtils, NumberUtils, MsgDialogs;
+  WinUtils, ListUtils, LangUtils, InitProg, WinApiUtils, PathUtils, NumberUtils, ShowMessageDlg,
+  ImageLoader, StyleUtils;
 
 const
   CuMsg = 'CustomMessages';
@@ -100,6 +107,8 @@ const
   iniLast = 'LastFile';
   îniLang = 'LastLanguage';
 
+//  DarkStyle = 'Windows10 Dark';
+
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
   IniFile  : TMemIniFile;
@@ -107,10 +116,15 @@ var
   i  : integer;
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
   Application.Title:=_('Convert CustomMessages from iss to pas');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
+// set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  SetDisplayMode(LoadDisplayModeFromIni(CfgName,CfgSekt));
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
@@ -160,6 +174,12 @@ begin
       AddToHistory(edIssFile,IssName);
       end;
     end;
+  end;
+
+procedure TfrmMain.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -218,6 +238,13 @@ begin
   ShowHelp('tools.html#isstrans');
   end;
 
+procedure TfrmMain.edIssFileCloseUp(Sender: TObject);
+begin
+  with edIssFile do begin
+    IssName:=Items[ItemIndex];
+    end;
+  end;
+
 procedure TfrmMain.edLanguageCloseUp(Sender: TObject);
 var
   s : string;
@@ -239,8 +266,8 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
-           +#13'E-Mail: '+EmailAdr);
+  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+sLineBreak+CopRgt
+           +sLineBreak+'E-Mail: '+EmailAdr);
   end;
 
 procedure TfrmMain.bbIssFileClick(Sender: TObject);

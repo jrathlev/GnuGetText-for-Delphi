@@ -19,7 +19,7 @@
      /out:<OutName>   - Use this file for output (instead of poname.txt)
 
    Feb. 2014
-   last modified: April 2024
+   last modified: January 2026
    *)
 
 unit PoToIssMain;
@@ -29,7 +29,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  PoParser, GgtConsts, Vcl.ExtCtrls, Vcl.ComCtrls;
+  PoParser, GgtConsts, Vcl.ExtCtrls, Vcl.ComCtrls, JrButtons, System.ImageList,
+  Vcl.ImgList, SVGIconImageListBase, SVGIconImageList;
 
 const
   Vers = ' - Vers. 3.1';
@@ -37,19 +38,20 @@ const
 type
   TfrmMain = class(TForm)
     Label2: TLabel;
-    bbInfo: TBitBtn;
-    bbExit: TBitBtn;
-    bbConvert: TBitBtn;
     OpenDialog: TOpenDialog;
     Label1: TLabel;
     edOutName: TLabeledEdit;
-    bbPoFile: TBitBtn;
-    bbCopyName: TBitBtn;
     StatusBar: TStatusBar;
     laTitle: TLabel;
-    btnHelp: TBitBtn;
     edPoFile: TComboBox;
     edLanguage: TComboBox;
+    imlGlyphs: TSVGIconImageList;
+    bbPoFile: TJrSpeedButton;
+    bbCopyName: TJrSpeedButton;
+    bbInfo: TJrButton;
+    bbExit: TJrButton;
+    bbConvert: TJrButton;
+    btnHelp: TJrButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbExitClick(Sender: TObject);
@@ -61,6 +63,8 @@ type
     procedure edLanguageCloseUp(Sender: TObject);
     procedure bbCopyNameClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -86,7 +90,7 @@ implementation
 
 uses System.IniFiles, Winapi.ShlObj, System.StrUtils, gnugettext, ggtutils,
   WinUtils, ListUtils, LangUtils, InitProg, WinApiUtils, WinShell, PathUtils,
-  NumberUtils, MsgDialogs;
+  NumberUtils, ShowMessageDlg, ImageLoader, StyleUtils;
 
 { ------------------------------------------------------------------- }
 const
@@ -105,10 +109,15 @@ var
   sn,sp : string;
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
   Application.Title:=_('Convert strings from po to iss');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
+// set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  SetDisplayMode(LoadDisplayModeFromIni(CfgName,CfgSekt));
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
@@ -153,6 +162,12 @@ begin
   if FileExists(PoFile) then LoadPoFile else edPoFile.Text:='';
   end;
 
+procedure TfrmMain.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
+  end;
+
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   IniFile  : TMemIniFile;
@@ -185,8 +200,8 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
-           +#13'E-Mail: '+EmailAdr);
+  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+sLineBreak+CopRgt
+           +sLineBreak+'E-Mail: '+EmailAdr);
   end;
 
 procedure TfrmMain.edLanguageCloseUp(Sender: TObject);

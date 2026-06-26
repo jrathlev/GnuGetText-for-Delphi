@@ -22,6 +22,8 @@ unit PlaceHolders;
 
 interface
 
+uses System.SysUtils;
+
 const
   VolPh = '%volume%';
   ProgPh = '%progpath%';
@@ -33,9 +35,9 @@ const
     ('%date%','%yaw%','%dow%','%ldow%','%dnw%','%day%','%week%','%dom%','%wom%',
      '%month%','%lmonth%','%year%','%user%','%computer%');
 
-  tphCount = 11;
+  tphCount = 12;
   TmPlaceHolder : array [0..tphCount-1] of string =
-    ('%time%','%hour%','%minute%','%d#?%','%w#?%','%m#?%','%v#?%','%username%',
+    ('%time%','%hour%','%minute%','%d#?%','%w#?%','%m#?%','%y#?%','%v#?%','%username%',
      '%computername%',VolPh,ModePh);
 
   pphCount = 11;
@@ -59,7 +61,10 @@ const
     (DevPh,'%date%','%yaw%','%dow%','%ldow%','%dnw%','%day%','%week%','%dom%',
      '%wom%', '%month%','%lmonth%','%year%');
 
-function ReplaceTimePlaceHolder (const ps : string; Count : integer = 0) : string;
+function ReplaceTimePlaceHolder (const ps : string; Count : integer = 0) : string; overload;
+function ReplaceTimePlaceHolder (const ps : string;
+  const AFormatSettings: TFormatSettings; Count : integer = 0) : string; overload;
+
 function ReplacePathPlaceHolder (const ps : string) : string;
 function RemovePlaceHolderSubdirs(ADir : string) : string;
 
@@ -68,7 +73,7 @@ function RemoveDot (const s : string) : string;
 
 implementation
 
-uses System.SysUtils, System.DateUtils, System.StrUtils, Winapi.ShlObj, Vcl.Forms,
+uses System.DateUtils, System.StrUtils, Winapi.ShlObj, Vcl.Forms,
   System.Masks, StringUtils, WinApiUtils, WinShell;
 
 (* Integer-Zahl in String mit führenden Nullen umsetzen *)
@@ -86,6 +91,12 @@ begin
 { ------------------------------------------------------------------- }
 (* Platzhalter im String ersetzen *)
 function ReplaceTimePlaceHolder (const ps : string; Count : integer) : string;
+begin
+  Result:=ReplaceTimePlaceHolder(ps,FormatSettings,Count);
+  end;
+
+function ReplaceTimePlaceHolder (const ps : string;
+  const AFormatSettings: TFormatSettings; Count : integer = 0) : string; overload;
 var
   i,w,y,
   n1,n2,d : integer;
@@ -101,15 +112,17 @@ begin
           if (MonthOf(Date)=1) and (w>25) then dec(y); // Woche des Vorjahres
           s:=ZStrint(y,4)+'-'+ZStrInt(w,2);
           end;
-      2 : s:=RemoveDot(FormatDateTime('ddd',Date));    // day of the week - ShortDayNames
-      3 : s:=RemoveDot(FormatDateTime('dddd',Date));   // day of the week - LongDayNames
+      // day names: ecific FormatSettings required
+      2 : s:=RemoveDot(FormatDateTime('ddd',Date,AFormatSettings));    // day of the week - ShortDayNames,
+      3 : s:=RemoveDot(FormatDateTime('dddd',Date,AFormatSettings));   // day of the week - LongDayNames
       4 : s:=ZStrInt(DayOfTheWeek(Date),1); // day of the week - Mo = 1
       5 : s:=ZStrInt(DayOfTheYear(Date),3);
       6 : s:=ZStrInt(WeekOfTheYear(Date),2);
       7 : s:=FormatDateTime('dd',Date);
       8 : s:=ZStrInt(WeekOfTheMonth(Date),1);
       9 : s:=FormatDateTime('mm',Date);
-      10 : s:=RemoveDot(FormatDateTime('mmmm',Date));   // long name of month
+      // long name of month, language specific FormatSettings required
+      10 : s:=RemoveDot(FormatDateTime('mmmm',Date,AFormatSettings));
       11 : s:=FormatDateTime('yyyy',Date);
       12 : s:=UserName;
       13 : s:=ComputerName;
@@ -119,7 +132,7 @@ begin
       end;
     end;
   if Count>0 then begin
-    for i:=3 to 6 do begin  // spez. Platzhalter für wechselnde Tage, Wochen und Monate
+    for i:=3 to 7 do begin  // spez. Platzhalter für wechselnde Tage, Wochen und Monate
       sv:=copy(TmPlaceHolder[i],1,3);
       if AnsiContainsText(Result,sv) then begin
         n1:=TextPos(sv,Result); n2:=TextPosEx('%',Result,n1+1);
@@ -129,6 +142,7 @@ begin
           3 : s:=ZStrInt((DayOfTheYear(Date)-1) mod y +1,d);
           4 : s:=ZStrInt((WeekOfTheYear(Date)-1) mod y +1,d);
           5 : s:=ZStrInt((MonthOfTheYear(Date)-1) mod y +1,d);
+          6 : s:=ZStrInt((YearOf(Date)-1) mod y +1,d);
           else s:=ZStrInt((Count-1) mod y +1,d);
             end;
           end
@@ -143,8 +157,8 @@ begin
       0 : s:=FormatDateTime('hhnnss',Time);
       1 : s:=FormatDateTime('hh',Time);
       2 : s:=FormatDateTime('nn',Time);
-      7 : s:=UserName;
-      8 : s:=ComputerName;
+      8 : s:=UserName;
+      9 : s:=ComputerName;
       else s:=''; // %volume% and %mode& must have been replaced in calling program if supported
         end;
       Result:=AnsiReplaceText(Result,TmPlaceHolder[i],s);

@@ -28,10 +28,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  Vcl.ComCtrls, PoParser;
+  Vcl.ComCtrls, PoParser, JrButtons, System.ImageList, Vcl.ImgList,
+  SVGIconImageListBase, SVGIconImageList;
 
 const
-  Vers = ' - Vers. 1.0';
+  Vers = ' - Vers. 3.1';
 
   GgtName = 'GnuGetText';
   GgtDummy = 'GgtDummy';
@@ -39,21 +40,22 @@ const
 type
   TMainForm = class(TForm)
     Label2: TLabel;
-    bbExit: TBitBtn;
-    bbInfo: TBitBtn;
     OpenDialog: TOpenDialog;
     Label1: TLabel;
     Label3: TLabel;
     lvStrings: TListView;
-    bbReplace: TBitBtn;
     edLang: TEdit;
     Label4: TLabel;
     edPasFile: TEdit;
     StatusBar: TStatusBar;
-    bbUnit: TBitBtn;
-    bbPoFile: TBitBtn;
-    btnHelp: TBitBtn;
     edPoFile: TComboBox;
+    imlGlyphs: TSVGIconImageList;
+    bbExit: TJrButton;
+    bbInfo: TJrButton;
+    bbReplace: TJrButton;
+    bbUnit: TJrButton;
+    bbPoFile: TJrButton;
+    btnHelp: TJrButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbPoFileClick(Sender: TObject);
@@ -65,6 +67,8 @@ type
     procedure edLangChange(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
     procedure bbInfoClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -96,7 +100,8 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, System.StrUtils, System.Math, GnuGetText, InitProg, PathUtils,
-  WinUtils, ListUtils, xgettexttools, MsgDialogs, ShellFileDlg, GgtConsts, GgtUtils;
+  WinUtils, ListUtils, xgettexttools, ShowMessageDlg, ShellFileDlg, GgtConsts, GgtUtils,
+  ImageLoader, StyleUtils;
 
 const
   (* INI-Sections *)
@@ -116,10 +121,15 @@ var
   IniFile  : TMemIniFile;
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
   Application.Title:=_('Copy translated strings from po file to Pascal unit');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
+// set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  SetDisplayMode(LoadDisplayModeFromIni(CfgName,CfgSekt));
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
@@ -147,6 +157,12 @@ begin
     FindTranslations;
     end
   else edPasFile.Text:='';
+  end;
+
+procedure TMainForm.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
   end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -248,8 +264,8 @@ begin
 
 procedure TMainForm.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(ProgVersName+' - '+ProgVersDate+#13+CopRgt
-           +#13'E-Mail: '+EmailAdr);
+  InfoDialog(ProgVersName+' - '+ProgVersDate+sLineBreak+CopRgt
+           +sLineBreak+'E-Mail: '+EmailAdr);
   end;
 
 procedure TMainForm.FindTranslations;

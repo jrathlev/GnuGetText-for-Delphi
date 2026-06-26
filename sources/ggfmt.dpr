@@ -25,21 +25,20 @@
      /e:<ext>    - Extension of output file if other than default
    *)
 
-program ggfmt;
+program GgFmt;
 
 uses
-  GnuGetText in 'units\GnuGetText.pas',
-  System.Classes,
-  System.SysUtils,
-  WinApi.Windows,
+  GnuGetText in 'Units\GnuGetText.pas',
+  LangUtils in 'Units\LangUtils.pas',
+  SVGIconItems in 'SVG\SVGIconItems.pas',
+  SVGIconImage in 'SVG\SVGIconImage.pas',
+  ImageLoader in 'Units\ImageLoader.pas',
   Vcl.Forms,
-  Vcl.Dialogs,
-  WinUtils, MsgDialogs,
-  ExtSysUtils,
-  ggtutils,
-  ExecuteApp in 'ExecuteApp.pas',
-  SelectDlg in 'units\SelectDlg.pas' {SelectDialog},
-  ShowText in 'units\ShowText.pas' {ShowtextDialog};
+  Vcl.Graphics,
+  Vcl.Styles,
+  GgtConsts in 'GgtConsts.pas',
+  GgFmtMain in 'GgFmtMain.pas' {frmMain},
+  ShowText in 'dialogs-svg\ShowText.pas' {ShowtextDialog};
 
 {$R *.res}
 {$IFDEF WIN32}
@@ -48,71 +47,18 @@ uses
   {$R *-64.res}
 {$ENDIF}
 
-const
-  MsgFmt = 'msgfmt.exe';
-  MsgUFmt = 'msgunfmt.exe';
-  PoExt = '.po';
-  MoExt = '.mo';
 
-{ ---------------------------------------------------------------- }
-var
-  AppOutput : TStringList;
-  cmdline,Filename,
-  Title,
-  AppPath,ProgramName,
-  OutExt,sp,se    :string;
-  BackConvert : boolean;
-  res,i  : integer;
 begin
-  AddDomains(['delphi10','units']);
+  TP_GlobalIgnoreClass(TFont);
+  TP_GlobalIgnoreClass(TSVGIconItem);
+  TP_GlobalIgnoreClassProperty(TSVGIconImage,'SVGText');
+  // Subdirectory in AppData for user configuration files and supported languages
+  InitTranslation(DefIniPath,GgtConfigName,['delphi10','units']);
+  InitImageLoader('images',['dialogs']);
 
-  BackConvert:=false;
-  Filename:=''; OutExt:=MoExt; se:='';
-  AppPath:=extractfilepath(paramstr(0));
-  Title:=_('Convert translation')+' (ggfmt '+GetProgVersion+')';
-  if ParamCount>0 then begin
-    for i:=1 to ParamCount do begin
-      sp:=ParamStr(i);
-      if (sp[1]='/') or (sp[1]='-') then begin
-        Delete(sp,1,1);
-        if ReadOptionValue(sp,'e') then se:=sp
-        else if CompareOption(sp,'u') then backconvert:=true;
-        end
-      else if length(Filename)=0 then Filename:=sp;
-      end;
-    if BackConvert then begin
-      ProgramName:=MsgUFmt; OutExt:=PoExt
-      end
-    else begin
-      ProgramName:=MsgFmt; OutExt:=MoExt
-      end;
-    if length(se)>0 then OutExt:='.'+se;
-    sp:=ChangeFileExt(filename,OutExt);
-
-    Application.Initialize;
-    Application.CreateForm(TSelectDialog, SelectDialog);
-    Application.CreateForm(TShowtextDialog, ShowtextDialog);
-    AppOutput:=TStringlist.Create;
-    try
-      cmdline:=Filename+' -o "'+sp+'"';
-      res:=StartProgram(AppPath+ProgramName,cmdline,'',AppOutput);
-      if res<0 then ErrorDialog(Title,Format(_('Execution of "%s" failed: '),[programname])
-                       +sLineBreak+SystemErrorMessage(abs(res)))
-      else if res>0 then begin
-        i:=SelectOption(Title,programname+_(' reports some errors, no processing has been done!'),
-          mtError,[],[_('Show errors')],'',0,-1,_('OK'));
-        if i=0 then ShowTextDialog.Execute(CenterPos,Format(_('Error report from "%s"'),[programname]),'',
-                               AppOutput,1,stShowModal,[sbPrint,sbSearch]);
-        end
-      else begin
-        if BackConvert then se:=_('Binary file was converted to "%s"!')
-        else se:=_('Binary file "%s" was generated!');
-        InfoDialog(Title,Format(se,[ExtractFilename(sp)]));
-        end;
-    finally
-      FreeAndNil (AppOutput);
-      end;
-    end
-  else ErrorDialog(Title,_('No file specified!'));
-  Application.Terminate;
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TShowtextDialog, ShowtextDialog);
+  Application.Run;
 end.

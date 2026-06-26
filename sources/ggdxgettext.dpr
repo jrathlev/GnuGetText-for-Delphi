@@ -14,14 +14,23 @@ program ggdxgettext;
 //         <filename>    - Name of basic directory or file to be scanned
 //         /dom:<domain> - use this domain instead of default
 
-// Last modified: October 2023 J. Rathlev, D-24222 Schwentinental
+// Changes: J. Rathlev, D-24222 Schwentinental
+// Last modified: January 2026 
 
 uses
-  GnuGetText in 'units\GnuGetText.pas',
+  GnuGetText in 'Units\GnuGetText.pas',
+  LangUtils in 'Units\LangUtils.pas',
+  SVGIconItems in 'SVG\SVGIconItems.pas',
+  SVGIconImage in 'SVG\SVGIconImage.pas',
+  ImageLoader in 'Units\ImageLoader.pas',
   Vcl.Forms,
-  Vcl.Dialogs,
+  Vcl.Graphics,
+  GgtConsts in 'GgtConsts.pas',
+  GetTextMain in 'GetTextMain.pas' {frmGetText},
   GetTextConfig in 'GetTextConfig.pas' {frmConfig},
-  GetTextMain in 'GetTextMain.pas' {frmGetText};
+  ShowMessageDlg in 'Dialogs-SVG\ShowMessageDlg.pas' {$R *.res},
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 {$IFDEF WIN32}
@@ -31,14 +40,21 @@ uses
 {$ENDIF}
 
 begin
-  AddDomains(['delphi10','units']);
+  TP_GlobalIgnoreClass(TFont);
+  TP_GlobalIgnoreClass(TSVGIconItem);
+  TP_GlobalIgnoreClassProperty(TSVGIconImage,'SVGText');
+  // Subdirectory in AppData for user configuration files and supported languages
+  InitTranslation(DefIniPath,GgtConfigName,['delphi10','units']);
+  InitImageLoader('images',['dialogs']);
 
   if paramcount=0 then begin
-    MessageDlg(_('This program needs one parameter, which must be a directory path or a file name'),mtError,[mbClose],0);
+    ErrorDialog(_('This program needs one parameter, which must be a directory path or a file name'));
     exit;
   end;
+
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+//  Application.ShowMainForm:=false;
   Application.CreateForm(TfrmGetText, frmGetText);
   Application.Run;
 end.

@@ -23,16 +23,15 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  PoParser, Vcl.ComCtrls;
+  PoParser, Vcl.ComCtrls, JrButtons, System.ImageList, Vcl.ImgList,
+  SVGIconImageListBase, SVGIconImageList;
 
 const
-  Vers = ' - Vers. 3.1';
+  Vers = ' - Vers. 3.3';
 
 type
   TfrmMain = class(TForm)
     Label2: TLabel;
-    bbInfo: TBitBtn;
-    bbExit: TBitBtn;
     OpenDialog: TOpenDialog;
     gbStat: TGroupBox;
     Label1: TLabel;
@@ -47,10 +46,13 @@ type
     laNumChars: TLabel;
     lvHeader: TListView;
     Label6: TLabel;
-    bbOpenPoFile: TBitBtn;
-    btnHelp: TBitBtn;
     edTranslation: TComboBox;
-    btnReload: TBitBtn;
+    imlGlyphs: TSVGIconImageList;
+    bbInfo: TJrButton;
+    bbExit: TJrButton;
+    btnHelp: TJrButton;
+    btnReload: TJrButton;
+    bbOpenPoFile: TJrSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure bbOpenPoFileClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -62,6 +64,8 @@ type
     procedure FormResize(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
     procedure btnReloadClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -87,7 +91,8 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, System.StrUtils, Winapi.ShellApi, GnuGetText, InitProg,
-  WinUtils, ListUtils, StringUtils, PathUtils, MsgDialogs, GgtConsts, GgtUtils;
+  WinUtils, ListUtils, StringUtils, PathUtils, ShowMessageDlg, GgtConsts, GgtUtils,
+  ImageLoader, StyleUtils;
 
 { ------------------------------------------------------------------- }
 const
@@ -100,11 +105,16 @@ var
   i : integer;
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
   DragAcceptFiles(frmMain.Handle, true);
   Application.Title:=_('Statistics of po file');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName; PoFile:='';
+// set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  SetDisplayMode(LoadDisplayModeFromIni(CfgName,CfgSekt));
   if ParamCount>0 then for i:=1 to ParamCount do if not IsOption(ParamStr(i)) then begin
     if PoFile.IsEmpty then PoFile:=ExpandFileName(ParamStr(i));
     end;
@@ -140,6 +150,12 @@ begin
   with lvHeader do begin
     Columns[1].Width:=ClientRect.Right-Columns[0].Width;
     end;
+  end;
+
+procedure TfrmMain.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -191,8 +207,8 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(TopLeftPos(gbStat),ProgVersName+' - '+ProgVersDate+#13+CopRgt
-           +#13'E-Mail: '+EmailAdr);
+  InfoDialog(TopLeftPos(gbStat),ProgVersName+' - '+ProgVersDate+sLineBreak+CopRgt
+           +sLineBreak+'E-Mail: '+EmailAdr);
   end;
 
 procedure TfrmMain.ClearStat;
@@ -224,18 +240,21 @@ begin
         end;
       pe:=FindNext(pe);
       end;
-    laEntries.Caption:=IntToStr(ne);
-    laNumTrans.Caption:=IntToStr(nt)+' ('+IntToStr(round(100*nt/ne))+'%)';
-    laNumNoTrans.Caption:=IntToStr(nu)+' ('+IntToStr(round(100*nu/ne))+'%)';
-    laNumFuzzy.Caption:=IntToStr(nf);
-    laNumChars.Caption:=_('Template = ')+IntToStr(cs)+sLineBreak+_('Translation = ')+IntToStr(ct);
-    lvHeader.Clear;
-    for id:=Low(TPoHeaderIds) to High(TPoHeaderIds) do begin
-      if not Header[id].IsEmpty then with lvHeader.Items.Add do begin
-        Caption:=HeaderIds[id];
-        SubItems.Add(Header[id])
+    if ne>0 then begin
+      laEntries.Caption:=IntToStr(ne);
+      laNumTrans.Caption:=IntToStr(nt)+' ('+IntToStr(round(100*nt/ne))+'%)';
+      laNumNoTrans.Caption:=IntToStr(nu)+' ('+IntToStr(round(100*nu/ne))+'%)';
+      laNumFuzzy.Caption:=IntToStr(nf);
+      laNumChars.Caption:=_('Template = ')+IntToStr(cs)+sLineBreak+_('Translation = ')+IntToStr(ct);
+      lvHeader.Clear;
+      for id:=Low(TPoHeaderIds) to High(TPoHeaderIds) do begin
+        if not Header[id].IsEmpty then with lvHeader.Items.Add do begin
+          Caption:=HeaderIds[id];
+          SubItems.Add(Header[id])
+          end;
         end;
-      end;
+      end
+    else laEntries.Caption:=_('No entries found');
     end;
   end;
 

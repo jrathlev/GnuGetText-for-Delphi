@@ -13,15 +13,20 @@
    the specific language governing rights and limitations under the License.
 
    Vers. 1 - July 2023
-   last mdified: July 2023
+   last modified: July 2023
    *)
+(* @abstract(Initialization for GnuGetText)
+   @author(© Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de))
+   @created(July 2023)
+   @lastmod(July 2023)
+*)
 
 unit GnuGetTextInit;
 
 interface
 
 // InitTranslation has to be placed in the project file before "Application.Initialize"
-// "Domains" is a list of all po/mo files needed by the application
+// "Domains" is a list of all po/mo files needed by the application@br
 // Calling sample: InitTranslation(['delphi10','indy10']);
 procedure InitTranslation (const Domains : array of string);
 

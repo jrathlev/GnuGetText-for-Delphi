@@ -24,7 +24,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  Vcl.ExtCtrls, Vcl.Menus, PoParser;
+  Vcl.ExtCtrls, Vcl.Menus, PoParser, System.ImageList, Vcl.ImgList,
+  SVGIconImageListBase, SVGIconImageList, JrButtons;
 
 const
   Vers = ' - Vers. 3.2';
@@ -41,14 +42,8 @@ type
   TfrmMain = class(TForm)
     meRef: TMemo;
     meEdit: TMemo;
-    bbUp: TBitBtn;
-    bbFirst: TBitBtn;
-    bbDown: TBitBtn;
-    bbLast: TBitBtn;
     pnMain: TPanel;
-    bbExit: TBitBtn;
     SaveDialog: TSaveDialog;
-    bbInfo: TBitBtn;
     pnTools: TPanel;
     Label1: TLabel;
     meID: TMemo;
@@ -57,32 +52,38 @@ type
     Label4: TLabel;
     laEdLine: TLabel;
     laEntry: TLabel;
-    bbCopyId: TBitBtn;
-    bbSave: TBitBtn;
     laEditFile: TLabel;
     Label5: TLabel;
     OpenDialog: TOpenDialog;
-    bbCopyAll: TBitBtn;
-    bbReload: TBitBtn;
-    bbSaveChanges: TBitBtn;
-    bbMUp: TBitBtn;
-    bbMDn: TBitBtn;
-    bbUndo: TBitBtn;
     cbEdit: TComboBox;
-    bbEditList: TBitBtn;
-    bbEditPo: TBitBtn;
-    bbEditFile: TBitBtn;
-    bbComp: TBitBtn;
-    bbCopyName: TBitBtn;
-    btnHelp: TBitBtn;
     cbComp: TComboBox;
     pmFileList: TPopupMenu;
     pmiEdit: TMenuItem;
     pmiClear: TMenuItem;
     N21: TMenuItem;
     pmiCancel: TMenuItem;
-    bbCopyAndNext: TBitBtn;
-    bbHeader: TBitBtn;
+    imlGlyphs: TSVGIconImageList;
+    bbEditFile: TJrButton;
+    bbComp: TJrButton;
+    bbCopyName: TJrButton;
+    bbExit: TJrButton;
+    bbInfo: TJrButton;
+    bbSave: TJrButton;
+    bbReload: TJrButton;
+    bbEditPo: TJrButton;
+    btnHelp: TJrButton;
+    bbSaveChanges: TJrButton;
+    bbCopyAll: TJrButton;
+    bbCopyId: TJrButton;
+    bbDown: TJrButton;
+    bbFirst: TJrButton;
+    bbLast: TJrButton;
+    bbUp: TJrButton;
+    bbMUp: TJrButton;
+    bbMDn: TJrButton;
+    bbUndo: TJrButton;
+    bbCopyAndNext: TJrButton;
+    bbHeader: TJrButton;
     procedure FormCreate(Sender: TObject);
     procedure bbExitClick(Sender: TObject);
     procedure bbInfoClick(Sender: TObject);
@@ -108,7 +109,6 @@ type
     procedure bbMUpClick(Sender: TObject);
     procedure bbUndoClick(Sender: TObject);
     procedure bbCopyNameClick(Sender: TObject);
-    procedure bbEditListClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure bbEditPoClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
@@ -116,6 +116,12 @@ type
     procedure pmiClearClick(Sender: TObject);
     procedure bbCopyAndNextClick(Sender: TObject);
     procedure bbHeaderClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
+    procedure pmiMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width,
+      Height: Integer);
+    procedure pmiDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect;
+      Selected: Boolean);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -128,7 +134,7 @@ type
     PeRef              : TPoEntry;
     IdList             : TStringList;
     Loaded,Changed     : boolean;
-    ElWidth,
+    PixelsPerInchOnCreate,
     IdIndex            : integer;
     procedure UpdateButtons;
     procedure SaveChangedFile;
@@ -152,9 +158,9 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, Winapi.ShellApi, Winapi.ShlObj, System.StrUtils,
-  WinUtils, ListUtils, MsgDialogs, LangUtils, InitProg, WinApiUtils, WinShell,
-  gnugettext, StringUtils, PathUtils, EditStringListDlg, GgtConsts, GgtUtils,
-  EditHistListDlg, TextDlg;
+  WinUtils, ListUtils, ShowMessageDlg, LangUtils, InitProg, WinApiUtils, WinShell,
+  gnugettext, StringUtils, PathUtils, GgtConsts, GgtUtils, MenuUtils,
+  EditHistListDlg, TextDlg, ImageLoader, StyleUtils;
 
 { ------------------------------------------------------------------- }
 constructor TText.Create (const AText : string);
@@ -182,18 +188,23 @@ var
   s,t,se : string;
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  PixelsPerInchOnCreate:=PixelsPerInch;
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
   Application.Title:=_('Compare and merge translations in two po files');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
   CompFile:=''; EditFile:='';
+// set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  SetDisplayMode(LoadDisplayModeFromIni(CfgName,CfgSekt));
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
     Top:=ReadInteger(CfGSekt,iniTop,Top);
     Left:=ReadInteger(CfGSekt,iniLeft,Left);
     se:=ReadString(CfGSekt,iniLast,'');
-    ElWidth:=ReadInteger(CfgSekt,iniWidth,0);
     LastPrj:=ReadString(CfgSekt,iniPrj,'');
     n:=ReadInteger(FileSekt,iniCount,0);
     for i:=0 to n-1 do begin
@@ -225,6 +236,7 @@ begin
   EdList:=TPoEntryList.Create;
   IdList:=TStringList.Create;
   Loaded:=false; Changed:=false;
+  SetOwnerDrawMenu(pmFileList,pmiDrawItem,pmiMeasureItem);
   end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -239,13 +251,47 @@ procedure TfrmMain.FormShow(Sender: TObject);
 var
   ok : boolean;
 begin
-  if ElWidth>0 then EditStringListDialog.Width:=ElWidth;
   if FileExists(EditFile) and FileExists(CompFile) then LoadFiles(true)
   else begin
     if not FileExists(EditFile) then ok:=SelectEdit else ok:=true;
     ok:=ok and SelectComp(CompFile);
     if ok then LoadFiles(true) else Close;
     end;
+  end;
+
+procedure TfrmMain.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
+  end;
+
+procedure TfrmMain.pmiDrawItem(Sender: TObject; ACanvas: TCanvas;
+  ARect: TRect; Selected: Boolean);
+var
+  d : integer;
+begin
+  with ACanvas do begin
+    if Selected then Brush.Color:=GetSysColor(clHighlight) else Brush.Color:=GetSysColor(clMenu);
+    if (Sender as TMenuItem).Caption=cLineCaption then with ARect do begin
+      FillRect(ARect);
+      if StylesEnabled then Pen.Color:=GetSysColor(clInActiveBorder) else Pen.Color:=clActiveBorder;
+      d:=Top+Height div 2;
+      MoveTo(Height,d); LineTo(Width-Height,d);
+      end
+    else begin
+      with Font do begin
+        Size:=SizeScale(Size,PixelsPerInchOnCreate,self);
+        if Selected then Color:=GetSysColor(clHighlightText) else Color:=GetSysColor(clMenuText);
+        end;
+      TextRect(ARect,ARect.Height,ARect.Top+MulDiv(ARect.Height,3,22),(Sender as TMenuItem).Caption);
+      end;
+    end;
+  end;
+
+procedure TfrmMain.pmiMeasureItem(Sender: TObject; ACanvas: TCanvas;
+  var Width, Height: Integer);
+begin
+  Width:=SizeScale(Width,PixelsPerInchOnCreate,self); Height:=SizeScale(Height,PixelsPerInchOnCreate,self);
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -259,7 +305,6 @@ begin
     WriteInteger(CfGSekt,iniTop,Top);
     WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniLast,EditFile);
-    WriteInteger(CfgSekt,iniWidth,EditStringListDialog.Width);
     WriteString(CfgSekt,iniPrj,LastPrj);
     EraseSection(FileSekt);
     with cbEdit.Items do begin
@@ -270,8 +315,7 @@ begin
         end;
       end;
     SaveHistory(IniFile,CompSekt,true,cbComp);
-    UpdateFile;
-    Free;
+    try UpdateFile; finally Free; end;
     end;
   try HtmlHelp(0,nil,HH_CLOSE_ALL,0); except end;
   end;
@@ -327,21 +371,6 @@ begin
     end;
   end;
 
-procedure TfrmMain.bbEditListClick(Sender: TObject);
-var
-  n  : integer;
-begin
-  n:=cbEdit.ItemIndex;
-  if EditStringListDialog.Execute(BottomLeftPos(cbEdit,0,10),_('Edit file list'),_('po files:'),
-      cbEdit.Items,[eoDelete],n) then begin
-    with cbEdit do begin
-      ItemIndex:=n;
-      EditFile:=Items[ItemIndex];
-      end;
-    GetCompFile;
-    end;
-  end;
-
 procedure TfrmMain.bbEditPoClick(Sender: TObject);
 begin
   SaveFile;
@@ -356,8 +385,8 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(BottomLeftPos(meEdit,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
-           +#13'E-Mail: '+EmailAdr);
+  InfoDialog(BottomLeftPos(meEdit,0,10),ProgVersName+' - '+ProgVersDate+sLineBreak+CopRgt
+           +sLineBreak+'E-Mail: '+EmailAdr);
   end;
 
 procedure TfrmMain.bbCopyNameClick(Sender: TObject);
@@ -518,7 +547,7 @@ procedure TfrmMain.UpdateButtons;
 var
   i : integer;
 begin
-  with pnTools do for i:=0 to ControlCount-1 do if (Controls[i] is TBitBtn) and (Tag=1) then
+  with pnTools do for i:=0 to ControlCount-1 do if (Controls[i] is TJrButton) and (Tag=1) then
     Controls[i].Enabled:=IdList.Count>1;
   end;
 

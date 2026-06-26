@@ -1,13 +1,18 @@
 program PoToIss;
 
 uses
-  GnuGetText in 'units\GnuGetText.pas',
-  LangUtils in 'units\LangUtils.pas',
+  GnuGetText in 'Units\GnuGetText.pas',
+  LangUtils in 'Units\LangUtils.pas',
+  SVGIconItems in 'SVG\SVGIconItems.pas',
+  SVGIconImage in 'SVG\SVGIconImage.pas',
+  ImageLoader in 'Units\ImageLoader.pas',
   Vcl.Forms,
   Vcl.Graphics,
   GgtConsts in 'GgtConsts.pas',
   PoToIssMain in 'PoToIssMain.pas' {frmMain},
-  ShellDirDlg in 'units\ShellDirDlg.pas' {ShellDirDialog};
+  ShellDirDlg in 'dialogs-SVG\ShellDirDlg.pas' {ShellDirDialog},
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 {$IFDEF WIN32}
@@ -18,11 +23,15 @@ uses
 
 begin
   TP_GlobalIgnoreClass(TFont);
+  TP_GlobalIgnoreClass(TSVGIconItem);
+  TP_GlobalIgnoreClassProperty(TSVGIconImage,'SVGText');
   // Subdirectory in AppData for user configuration files and supported languages
-  InitTranslation(DefIniPath,'',['delphi10','units']);
+  InitTranslation(DefIniPath,GgtConfigName,['delphi10','units']);
+  InitImageLoader('images',['dialogs']);
 
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('JR Dark');
   Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TShellDirDialog, ShellDirDialog);
   Application.Run;

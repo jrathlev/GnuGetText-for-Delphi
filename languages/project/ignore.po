@@ -1,13 +1,15 @@
 #  Doesn't have any letters
 #. frmMain.pmFileList.N21.Caption
-#: PoCompMain.dfm:2156
-#. frmTransMain.pmDirectorytList.N21.Caption
-#: TransMain.dfm:3754
+#: PoCompMain.dfm:512
+#. frmTransMain.pmDirectoryList.N21.Caption
+#: TransMain.dfm:1093
+#. frmTransMain.pmSettings.N1.Caption
+#: TransMain.dfm:2590
 msgid "-"
 msgstr ""
 
 #. frmConfig.EditMask.Text
-#: GetTextConfig.dfm:232
+#: GetTextConfig.dfm:87
 msgid "*.pas *.dfm *.c *.cpp *.inc *.rc *.dfm *.xfm "
 "*.dpr"
 msgstr ""
@@ -20,11 +22,11 @@ msgid "..."
 msgstr ""
 
 #. frmTransMain.paTop.pcOptions.tsLang.cbLanguage.Font.Name
-#: TransMain.dfm:644
+#: TransMain.dfm:349
 #. frmTransMain.paTop.pcOptions.tsLang.lbLang.Font.Name
-#: TransMain.dfm:669
+#: TransMain.dfm:374
 #. frmTransMain.pnStatus.meProgress.Font.Name
-#: TransMain.dfm:1793
+#: TransMain.dfm:841
 msgid "Courier New"
 msgstr ""
 
@@ -35,11 +37,11 @@ msgstr ""
 
 #  Doesn't look like text
 #. frmConfig.rgEncoding.Items.Strings
-#: GetTextConfig.dfm:500
+#: GetTextConfig.dfm:227
 #. frmMain.paCenter.rgEncoding.Items.Strings
-#: PoFromPasMain.dfm:891
+#: PoFromPasMain.dfm:173
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1544
+#: TransMain.dfm:566
 msgid "ISO-8859-1"
 msgstr ""
 
@@ -66,17 +68,19 @@ msgstr ""
 #. frmGetText.Font.Name
 #: GetTextMain.dfm:11
 #. frmMain.Font.Name
+#: GgFmtMain.dfm:10
+#. frmMain.Font.Name
 #: IssToPasMain.dfm:10
 #. frmMain.laTitle.Font.Name
-#: IssToPasMain.dfm:49
+#: IssToPasMain.dfm:51
 #. frmMerge.Font.Name
 #: MergeMain.dfm:12
 #. frmMain.Font.Name
 #: PoCompMain.dfm:11
 #. frmMain.pnMain.laEntry.Font.Name
-#: PoCompMain.dfm:77
+#: PoCompMain.dfm:78
 #. frmMain.pnMain.meRef.Font.Name
-#: PoCompMain.dfm:103
+#: PoCompMain.dfm:104
 #. frmMain.Font.Name
 #: PoFromPasMain.dfm:10
 #. frmMain.Font.Name
@@ -89,16 +93,16 @@ msgstr ""
 #: PoInsMain.dfm:35
 #. frmMain.Font.Name
 #: PoSpellMain.dfm:11
-#. frmMain.laEntry.Font.Name
-#: PoSpellMain.dfm:53
-#. frmMain.edWord.Font.Name
-#: PoSpellMain.dfm:392
-#. frmMain.meTrans.Font.Name
-#: PoSpellMain.dfm:446
+#. frmMain.paBottom.laEntry.Font.Name
+#: PoSpellMain.dfm:62
+#. frmMain.paBottom.edWord.Font.Name
+#: PoSpellMain.dfm:188
+#. frmMain.paCenter.meTrans.Font.Name
+#: PoSpellMain.dfm:296
 #. PoStatDialog.Font.Name
 #: PoStatDlg.dfm:11
 #. PoStatDialog.laPoFile.Font.Name
-#: PoStatDlg.dfm:40
+#: PoStatDlg.dfm:41
 #. frmMain.Font.Name
 #: PoStatMain.dfm:11
 #. MainForm.Font.Name
@@ -106,25 +110,27 @@ msgstr ""
 #. frmMain.Font.Name
 #: PoToIssMain.dfm:10
 #. frmMain.laTitle.Font.Name
-#: PoToIssMain.dfm:47
+#: PoToIssMain.dfm:48
 #. frmMain.Font.Name
 #: PoTransMain.dfm:11
 #. frmTransMain.Font.Name
 #: TransMain.dfm:11
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.laMergeLanguage.Font.Name
-#: TransMain.dfm:1581
+#: TransMain.dfm:603
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.laSaveLanguage.Font.Name
-#: TransMain.dfm:1674
+#: TransMain.dfm:696
+#. frmTransMain.paTop.pcOptions.pcExclude.lbExcludeGroups.Font.Name
+#: TransMain.dfm:808
 msgid "Tahoma"
 msgstr ""
 
 #  Doesn't look like text
 #. frmConfig.rgEncoding.Items.Strings
-#: GetTextConfig.dfm:501
+#: GetTextConfig.dfm:228
 #. frmMain.paCenter.rgEncoding.Items.Strings
-#: PoFromPasMain.dfm:892
+#: PoFromPasMain.dfm:174
 #. frmTransMain.paTop.pcOptions.tsOptions.rgEncoding.Items.Strings
-#: TransMain.dfm:1545
+#: TransMain.dfm:567
 msgid "UTF-8"
 msgstr ""
 
@@ -137,53 +143,61 @@ msgid "frmMain"
 msgstr ""
 
 #  Seems like unrenamed label placeholder
+#. frmGetText.laVersion.Caption
+#: GetTextMain.dfm:40
+#. frmGetText.laProg.Caption
+#: GetTextMain.dfm:48
+#. frmMerge.Panel1.laProg.Caption
+#: MergeMain.dfm:210
+#. frmMerge.Panel1.laVersion.Caption
+#: MergeMain.dfm:218
 #. frmMain.laStatus.Caption
-#: PoImportMain.dfm:171
+#: PoImportMain.dfm:45
 #. frmMain.laStatus.Caption
-#: PoInsComMain.dfm:40
+#: PoInsComMain.dfm:41
 #. PoStatDialog.laPoFile.Caption
-#: PoStatDlg.dfm:35
+#: PoStatDlg.dfm:36
 #. PoStatDialog.gbStat.laEntries.Caption
-#: PoStatDlg.dfm:187
+#: PoStatDlg.dfm:94
 #. PoStatDialog.gbStat.laNumTrans.Caption
-#: PoStatDlg.dfm:194
+#: PoStatDlg.dfm:101
 #. PoStatDialog.gbStat.laNumNoTrans.Caption
-#: PoStatDlg.dfm:201
+#: PoStatDlg.dfm:108
 #. PoStatDialog.gbStat.laNumFuzzy.Caption
-#: PoStatDlg.dfm:208
+#: PoStatDlg.dfm:115
 #. PoStatDialog.gbStat.laNumChars.Caption
-#: PoStatDlg.dfm:215
+#: PoStatDlg.dfm:122
 #. frmMain.gbStat.laEntries.Caption
-#: PoStatMain.dfm:268
+#: PoStatMain.dfm:101
 #. frmMain.gbStat.laNumTrans.Caption
-#: PoStatMain.dfm:275
+#: PoStatMain.dfm:108
 #. frmMain.gbStat.laNumNoTrans.Caption
-#: PoStatMain.dfm:282
+#: PoStatMain.dfm:115
 #. frmMain.gbStat.laNumFuzzy.Caption
-#: PoStatMain.dfm:289
+#: PoStatMain.dfm:122
 #. frmMain.gbStat.laNumChars.Caption
-#: PoStatMain.dfm:296
+#: PoStatMain.dfm:129
 #. frmTransMain.paTop.pcOptions.tsMerge.gbLangMerge.laMergeLanguage.Caption
-#: TransMain.dfm:1577
+#: TransMain.dfm:599
 #. frmTransMain.paTop.pcOptions.tsSaveOptions.gbSaveLanguage.laSaveLanguage.Caption
-#: TransMain.dfm:1670
+#: TransMain.dfm:692
 msgid "xxx"
 msgstr ""
 
 #  Seems like unrenamed tab sheet
 #. frmTransMain.paTop.paFiles.pcMode.tsMask.Caption
-#: TransMain.dfm:136
+#: TransMain.dfm:89
 msgid "tsMask"
 msgstr ""
 
 #  Seems like unrenamed tab sheet
 #. frmTransMain.paTop.paFiles.pcMode.tsFiles.Caption
-#: TransMain.dfm:299
+#: TransMain.dfm:150
 msgid "tsFiles"
 msgstr ""
 
 #. frmAssemble.OpenDialog.DefaultExt
-#: AssembleMain.dfm:557
+#: AssembleMain.dfm:162
 msgid "exe"
 msgstr ""
 

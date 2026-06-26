@@ -1,0 +1,6 @@
+IDR_LANGUAGES RCDATA "Languages\\language.cfg"
+IDR_TRANS_DE_LANGUAGES RCDATA "Languages\\de\\languages.mo"
+IDR_TRANS_DE_DEFAULT RCDATA "Languages\\de\\default.mo"
+IDR_TRANS_DE_DELPHI10 RCDATA "Languages\\de\\delphi10.mo"
+IDR_TRANS_DE_DIALOGS RCDATA "Languages\\de\\dialogs-svg.mo"
+IDR_TRANS_DE_UNITS RCDATA "Languages\\de\\units.mo"

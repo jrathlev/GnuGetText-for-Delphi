@@ -203,13 +203,6 @@ const
   cDomainDefinition = 'text-domain';  // Changes default text domain for strings
   cScanResetOption  = 'reset';        // Changes back to default behaviour
 
-  { consts for exclusion of files, directories, properties and classes from extraction: }
-  cExcludeFormInstance = 'exclude-form-instance';
-  cExcludeFormClassProperty = 'exclude-form-class-property';
-  cExcludeFormClass = 'exclude-form-class';
-  cExcludeFile = 'exclude-file';
-  cExcludeDir = 'exclude-dir';
-
   PoExt = '.po';
   PoIgnore = 'ignore.po';
 
@@ -1612,8 +1605,6 @@ begin
   end;
 
 procedure TXGetText.ParseExcludeFile;
-const
- cExcludeFilename = 'ggexclude.cfg';
 var
   F : TextFile;
   excludefile,
@@ -1793,7 +1784,7 @@ begin
         if FileExists(sf) then FFiles.Add(sf)
         else begin
           Result:=False;
-          FLastErrorMsg:=Format(_('File %s doesn''t exist'), [sf]);
+          FLastErrorMsg:=Format(_('File "%s" doesn''t exist'), [sf]);
           end;
         end;
       end;

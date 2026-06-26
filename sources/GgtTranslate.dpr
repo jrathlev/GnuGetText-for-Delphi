@@ -1,20 +1,25 @@
 program GgtTranslate;
 
 uses
-  GnuGetText in 'units\GnuGetText.pas',
-  LangUtils in 'units\LangUtils.pas',
-  Forms,
-  Graphics,
+  GnuGetText in 'Units\GnuGetText.pas',
+  LangUtils in 'Units\LangUtils.pas',
+  SVGIconItems in 'SVG\SVGIconItems.pas',
+  SVGIconImage in 'SVG\SVGIconImage.pas',
+  ImageLoader in 'Units\ImageLoader.pas',
+  Vcl.Forms,
+  Vcl.Graphics,
+  Vcl.Themes,
+  Vcl.Styles,
   TransMain in 'TransMain.pas' {frmTransMain},
-  ShellDirDlg in 'units\ShellDirDlg.pas' {ShellDirDialog},
-  SelectListItems in 'units\SelectListItems.pas' {SelectListItemsDialog},
-  FileListDlg in 'units\FileListDlg.pas' {FileListDialog},
-  SelectDlg in 'units\SelectDlg.pas' {SelectDialog},
-  ShowText in 'units\ShowText.pas' {ShowtextDialog},
-  EditHistListDlg in 'units\EditHistListDlg.pas' {EditHistListDialog},
-  ListSelectDlg in 'units\ListSelectDlg.pas' {ListSelectDialog},
+  ShellDirDlg in 'dialogs-svg\ShellDirDlg.pas' {ShellDirDialog},
+  SelectListItems in 'dialogs-svg\SelectListItems.pas' {SelectListItemsDialog},
+  FileListDlg in 'dialogs-svg\FileListDlg.pas' {FileListDialog},
+  ShowText in 'dialogs-svg\ShowText.pas' {ShowtextDialog},
+  EditHistListDlg in 'dialogs-svg\EditHistListDlg.pas' {EditHistListDialog},
   PoStatDlg in 'PoStatDlg.pas' {PoStatDialog},
-  GgtConsts in 'GgtConsts.pas';
+  GgtConsts in 'GgtConsts.pas',
+  EditStringListDlg in 'Dialogs-SVG\EditStringListDlg.pas' {EditStringListDialog},
+  EditDirListDlg in 'dialogs-svg\EditDirListDlg.pas' {EditDirListDialog};
 
 {$R *.res}
 {$IFDEF WIN32}
@@ -25,8 +30,11 @@ uses
 
 begin
   TP_GlobalIgnoreClass(TFont);
+  TP_GlobalIgnoreClass(TSVGIconItem);
+  TP_GlobalIgnoreClassProperty(TSVGIconImage,'SVGText');
   // Subdirectory in AppData for user configuration files and supported languages
-  InitTranslation(DefIniPath,'',['delphi10','units']);
+  InitTranslation(DefIniPath,GgtConfigName,['delphi10','units']);
+  InitImageLoader('images',['dialogs']);
 
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
@@ -34,9 +42,9 @@ begin
   Application.CreateForm(TShellDirDialog, ShellDirDialog);
   Application.CreateForm(TSelectListItemsDialog, SelectListItemsDialog);
   Application.CreateForm(TFileListDialog, FileListDialog);
-  Application.CreateForm(TSelectDialog, SelectDialog);
   Application.CreateForm(TShowtextDialog, ShowtextDialog);
-  Application.CreateForm(TListSelectDialog, ListSelectDialog);
   Application.CreateForm(TPoStatDialog, PoStatDialog);
+  Application.CreateForm(TEditStringListDialog, EditStringListDialog);
+  Application.CreateForm(TEditDirListDialog, EditDirListDialog);
   Application.Run;
 end.

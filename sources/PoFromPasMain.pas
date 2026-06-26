@@ -25,10 +25,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, PoParser,
-  Vcl.ComCtrls, Vcl.ExtCtrls;
+  Vcl.ComCtrls, Vcl.ExtCtrls, System.ImageList, Vcl.ImgList,
+  SVGIconImageListBase, SVGIconImageList, JrButtons;
 
 const
-  Vers = ' - Vers. 1.0';
+  Vers = ' - Vers. 4.0';
   PrgNamId = 'Programmer''s name for it: ';
 
 type
@@ -46,24 +47,25 @@ type
   TfrmMain = class(TForm)
     Label2: TLabel;
     Label5: TLabel;
-    sbEdit: TSpeedButton;
-    bbInfo: TBitBtn;
-    bbExit: TBitBtn;
-    bbSave: TBitBtn;
     OpenDialog: TOpenDialog;
-    btDir: TSpeedButton;
     StatusBar: TStatusBar;
     rgEncoding: TRadioGroup;
     cbOverwrite: TCheckBox;
-    btnHelp: TBitBtn;
     edDir: TComboBox;
     edEdit: TComboBox;
-    sbCopy: TSpeedButton;
     paTop: TPanel;
     paCenter: TPanel;
     Label1: TLabel;
     edSources: TComboBox;
-    sbSources: TSpeedButton;
+    imlGlyphs: TSVGIconImageList;
+    btDir: TJrSpeedButton;
+    sbSources: TJrSpeedButton;
+    sbCopy: TJrSpeedButton;
+    sbEdit: TJrSpeedButton;
+    bbExit: TJrButton;
+    bbInfo: TJrButton;
+    bbSave: TJrButton;
+    btnHelp: TJrButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbExitClick(Sender: TObject);
@@ -78,6 +80,8 @@ type
     procedure btnHelpClick(Sender: TObject);
     procedure sbCopyClick(Sender: TObject);
     procedure sbSourcesClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -104,8 +108,8 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, Winapi.ShlObj, System.StrUtils, gnugettext, PathUtils,
-  WinUtils, ListUtils, MsgDialogs, LangUtils, InitProg, WinApiUtils, WinShell,
-  StringUtils, ShellDirDlg, xgettexttools, GgtConsts, GgtUtils;
+  WinUtils, ListUtils, ShowMessageDlg, LangUtils, InitProg, WinApiUtils, WinShell,
+  StringUtils, ShellDirDlg, xgettexttools, GgtConsts, GgtUtils, ImageLoader, StyleUtils;
 
 { ------------------------------------------------------------------- }
 constructor TTextInfo.Create (const AUnit,AText : string);
@@ -126,10 +130,15 @@ var
   IniFile  : TMemIniFile;
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
   Application.Title:=_('Insert translated strings from pas files');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
+// set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  SetDisplayMode(LoadDisplayModeFromIni(CfgName,CfgSekt));
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
@@ -164,6 +173,12 @@ begin
   else begin
     EdFile:=''; edEdit.Text:='';
     end;
+  end;
+
+procedure TfrmMain.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -206,7 +221,7 @@ var
 
   procedure ShowError (const Msg : string);
   begin
-    ErrorDialog(sourcefilename,Msg+sLineBreak+'"'+LastLineRead+'"');
+    ErrorDialog(sourcefilename+'|'+Msg+sLineBreak+'"'+LastLineRead+'"');
     end;
 
   procedure dxreadln(var src: TextFile; var line: string);
@@ -635,7 +650,7 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(ProgVersName+' - '+ProgVersDate+#13+CopRgt+#13'E-Mail: '+EmailAdr);
+  InfoDialog(ProgVersName+' - '+ProgVersDate+sLineBreak+CopRgt+sLineBreak+'E-Mail: '+EmailAdr);
   end;
 
 procedure TfrmMain.edEditCloseUp(Sender: TObject);

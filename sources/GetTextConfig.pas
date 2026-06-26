@@ -9,14 +9,18 @@ unit GetTextConfig;
 (*  See http://dybdahl.dk/dxgettext/ for more information     *)
 (*                                                            *)
 (**************************************************************)
-// Last modified: July 2023 J. Rathlev
+(* further development by J. Rathlev
+
+   last modified: April 2026
+   *)
 
 interface
 
 uses
-  Winapi.Windows, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Buttons, Vcl.Menus;
+  Vcl.Buttons, Vcl.Menus, System.ImageList, Vcl.ImgList, SVGIconImageListBase,
+  SVGIconImageList, JrButtons;
 
 type
   TfrmConfig = class(TForm)
@@ -33,16 +37,19 @@ type
     ExcludeDirs: TLabeledEdit;
     laVersion: TLabel;
     cbOverwrite: TCheckBox;
-    ButtonOK: TBitBtn;
-    ButtonCancel: TBitBtn;
-    bbBaseDir: TSpeedButton;
-    bbExclude: TSpeedButton;
-    btDefMask: TSpeedButton;
+    FileOpenDialog: TFileOpenDialog;
     pmMask: TPopupMenu;
     cbOrder: TCheckBox;
     rgEncoding: TRadioGroup;
-    btnHelp: TBitBtn;
-    btnManual: TBitBtn;
+    imlGlyphs: TSVGIconImageList;
+    ButtonOK: TJrButton;
+    ButtonCancel: TJrButton;
+    btnHelp: TJrButton;
+    btnManual: TJrButton;
+    bbBaseDir: TJrSpeedButton;
+    bbExclude: TJrSpeedButton;
+    btDefMask: TJrSpeedButton;
+    laProg: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure rbDefaultClick(Sender: TObject);
@@ -51,23 +58,30 @@ type
     procedure btDefMaskClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
     procedure btnManualClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
+    procedure pmiMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width,
+      Height: Integer);
+    procedure pmiDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect;
+      Selected: Boolean);
     procedure CheckBoxRecurseClick(Sender: TObject);
   private
     { Private declarations }
-    IsVista : boolean;
+    PixelsPerInchOnCreate : integer;
     procedure DoMaskClick (Sender : TObject);
     procedure ShowExclude;
   public
     { Public declarations }
     procedure LoadFromIni(const AIniName : string);
-    procedure SaveToIni(const AIniName : string; SaveMask : boolean);
+    function SaveToIni(const AIniName : string; SaveMask : boolean) : boolean;
     procedure SetDomain(const DomName : string);
   end;
 
 implementation
 
 uses
-  System.inifiles, Vcl.FileCtrl, gnugettext, GgtConsts, GgtUtils, PathUtils, WinShell;
+  System.Inifiles, System.UITypes, gnugettext, GgtConsts, GgtUtils, WinUtils,
+  PathUtils, WinShell, ImageLoader, StyleUtils;
 
 {$R *.dfm}
 
@@ -79,21 +93,26 @@ const
   Masks : array [0..2] of string =(defDelphiMask,defLazarusMask,defCppMask);
 
 procedure TfrmConfig.FormCreate(Sender: TObject);
+
+  function AddMenuItem (const ACaption,AName : string) : TMenuItem;
+  begin
+    Result:=NewItem(ACaption,0,false,true,DoMaskClick,0,AName);
+    Result.OnDrawItem:=pmiDrawItem;
+    Result.OnMeasureItem:=pmiMeasureItem;
+    pmMask.Items.Add(Result);
+    end;
+
 begin
   TranslateComponent (self);
-  Caption:=Caption+' (ggdxgettext)';
-  with pmMask.Items do begin
-    Add(NewItem(_('Delphi files'),0,false,true,DoMaskClick,0,Format('miMask%u',[0])));
-    Add(NewItem(_('Lazarus files'),0,false,true,DoMaskClick,0,Format('miMask%u',[1])));
-    Add(NewItem(_('Cpp Builder files'),0,false,true,DoMaskClick,0,Format('miMask%u',[2])));
-    end;
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  PixelsPerInchOnCreate:=PixelsPerInch;
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
+  laProg.Caption:='ggdxgettext';
+  laVersion.Caption:='Version: '+GetProgVersion;
+  AddMenuItem(_('Delphi files'),Format('miMask%u',[0]));
+  AddMenuItem(_('Lazarus files'),Format('miMask%u',[1]));
+  AddMenuItem(_('Cpp Builder files'),Format('miMask%u',[2]));
   EditMask.Text:='';
-  IsVista:=(Win32Platform = VER_PLATFORM_WIN32_NT) and (Win32MajorVersion >= 6);
-  end;
-
-procedure TfrmConfig.FormShow(Sender: TObject);
-begin
-  if length(EditBasepath.Text)=0 then bbBaseDirClick(self);
   end;
 
 procedure TfrmConfig.LoadFromIni(const AIniName : string);
@@ -102,6 +121,7 @@ begin
     Left:=ReadInteger(ggtSect,iniLeft,Left);       // JR
     Top:=ReadInteger(ggtSect,iniTop,Top);
     CheckBoxRecurse.Checked:=ReadBool(ggtSect,iniRecurse,false);
+    ExcludeDirs.Enabled:=CheckBoxRecurse.Checked;
     ExcludeDirs.Text:=ReadString(ggtSect,iniExclude,'');
     cbCreateIgnore.Checked:=ReadBool(ggtSect,iniUpdate,false);
     cbRemoveIgnore.Checked:=ReadBool(ggtSect,iniIgnore,false);
@@ -126,29 +146,36 @@ begin
     cbOverwrite.Checked:=ReadBool(dxSect,iniOvwr,false);
     Free;
     end;
-  ShowExclude;
   end;
 
-procedure TfrmConfig.SaveToIni(const AIniName : string; SaveMask : boolean);
+function TfrmConfig.SaveToIni(const AIniName : string; SaveMask : boolean) : boolean;
 begin
+  Result:=true;
   if CheckBoxSaveSettings.Checked and (length(AIniName)>0) then begin
     with TMemIniFile.Create (AIniName) do begin
-      WriteInteger(ggtSect,iniLeft,Left);       // JR
-      WriteInteger(ggtSect,iniTop,Top);
-      WriteBool(ggtSect,iniRecurse,CheckBoxRecurse.Checked);
-      WriteString(ggtSect,iniExclude,ExcludeDirs.Text);
-      WriteBool(ggtSect,iniUpdate,cbCreateIgnore.Checked);
-      WriteBool(ggtSect,iniIgnore,cbRemoveIgnore.Checked);
-//      WriteBool(ggtSect,iniAAscii,not cbCheckNonAscii.Checked);
-      WriteInteger(ggtSect,iniCode,rgEncoding.ItemIndex);
-      WriteBool(ggtSect,iniDefault,rbOther.Checked);
-      if rbOther.Checked then WriteString(dxSect,iniOutput,OutputName.Text)
-      else WriteString(dxSect,iniOutput,'');
-      if SaveMask then WriteString(dxSect,iniMask,EditMask.Text);
-      WriteBool(dxSect,iniOrder,cbOrder.Checked);
-      WriteBool(dxSect,iniOvwr,cbOverwrite.Checked);
-      UpdateFile;
-      Free;
+      try
+        WriteInteger(ggtSect,iniLeft,Left);       // JR
+        WriteInteger(ggtSect,iniTop,Top);
+        WriteBool(ggtSect,iniRecurse,CheckBoxRecurse.Checked);
+        WriteString(ggtSect,iniExclude,ExcludeDirs.Text);
+        WriteBool(ggtSect,iniUpdate,cbCreateIgnore.Checked);
+        WriteBool(ggtSect,iniIgnore,cbRemoveIgnore.Checked);
+  //      WriteBool(ggtSect,iniAAscii,not cbCheckNonAscii.Checked);
+        WriteInteger(ggtSect,iniCode,rgEncoding.ItemIndex);
+        WriteBool(ggtSect,iniDefault,rbOther.Checked);
+        if rbOther.Checked then WriteString(dxSect,iniOutput,OutputName.Text)
+        else WriteString(dxSect,iniOutput,'');
+        if SaveMask then WriteString(dxSect,iniMask,EditMask.Text);
+        WriteBool(dxSect,iniOrder,cbOrder.Checked);
+        WriteBool(dxSect,iniOvwr,cbOverwrite.Checked);
+        try
+          UpdateFile;
+        except
+          Result:=false;
+        end;
+      finally
+        Free;
+        end;
       end;
     end;
   end;
@@ -169,6 +196,46 @@ begin
     rbOther.Checked:=true;
     OutputName.Text:=DomName;
     end;
+  end;
+
+procedure TfrmConfig.pmiDrawItem(Sender: TObject; ACanvas: TCanvas;
+  ARect: TRect; Selected: Boolean);
+var
+  d : integer;
+begin
+  with ACanvas do begin
+    if Selected then Brush.Color:=GetSysColor(clHighlight) else Brush.Color:=GetSysColor(clMenu);
+    if (Sender as TMenuItem).Caption=cLineCaption then with ARect do begin
+      FillRect(ARect);
+      if StylesEnabled then Pen.Color:=GetSysColor(clInActiveBorder) else Pen.Color:=clActiveBorder;
+      d:=Top+Height div 2;
+      MoveTo(Height,d); LineTo(Width-Height,d);
+      end
+    else begin
+      with Font do begin
+        Size:=SizeScale(Size,PixelsPerInchOnCreate,self);
+        if Selected then Color:=GetSysColor(clHighlightText) else Color:=GetSysColor(clMenuText);
+        end;
+      TextRect(ARect,ARect.Height,ARect.Top+MulDiv(ARect.Height,3,22),(Sender as TMenuItem).Caption);
+      end;
+    end;
+  end;
+
+procedure TfrmConfig.pmiMeasureItem(Sender: TObject; ACanvas: TCanvas;
+  var Width, Height: Integer);
+begin
+  Width:=SizeScale(Width,PixelsPerInchOnCreate,self); Height:=SizeScale(Height,PixelsPerInchOnCreate,self);
+  end;
+
+procedure TfrmConfig.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
+  end;
+
+procedure TfrmConfig.FormShow(Sender: TObject);
+begin
+  if length(EditBasepath.Text)=0 then bbBaseDirClick(self);
   end;
 
 procedure TfrmConfig.rbDefaultClick(Sender: TObject);
@@ -200,27 +267,30 @@ begin
   end;
 
 procedure TfrmConfig.btnManualClick(Sender: TObject);
+var
+  pt : TPoint;
 begin
   ShowManual(Application.Handle);
   end;
 
 procedure TfrmConfig.CheckBoxRecurseClick(Sender: TObject);
 begin
-  ShowExclude;
+   ShowExclude;
   end;
 
 procedure TfrmConfig.bbBaseDirClick(Sender: TObject);
 var
   sd : string;
-  dirs : TArray<string>;
 begin
   sd:=EditBasepath.Text;
   if length(sd)=0 then sd:=GetPersonalFolder;
-  if IsVista then begin
-    if SelectDirectory(sd,dirs,[],_('Select basic directory')) then EditBasepath.Text:=Dirs[0];
-    end
-  else begin
-    if SelectDirectory(_('Select basic directory'),sd,sd,[],self) then EditBasepath.Text:=sd;
+  with FileOpenDialog do begin
+    Title:=_('Select basic directory');
+    Options := [fdoPickFolders,fdoForceFileSystem];
+    OkButtonLabel:=_('Select');
+    DefaultFolder:=sd;
+    FileName:=sd;
+    if Execute then EditBasepath.Text:=Filename;
     end;
   end;
 
@@ -228,22 +298,20 @@ procedure TfrmConfig.bbExcludeClick(Sender: TObject);
 var
   sd : string;
   i  : integer;
-  dirs : TArray<string>;
 begin
   sd:=EditBasepath.Text;
   if length(sd)=0 then sd:=GetPersonalFolder;
-  if IsVista then begin
-    if SelectDirectory(sd,dirs,[sdAllowMultiselect],_('Select subdirectories to be excluded')) then begin
-      sd:=MakeRelativePath(EditBasepath.Text,Dirs[0]);
-      for i:=1 to High(Dirs) do sd:=sd+','+MakeRelativePath(EditBasepath.Text,Dirs[i]);
+  with FileOpenDialog do begin
+    Title:=_('Select subdirectories to be excluded');
+    Options := [fdoPickFolders,fdoAllowMultiSelect,fdoForceFileSystem];
+    OkButtonLabel:=_('Select');
+    DefaultFolder:=sd;
+    FileName:=sd;
+    if Execute then begin
+      sd:=MakeRelativePath(EditBasepath.Text,Files[0]);
+      for i:=1 to Files.Count-1 do sd:=sd+','+MakeRelativePath(EditBasepath.Text,Files[i]);
       if length(ExcludeDirs.Text)>0 then ExcludeDirs.Text:=ExcludeDirs.Text+',';
       ExcludeDirs.Text:=ExcludeDirs.Text+sd;
-      end;
-    end
-  else begin
-    if SelectDirectory(_('Select subdirectories to be excluded'),sd,sd,[],self) then begin
-      if length(ExcludeDirs.Text)>0 then ExcludeDirs.Text:=ExcludeDirs.Text+',';
-      ExcludeDirs.Text:=ExcludeDirs.Text+MakeRelativePath(EditBasepath.Text,sd);
       end;
     end;
   end;

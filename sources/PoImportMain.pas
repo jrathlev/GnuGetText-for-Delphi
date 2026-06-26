@@ -21,7 +21,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, PoParser;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, PoParser,
+  JrButtons, System.ImageList, Vcl.ImgList, SVGIconImageListBase,
+  SVGIconImageList;
 
 const
   Vers = ' - Vers. 3.1';
@@ -34,17 +36,18 @@ type
   TfrmMain = class(TForm)
     cbEdit: TComboBox;
     Label2: TLabel;
-    sbEdit: TSpeedButton;
     cbTrans: TComboBox;
     Label5: TLabel;
-    sbTrans: TSpeedButton;
-    bbSave: TBitBtn;
-    bbInfo: TBitBtn;
-    bbExit: TBitBtn;
     OpenDialog: TOpenDialog;
     laStatus: TLabel;
-    btnHelp: TBitBtn;
     cbFuzzy: TCheckBox;
+    imlGlyphs: TSVGIconImageList;
+    sbEdit: TJrSpeedButton;
+    sbTrans: TJrSpeedButton;
+    bbSave: TJrButton;
+    bbInfo: TJrButton;
+    bbExit: TJrButton;
+    btnHelp: TJrButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbExitClick(Sender: TObject);
@@ -58,6 +61,8 @@ type
     procedure cbDrawItem(Control: TWinControl; Index: Integer; Rect: TRect;
       State: TOwnerDrawState);
     procedure btnHelpClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -81,8 +86,8 @@ implementation
 
 {$R *.dfm}
 
-uses System.IniFiles, GnuGettext, InitProg, WinUtils, ListUtils, PathUtils,
-  StringUtils, MsgDialogs, GgtConsts, GgtUtils;
+uses System.IniFiles, Vcl.Themes, GnuGettext, InitProg, WinUtils, ListUtils, PathUtils,
+  StringUtils, ShowMessageDlg, GgtConsts, GgtUtils, ImageLoader, StyleUtils;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
@@ -90,16 +95,24 @@ var
   i : integer;
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
+  AdjustComboBoxes(self,PixelsPerInchOnDesign,PixelsPerInch);
   Application.Title:=_('Import translations from po file');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName; EdFile:='';
+// set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  SetDisplayMode(LoadDisplayModeFromIni(CfgName,CfgSekt));
   if ParamCount>0 then for i:=1 to ParamCount do if not IsOption(ParamStr(i)) then begin
     if EdFile.IsEmpty then EdFile:=ExpandFileName(ParamStr(i));
     end;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
+    Top:=ReadInteger(CfGSekt,iniTop,Top);
+    Left:=ReadInteger(CfGSekt,iniLeft,Left);
     if length(EdFile)=0 then EdFile:=ReadString(CfGSekt,iniTempl,'');
     ImportFile:=ReadString(CfGSekt,iniTrans,'');
     LoadHistoryList(IniFile,TemplSekt,cbEdit);
@@ -121,10 +134,18 @@ begin
     if FileExists(ImportFile) then ok:=LoadFile(ImportFile,ImportList)
     else if SelectImport then ok:=LoadFile(ImportFile,ImportList);
     end;
+  if not ok then Close;
   laStatus.Caption:='';
   AddToHistoryList(cbEdit,EdFile);
   AddToHistoryList(cbTrans,ImportFile);
   UpdateButton;
+  end;
+
+procedure TfrmMain.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
+  AdjustComboBoxes(self,PixelsPerInchOnDesign,PixelsPerInch);
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -133,6 +154,8 @@ var
 begin
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
+    WriteInteger(CfGSekt,iniTop,Top);
+    WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniTempl,EdFile);
     WriteString(CfGSekt,iniTrans,ImportFile);
     SaveHistory(IniFile,TemplSekt,cbEdit);
@@ -194,7 +217,7 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
+  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+sLineBreak+CopRgt
            +sLineBreak+'E-Mail: '+EmailAdr);
   end;
 
@@ -220,15 +243,6 @@ procedure TfrmMain.cbDrawItem(Control: TWinControl; Index: Integer;
   Rect: TRect; State: TOwnerDrawState);
 begin
   with Control as TComboBox,Canvas do begin
-    if (odSelected in State) and (ItemIndex>=0) then begin
-      Brush.Color:=clSkyBlue;
-      Font.Color:=clNavy;
-      end
-    else begin
-      Brush.Color:=Color;
-      Pen.Color:=Color;
-      end;
-    Font.Color:=clBlack;
     FillRect(Rect);
     if odFocused in State then  // also check for styles if there's a possibility of using ..
       DrawFocusRect(Rect);
@@ -269,26 +283,34 @@ var
   sn,s   : string;
   n      : integer;
 begin
-  with EdList do begin
-    pe:=FindFirst; n:=0;
-    while (pe<>nil) do begin
-      if not pe.MsgId.IsEmpty and pe.MsgStr.IsEmpty then begin
-        pi:=ImportList.FindEntry(pe.MsgId);
-        if (pi<>nil) and (pe.MsgStr.IsEmpty or (cbFuzzy.Checked and pe.Fuzzy)) then begin
-          pe.MsgStr:=pi.MsgStr;
-          inc(n);
+  if AnsisameText(EdList.Header[hiLanguage],ImportList.Header[hiLanguage]) then begin
+    with EdList do begin
+      pe:=FindFirst; n:=0;
+      while (pe<>nil) do begin
+        if not pe.MsgId.IsEmpty and (pe.MsgStr.IsEmpty or (cbFuzzy.Checked and pe.Fuzzy)) then begin
+          pi:=ImportList.FindEntry(pe.MsgId);
+          if (pi<>nil) then begin
+            pe.MsgStr:=pi.MsgStr;
+            pe.Fuzzy:=false;
+            inc(n);
+            end;
           end;
+        pe:=FindNext(pe);
         end;
-      pe:=FindNext(pe);
       end;
-    end;
-  laStatus.Caption:=Format(_('%u strings imported'),[n]);
-  sn:=EdFile+'.tmp';
-  EdList.SaveToFile(sn,true);
-  s:=EdFile+'.bak';
-  if FileExists(s) then DeleteFile(s);
-  RenameFile(EdFile,s);
-  RenameFile(sn,EdFile);
+    if n=0 then InfoDialog(_('No strings found to import!'))
+    else begin
+      laStatus.Caption:=Format(_('%u strings were imported'),[n]);
+      sn:=EdFile+'.tmp';
+      EdList.SaveToFile(sn,true);
+      s:=EdFile+'.bak';
+      if FileExists(s) then DeleteFile(s);
+      RenameFile(EdFile,s);
+      RenameFile(sn,EdFile);
+      end;
+    end
+  else ErrorDialog(Format(_('The po files belong to different languages: "%s" <=> "%s"!'),
+    [EdList.Header[hiLanguage],ImportList.Header[hiLanguage]])+sLineBreak+_('No import possible!'));
   end;
 
 procedure TfrmMain.btnHelpClick(Sender: TObject);

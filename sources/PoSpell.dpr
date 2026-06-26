@@ -1,15 +1,20 @@
 program PoSpell;
 
 uses
-  GnuGetText in 'units\GnuGetText.pas',
-  LangUtils in 'units\LangUtils.pas',
+  GnuGetText in 'Units\GnuGetText.pas',
+  LangUtils in 'Units\LangUtils.pas',
+  SVGIconItems in 'SVG\SVGIconItems.pas',
+  SVGIconImage in 'SVG\SVGIconImage.pas',
+  ImageLoader in 'Units\ImageLoader.pas',
   Vcl.Forms,
   Vcl.Graphics,
-  Vcl.Dialogs,
   GgtConsts in 'GgtConsts.pas',
   PoSpellMain in 'PoSpellMain.pas' {frmMain},
   SpellChecker in 'SpellChecker.pas',
-  ListSelectDlg in 'units\ListSelectDlg.pas' {ListSelectDialog};
+  ShowMessageDlg in 'Dialogs-SVG\ShowMessageDlg.pas',
+  ListSelectDlg in 'Dialogs-SVG\ListSelectDlg.pas' {ListSelectDialog},
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 {$IFDEF WIN32}
@@ -20,11 +25,14 @@ uses
 
 begin
   TP_GlobalIgnoreClass(TFont);
+  TP_GlobalIgnoreClass(TSVGIconItem);
+  TP_GlobalIgnoreClassProperty(TSVGIconImage,'SVGText');
   // Subdirectory in AppData for user configuration files and supported languages
-  InitTranslation(DefIniPath,'',['delphi10','units']);
+  InitTranslation(DefIniPath,GgtConfigName,['delphi10','units']);
+  InitImageLoader('images',['dialogs']);
 
   if not HunspellDllLoaded then begin
-    MessageDlg(_('Error loading Hunspell library!'),mtError,[mbClose],0);
+    ErrorDialog(_('Error loading Hunspell library!'));
     Exit;
     end;
 

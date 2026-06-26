@@ -11,14 +11,21 @@
    the specific language governing rights and limitations under the License.
 
    July 2016
+   last modified: January 2026
    *)
 
 program ggassemble;
 
 uses
   GnuGetText in 'units\GnuGetText.pas',
+  LangUtils in 'units\LangUtils.pas',
+  SVGIconItems in 'svg\SVGIconItems.pas',
+  SVGIconImage in 'svg\SVGIconImage.pas',
+  ImageLoader in 'units\ImageLoader.pas',
   Vcl.Forms,
-  Vcl.Dialogs,
+  Vcl.Graphics,
+  Vcl.Styles,
+  GgtConsts in 'GgtConsts.pas',
   AssembleMain in 'AssembleMain.pas' {frmAssemble};
 
 {$R *.res}
@@ -29,7 +36,12 @@ uses
 {$ENDIF}
 
 begin
-  AddDomains(['delphi10','units']);
+  TP_GlobalIgnoreClass(TFont);
+  TP_GlobalIgnoreClass(TSVGIconItem);
+  TP_GlobalIgnoreClassProperty(TSVGIconImage,'SVGText');
+  // Subdirectory in AppData for user configuration files and supported languages
+  InitTranslation(DefIniPath,GgtConfigName,['delphi10','units']);
+  InitImageLoader('images',['dialogs']);
 
   Application.Initialize;
   Application.MainFormOnTaskbar := True;

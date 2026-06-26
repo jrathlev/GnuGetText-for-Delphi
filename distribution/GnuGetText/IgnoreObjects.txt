@@ -1,0 +1,18 @@
+frm_=form
+l_=label
+a_=action
+ac_=action
+act_=action
+b_=button
+e_=edit
+p_=panel
+pn_=panel
+bb_=bit button
+sb_=speed button
+cb_=combo box
+ed_=edit
+gb_=group box
+tb_=tool bar
+pc_=page control
+ts_=tab sheet
+

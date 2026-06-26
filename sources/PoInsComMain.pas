@@ -23,7 +23,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, PoParser;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, PoParser,
+  JrButtons, System.ImageList, Vcl.ImgList, SVGIconImageListBase,
+  SVGIconImageList;
 
 const
   Vers = ' - Vers. 3.1';
@@ -36,16 +38,17 @@ type
   TfrmMain = class(TForm)
     Label2: TLabel;
     Label5: TLabel;
-    bbInfo: TBitBtn;
-    bbExit: TBitBtn;
-    bbSave: TBitBtn;
     OpenDialog: TOpenDialog;
-    bbRef: TBitBtn;
-    bbEdit: TBitBtn;
-    btnHelp: TBitBtn;
     edRef: TComboBox;
     edEdit: TComboBox;
     laStatus: TLabel;
+    imlGlyphs: TSVGIconImageList;
+    bbInfo: TJrButton;
+    bbExit: TJrButton;
+    bbSave: TJrButton;
+    btnHelp: TJrButton;
+    bbRef: TJrSpeedButton;
+    bbEdit: TJrSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbExitClick(Sender: TObject);
@@ -57,6 +60,8 @@ type
     procedure edEditCloseUp(Sender: TObject);
     procedure bbSaveClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -83,7 +88,8 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, Winapi.ShlObj, System.StrUtils, WinUtils,  ListUtils, LangUtils,
-  InitProg, WinApiUtils, WinShell,gnugettext, PathUtils, MsgDialogs, GgtConsts, GgtUtils;
+  InitProg, WinApiUtils, WinShell,gnugettext, PathUtils, ShowMessageDlg, GgtConsts, GgtUtils,
+  ImageLoader, StyleUtils;
 
 { ------------------------------------------------------------------- }
 procedure TfrmMain.FormCreate(Sender: TObject);
@@ -91,13 +97,20 @@ var
   IniFile  : TMemIniFile;
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
   Application.Title:=_('Copy translated strings as comments');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
+// set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  SetDisplayMode(LoadDisplayModeFromIni(CfgName,CfgSekt));
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
+    Top:=ReadInteger(CfGSekt,iniTop,Top);
+    Left:=ReadInteger(CfGSekt,iniLeft,Left);
     RefFile:=ReadString(CfGSekt,iniTempl,'');
     EdFile:=ReadString(CfGSekt,iniTrans,'');
     LoadHistory(IniFile,TemplSekt,edRef);
@@ -119,18 +132,25 @@ begin
   laStatus.Caption:='';
   end;
 
+procedure TfrmMain.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
+  end;
+
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   IniFile  : TMemIniFile;
 begin
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
+    WriteInteger(CfGSekt,iniTop,Top);
+    WriteInteger(CfGSekt,iniLeft,Left);
     WriteString(CfGSekt,iniTempl,RefFile);
     WriteString(CfGSekt,iniTrans,EdFile);
     SaveHistory(IniFile,TemplSekt,edRef);
     SaveHistory(IniFile,TransSekt,edEdit);
-    UpdateFile;
-    Free;
+    try UpdateFile; finally Free; end;
     end;
   IdList.Free;
   RefList.Free;
@@ -145,8 +165,8 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
-           +#13'E-Mail: '+EmailAdr);
+  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+sLineBreak+CopRgt
+           +sLineBreak+'E-Mail: '+EmailAdr);
   end;
 
 procedure TfrmMain.edEditCloseUp(Sender: TObject);

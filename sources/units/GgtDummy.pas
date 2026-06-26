@@ -20,6 +20,11 @@
 
    October 2021
    *)
+(* @abstract(Dummy replacement for GnuGetText)
+   @author(© Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de))
+   @created(October 2021)
+   @lastmod(October 2021)
+*)
 
 unit GgtDummy;
 

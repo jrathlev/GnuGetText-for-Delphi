@@ -12,7 +12,7 @@
    the specific language governing rights and limitations under the License.
 
    Jan. 2016
-   last modified: April 2024
+   last modified: January 2026
    *)
 
 unit PoSpellMain;
@@ -22,10 +22,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  PoParser, SpellChecker;
+  PoParser, SpellChecker, JrButtons, System.ImageList, Vcl.ImgList,
+  SVGIconImageListBase, SVGIconImageList, Vcl.Menus, Vcl.ExtCtrls;
 
 const
-  Vers = ' - Vers. 3.1';
+  Vers = ' - Vers. 4.0';
 
   PoExt = 'po';
   DicExt = 'dic';
@@ -34,9 +35,6 @@ const
 type
   TfrmMain = class(TForm)
     Label2: TLabel;
-    bbSave: TBitBtn;
-    bbInfo: TBitBtn;
-    bbExit: TBitBtn;
     Label5: TLabel;
     edWord: TEdit;
     btAdd: TButton;
@@ -46,14 +44,22 @@ type
     Label3: TLabel;
     laEntry: TLabel;
     OpenDialog: TOpenDialog;
-    bbReload: TBitBtn;
     Label1: TLabel;
-    bbDictionary: TBitBtn;
-    bbTranslation: TBitBtn;
-    btGetSuggestion: TBitBtn;
-    btnHelp: TBitBtn;
     edTranslation: TComboBox;
     edDictionary: TComboBox;
+    imlGlyphs: TSVGIconImageList;
+    bbDictionary: TJrSpeedButton;
+    bbTranslation: TJrSpeedButton;
+    btGetSuggestion: TJrSpeedButton;
+    bbSave: TJrButton;
+    bbInfo: TJrButton;
+    bbExit: TJrButton;
+    bbReload: TJrButton;
+    btnHelp: TJrButton;
+    pmSugg: TPopupMenu;
+    paBottom: TPanel;
+    paTop: TPanel;
+    paCenter: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -71,6 +77,13 @@ type
     procedure btGetSuggestionClick(Sender: TObject);
     procedure btNextClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
+    procedure pmiMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width,
+      Height: Integer);
+    procedure pmiDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect;
+      Selected: Boolean);
+    procedure FormResize(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -85,11 +98,12 @@ type
     CurEntry           : TPoEntry;
     SpellCheck         : TSpellCheck;
     SuggList           : TStringList;
+    PixelsPerInchOnCreate,
     WordPos,EntryCnt   : integer;
     Changed            : boolean;
     FsEnu              : TFormatSettings;
     procedure ShowMessage(const AMsg : string; IsErr : boolean = false);
-    procedure GetSelectedIndex (n : integer);
+    procedure DoSuggClick (Sender : TObject);
     procedure SaveChangedFile;
     procedure SaveFile;
     function LoadFile : boolean;
@@ -115,9 +129,9 @@ implementation
 
 {$R *.dfm}
 
-uses System.IniFiles, Winapi.ShlObj, System.StrUtils, System.Character,
-  GnuGetText, WinUtils, ListUtils, MsgDialogs, LangUtils, InitProg, ListSelectDlg,
-  WinApiUtils, WinShell, PathUtils, StringUtils, GgtConsts, GgtUtils;
+uses System.IniFiles, Winapi.ShlObj, System.StrUtils, System.Character, GnuGetText,
+  WinUtils, ListUtils, ShowMessageDlg, LangUtils, InitProg, WinApiUtils, WinShell,
+  PathUtils, StringUtils, GgtConsts, GgtUtils, ImageLoader, StyleUtils;
 
 function RemoveLeadingChars (const s : string; CheckChars : array of char) : string;
 var
@@ -163,10 +177,16 @@ var
   i : integer;
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  PixelsPerInchOnCreate:=PixelsPerInch;
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
   Application.Title:=_('Spell checking of po translations');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName; PoFile:='';
+// set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  SetDisplayMode(LoadDisplayModeFromIni(CfgName,CfgSekt));
   if ParamCount>0 then for i:=1 to ParamCount do if not IsOption(ParamStr(i)) then begin
     if PoFile.IsEmpty then PoFile:=ExpandFileName(ParamStr(i));
     end;
@@ -215,14 +235,15 @@ begin
   FsEnu.DecimalSeparator:='.';
   end;
 
+procedure TfrmMain.FormResize(Sender: TObject);
+begin
+  with edWord do Width:=btGetSuggestion.Left-MulDiv(Left,3,2);
+  end;
+
 procedure TfrmMain.FormShow(Sender: TObject);
 var
   ok : boolean;
 begin
-  with ListSelectDialog do begin
-    Sorted:=true; Width:=edWord.Width;
-    OnSelect:=GetSelectedIndex;
-    end;
   ok:=false;
   if FileExists(DicFile) then ok:=LoadDic;
   if not ok then begin
@@ -238,6 +259,12 @@ begin
     FindFirstWord(ok);
     end
   else Close;
+  end;
+
+procedure TfrmMain.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
   end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -287,8 +314,8 @@ begin
 
 procedure TfrmMain.bbInfoClick(Sender: TObject);
 begin
-  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+#13+CopRgt
-           +#13'E-Mail: '+EmailAdr);
+  InfoDialog(BottomLeftPos(bbInfo,0,10),ProgVersName+' - '+ProgVersDate+sLineBreak+CopRgt
+           +sLineBreak+'E-Mail: '+EmailAdr);
   end;
 
 procedure TfrmMain.bbReloadClick(Sender: TObject);
@@ -546,24 +573,68 @@ begin
 //  if not GetNextWord then NotFound;
   end;
 
-procedure TfrmMain.GetSelectedIndex (n : integer);
+procedure TfrmMain.pmiDrawItem(Sender: TObject; ACanvas: TCanvas;
+  ARect: TRect; Selected: Boolean);
+var
+  d : integer;
 begin
-//  ReplaceWord(SuggList[n]);
-//  if not GetNextWord then NotFound;
-  edWord.Text:=SuggList[n];
+  with ACanvas do begin
+    if Selected then Brush.Color:=GetSysColor(clHighlight) else Brush.Color:=GetSysColor(clMenu);
+    if (Sender as TMenuItem).Caption=cLineCaption then with ARect do begin
+      FillRect(ARect);
+      if StylesEnabled then Pen.Color:=GetSysColor(clInActiveBorder) else Pen.Color:=clActiveBorder;
+      d:=Top+Height div 2;
+      MoveTo(Height,d); LineTo(Width-Height,d);
+      end
+    else begin
+      with Font do begin
+        Size:=SizeScale(Size,PixelsPerInchOnCreate,self);
+        if Selected then Color:=GetSysColor(clHighlightText) else Color:=GetSysColor(clMenuText);
+        end;
+      TextRect(ARect,ARect.Height,ARect.Top+MulDiv(ARect.Height,3,22),RemoveCharacters((Sender as TMenuItem).Caption,['&']));
+      TextRect(ARect,ARect.Height,ARect.Top+MulDiv(ARect.Height,3,22),(Sender as TMenuItem).Caption);
+      end;
+    end;
+  end;
+
+procedure TfrmMain.pmiMeasureItem(Sender: TObject; ACanvas: TCanvas;
+  var Width, Height: Integer);
+begin
+  Width:=SizeScale(Width,PixelsPerInchOnCreate,self); Height:=SizeScale(Height,PixelsPerInchOnCreate,self);
+  end;
+
+procedure TfrmMain.DoSuggClick (Sender : TObject);
+var
+  s : string;
+  n : integer;
+begin
+  s:=(Sender as TMenuItem).Name;
+  system.delete (s,1,6);
+  if TryStrToInt(s,n) then edWord.Text:=SuggList[n];
   end;
 
 procedure TfrmMain.btGetSuggestionClick(Sender: TObject);
 var
   i  : integer;
+
+  function AddMenuItem (const ACaption,AName : string) : TMenuItem;
+  begin
+    Result:=NewItem(ACaption,0,false,true,DoSuggClick,0,AName);
+    Result.OnDrawItem:=pmiDrawItem;
+    Result.OnMeasureItem:=pmiMeasureItem;
+    pmSugg.Items.Add(Result);
+    end;
+
 begin
   SuggList.Clear;
-  with ListSelectDialog do begin
-    Clear;
-    SpellCheck.GetSuggestions(edWord.Text,SuggList);
-    for i:=0 to SuggList.Count-1 do AddItem(SuggList[i],i);
+  with pmSugg.Items do begin
+    while Count>0 do Items[Count-1].Free;
     end;
-  ListSelectDialog.ShowList(BottomLeftPos(edWord,0,2));
+  SpellCheck.GetSuggestions(edWord.Text,SuggList);
+  for i:=0 to SuggList.Count-1 do begin
+    AddMenuItem(SuggList[i],Format('miSugg%u',[i]));
+    end;
+  with BottomRightPos(edWord,0,2) do pmSugg.Popup(x,y);
   end;
 
 procedure TfrmMain.btNextClick(Sender: TObject);

@@ -23,11 +23,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  PoParser, Vcl.ComCtrls;
+  PoParser, Vcl.ComCtrls, JrButtons, System.ImageList, Vcl.ImgList,
+  SVGIconImageListBase, SVGIconImageList;
 
 type
   TPoStatDialog = class(TForm)
-    bbExit: TBitBtn;
     OpenDialog: TOpenDialog;
     gbStat: TGroupBox;
     Label1: TLabel;
@@ -43,11 +43,15 @@ type
     lvHeader: TListView;
     Label6: TLabel;
     laPoFile: TLabel;
+    imlGlyphs: TSVGIconImageList;
+    bbExit: TJrButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure bbExitClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
   private
     { Private-Deklarationen }
     FIniName,FIniSection : string;
@@ -71,12 +75,14 @@ implementation
 {$R *.dfm}
 
 uses System.IniFiles, System.StrUtils, Winapi.ShellApi, GnuGetText, InitProg,
-  WinUtils, PathUtils, MsgDialogs;
+  WinUtils, PathUtils, ShowMessageDlg, ImageLoader;
 
 { ------------------------------------------------------------------- }
 procedure TPoStatDialog.FormCreate(Sender: TObject);
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,Monitor.PixelsPerInch);
   PoList:=TPoEntryList.Create;
   end;
 
@@ -84,6 +90,12 @@ procedure TPoStatDialog.FormDestroy(Sender: TObject);
 begin
   SaveToIni;
   PoList.Free;
+  end;
+
+procedure TPoStatDialog.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
   end;
 
 procedure TPoStatDialog.FormResize(Sender: TObject);
@@ -168,19 +180,22 @@ begin
         end;
       pe:=FindNext(pe);
       end;
-    laEntries.Caption:=IntToStr(ne);
-    laNumTrans.Caption:=IntToStr(nt)+' ('+IntToStr(round(100*nt/ne))+'%)';
-    laNumNoTrans.Caption:=IntToStr(nu)+' ('+IntToStr(round(100*nu/ne))+'%)';
-    laNumFuzzy.Caption:=IntToStr(nf);
-    InComplete:=(nu>0) or (nf>0);
-    laNumChars.Caption:=_('Template = ')+IntToStr(cs)+sLineBreak+_('Translation = ')+IntToStr(ct);
-    lvHeader.Clear;
-    for id:=Low(TPoHeaderIds) to High(TPoHeaderIds) do begin
-      if not Header[id].IsEmpty then with lvHeader.Items.Add do begin
-        Caption:=HeaderIds[id];
-        SubItems.Add(Header[id])
+    if ne>0 then begin
+      laEntries.Caption:=IntToStr(ne);
+      laNumTrans.Caption:=IntToStr(nt)+' ('+IntToStr(round(100*nt/ne))+'%)';
+      laNumNoTrans.Caption:=IntToStr(nu)+' ('+IntToStr(round(100*nu/ne))+'%)';
+      laNumFuzzy.Caption:=IntToStr(nf);
+      InComplete:=(nu>0) or (nf>0);
+      laNumChars.Caption:=_('Template = ')+IntToStr(cs)+sLineBreak+_('Translation = ')+IntToStr(ct);
+      lvHeader.Clear;
+      for id:=Low(TPoHeaderIds) to High(TPoHeaderIds) do begin
+        if not Header[id].IsEmpty then with lvHeader.Items.Add do begin
+          Caption:=HeaderIds[id];
+          SubItems.Add(Header[id])
+          end;
         end;
-      end;
+      end
+    else laEntries.Caption:=_('No entries found');
     end;
   end;
 

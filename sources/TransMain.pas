@@ -27,8 +27,12 @@
    Vers. 3.3   - October 2024:  optional merging of AutoComments and HistComments
                                 optional merging with similar msgids
    Vers. 3.4   - December 2025: Entry for Project-Id-Version added
+   Vers. 4.0   - February 2026: Icons replaced by scalable SVG graphics
+                                Adapted for monitors with high resolution
+                                Alternate design for buttons
+                                Optional display in dark mode
 
-   last modified: December 2025
+   last modified: February 2026
    *)
 
 unit TransMain;
@@ -38,21 +42,23 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.ComCtrls, Vcl.Buttons, System.ImageList, Vcl.ImgList, Vcl.Menus,
-  GgtConsts, xgettext;
+  Vcl.ComCtrls, Vcl.Buttons, System.ImageList, Vcl.ImgList, Vcl.Menus, LangUtils,
+  GgtConsts, xgettext, SVGIconImageListBase, SVGIconImageList, JrButtons, ImageLoader,
+  StyleUtils;
 
 const
   ProgName = 'Process GnuGetText translations';
-  Vers = '3.3';
+  Vers = '4.0';
 
   defOutput = 'default';
   defCopyDir ='locale\%s\LC_MESSAGES\';
   defLang = 'de'; // German
 
 type
+  TExludeLists = array [TExcludeGroup] of TStringList;
+
   TfrmTransMain = class(TForm)
     Label1: TLabel;
-    btProjDir: TSpeedButton;
     edLangSubDir: TLabeledEdit;
     cbLanguage: TComboBox;
     EditMask: TLabeledEdit;
@@ -67,23 +73,13 @@ type
     paTop: TPanel;
     meProgress: TMemo;
     pnStatus: TPanel;
-    laProgress: TLabel;
-    btExtract: TBitBtn;
-    EndeBtn: TBitBtn;
     cbOverwrite: TCheckBox;
-    btMerge: TBitBtn;
     cbBackup: TCheckBox;
     gbCopy: TGroupBox;
     rbSingle: TRadioButton;
     rbMulti: TRadioButton;
     edTargetDir: TLabeledEdit;
-    btCopyDir: TSpeedButton;
-    btCopy: TBitBtn;
     cbPoEdit: TCheckBox;
-    btPoEdit: TBitBtn;
-    btAssemble: TBitBtn;
-    btnInfo: TBitBtn;
-    btEditIgnore: TBitBtn;
     OpenDialog: TOpenDialog;
     rbMask: TRadioButton;
     rbFiles: TRadioButton;
@@ -91,40 +87,23 @@ type
     tsMask: TTabSheet;
     tsFiles: TTabSheet;
     Label2: TLabel;
-    btnNew: TBitBtn;
-    btnEdit: TBitBtn;
     ExcludeDirs: TLabeledEdit;
     pcOptions: TPageControl;
     tsLang: TTabSheet;
     tsOptions: TTabSheet;
     lbLang: TListBox;
-    btSelNone: TBitBtn;
-    btSelAll: TBitBtn;
-    bbAdd: TBitBtn;
-    bbRem: TBitBtn;
-    bbUp: TBitBtn;
-    bbDown: TBitBtn;
     Label4: TLabel;
-    ilGlyphs: TImageList;
-    pmDirectorytList: TPopupMenu;
+    pmDirectoryList: TPopupMenu;
     pmiEdit: TMenuItem;
     pmiClear: TMenuItem;
     N21: TMenuItem;
     pmiCancel: TMenuItem;
-    btnClipBoard: TBitBtn;
-    laLineNr: TLabel;
-    btDefMask: TSpeedButton;
     tsSaveOptions: TTabSheet;
     cbOrder: TCheckBox;
-    bbExclude: TSpeedButton;
     FileOpenDialog: TFileOpenDialog;
-    btStatus: TBitBtn;
     rgEncoding: TRadioGroup;
-    btnHelp: TBitBtn;
-    btnManual: TBitBtn;
     cbProjDir: TComboBox;
     cbFiles: TComboBox;
-    btUpdate: TBitBtn;
     tsMerge: TTabSheet;
     gbLangMerge: TGroupBox;
     cbMergeAutoComments: TCheckBox;
@@ -135,11 +114,63 @@ type
     udSimLength: TUpDown;
     gbSaveLanguage: TGroupBox;
     laSaveLanguage: TLabel;
-    sbSetAllBu: TSpeedButton;
-    bbImport: TBitBtn;
-    btEdit: TBitBtn;
     gbEdit: TGroupBox;
     ProjectName: TLabeledEdit;
+    imlGlyphs: TSVGIconImageList;
+    btProjDir: TJrSpeedButton;
+    btDefMask: TJrSpeedButton;
+    bbExclude: TJrSpeedButton;
+    btCopyDir: TJrSpeedButton;
+    btSelNone: TJrButton;
+    btSelAll: TJrButton;
+    bbAdd: TJrButton;
+    bbRem: TJrButton;
+    bbUp: TJrButton;
+    bbDown: TJrButton;
+    btStatus: TJrButton;
+    btUpdate: TJrButton;
+    bbImport: TJrButton;
+    sbSetAllBu: TJrSpeedButton;
+    btnNew: TJrButton;
+    btnEdit: TJrButton;
+    btExtract: TJrButton;
+    btMerge: TJrButton;
+    btCopy: TJrButton;
+    btAssemble: TJrButton;
+    btEdit: TJrButton;
+    btEditIgnore: TJrButton;
+    btPoEdit: TJrButton;
+    btnInfo: TJrButton;
+    EndeBtn: TJrButton;
+    btnClipBoard: TJrButton;
+    btnHelp: TJrButton;
+    btnManual: TJrButton;
+    pmMask: TPopupMenu;
+    paBottom: TPanel;
+    laLineNr: TLabel;
+    laProgress: TLabel;
+    paButtons: TPanel;
+    btnDesign: TJrButton;
+    pmSettings: TPopupMenu;
+    pmiDesignHeader: TMenuItem;
+    N1: TMenuItem;
+    pmiDefaultDesign: TMenuItem;
+    pmiSimpleDesign: TMenuItem;
+    pcExclude: TTabSheet;
+    lbExcludeValues: TListBox;
+    lbGroupValues: TLabel;
+    btnEditExclude: TJrButton;
+    btnClearExclude: TJrButton;
+    btnSvgExclude: TJrButton;
+    Label3: TLabel;
+    lbExcludeGroups: TListBox;
+    pmiLanguage: TMenuItem;
+    imlStat: TSVGIconImageList;
+    pmiDisplay: TMenuItem;
+    pmiDmDefault: TMenuItem;
+    pmiDmLight: TMenuItem;
+    pmiDmDark: TMenuItem;
+    Panel1: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -188,6 +219,25 @@ type
     procedure sbSetAllBuClick(Sender: TObject);
     procedure bbImportClick(Sender: TObject);
     procedure btEditClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
+    procedure pmiMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width,
+      Height: Integer);
+    procedure pmiDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect;
+      Selected: Boolean);
+    procedure lbLangMeasureItem(Control: TWinControl; Index: Integer;
+      var Height: Integer);
+    procedure btnDesignClick(Sender: TObject);
+    procedure pmiDefaultDesignClick(Sender: TObject);
+    procedure pmiSimpleDesignClick(Sender: TObject);
+    procedure lbExcludeGroupsClick(Sender: TObject);
+    procedure pcOptionsChange(Sender: TObject);
+    procedure btnEditExcludeClick(Sender: TObject);
+    procedure btnClearExcludeClick(Sender: TObject);
+    procedure btnSvgExcludeClick(Sender: TObject);
+    procedure pmiDmDefaultClick(Sender: TObject);
+    procedure pmiDmLightClick(Sender: TObject);
+    procedure pmiDmDarkClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -195,11 +245,23 @@ type
     AppPath,UserPath,
     IniName,ProgPath,
     LastDir,
+    LangListDir,
+    TargetDirs,
     TextEditor        : string;
     ErrorOutput       : TStringList;
+    PixelsPerInchOnCreate,
     WarnCount         : integer;
+    ExcludeChg        : boolean;
     XGetText          : TXGetText;
-    procedure GetSelectedIndex (n : integer);
+    ExcludeLists      : TExludeLists;
+    Languages         : TLanguageList;
+    DisplayMode       : TDisplayMode;
+    MainPos           : TRect;
+    procedure DoMaskClick (Sender : TObject);
+    procedure SetLanguageClick(Sender : TObject; const Language : TLangCodeString);
+    procedure LoadLanguageList(const Language,Selected : TLangCodeString);
+    procedure ChangeDisplayMode (dm : TDisplayMode);
+    procedure ChangeDesign (NewStyle : TImageStyle);
     function GetFileFilter : string;
     function GetGenerator : string;
     function GetLangId (AIndex : integer) : string;
@@ -207,24 +269,21 @@ type
     function GetLangSubDir (AIndex : integer) : string;
     procedure ShowLangOptions;
     procedure SetLangMarker (AIndex : integer; Mark : boolean);
+    procedure ShowTargets;
     function CheckPoFile (const PoFile : string) : boolean;
     function GetTemplName : string;
     procedure LoadGetTextSettings (const ADir : string);
-    procedure SaveGetTextSettings;
-    procedure LoadMergeSettings(const AFilename : string);
+    function SaveGetTextSettings : boolean;
     procedure SaveMergeSettings(const AFilename : string; ac,hc,bu : boolean);
     procedure RemoveBOM(const PoName : string);
     function CompileToMo (const PoFile,MergePath : string) : boolean;
     function Merge (AIndex : integer) : boolean;
-    procedure CopyMo (AIndex : integer; var FCount,ECount : integer);
+    procedure CopyMo (AIndex : integer; const Dest : string; var FCount,ECount : integer);
     procedure Progress (const CurrentTask,CurrentFileName:string; LineNumber:Integer);
     procedure Warning (WarningType:TWarningType; const Msg,Line,Filename:string;LineNumber:Integer);
     procedure OverwriteQuestion (sender: TObject; const aFileName: string; var Overwrite: boolean);
   public
     { Public-Deklarationen }
-{$IFDEF HDPI}   // scale glyphs and images for High DPI
-    procedure AfterConstruction; override;
-{$EndIf}
   end;
 
 var
@@ -234,12 +293,12 @@ implementation
 
 {$R *.dfm}
 
-uses System.IniFiles, System.Win.Registry, System.Types, Winapi.ShellApi,
-  System.DateUtils, System.TimeSpan, System.UITypes, GgtUtils, ListUtils,
-  StringUtils, WinUtils, MsgDialogs, GnuGetText, LangUtils, InitProg, ShellDirDlg,
+uses System.IniFiles, System.Win.Registry, System.Types, Winapi.ShellApi, Vcl.Themes,
+  System.DateUtils, System.TimeSpan, System.UITypes, GgtUtils, ListUtils, MenuUtils,
+  StringUtils, WinUtils, ShowMessageDlg, GnuGetText, InitProg, ShellDirDlg,
   ExtSysUtils, WinApiUtils, PathUtils, FileUtils, StrUtils, PoParser, SelectListItems,
-  AssembleEngine, FileListDlg, SelectDlg, ShowText, ExecuteApp, EditHistListDlg,
-  PoStatDlg, ListSelectDlg;
+  AssembleEngine, ShowText, ExecuteApp, EditHistListDlg, EditStringListDlg,
+  PoStatDlg, FileListDlg, EditDirListDlg;
 
 { ---------------------------------------------------------------- }
 const
@@ -247,7 +306,12 @@ const
 //  MsgMerge = 'msgmerge.exe';
   MsgFmt = 'msgfmt.exe';
   LangSubDir = 'Lang';
-  LangName = 'languages';
+  TranslateLangName = 'languages';
+  LanguageSeparator = '=';
+
+  SysRoot = '%SystemRoot%';
+
+  Masks : array [0..2] of string =(defDelphiMask,defLazarusMask,defCppMask);
 
   (* INI-Sektionen *)
   StatSekt = 'PoStat';
@@ -263,81 +327,99 @@ const
   LangShortNames : array [0..MaxLang-1] of string = (
     'bg','cs','da','de','el','en','es','et','fi','fr','hr','hu','it','lt','lv',
     'nl','no','pl','pt','ro','ru','sk','sl','sq','sr','sv','tr','uk','zh');
-  defLanguages = '"bg - Bulgarian","cs - Czech","da - Danish","de - German","el - Greek","en - English",'+
-      '"es - Spanish","et - Estonian","fi - Finnish","fr - French","hr - Croatian","hu - Hungarian",'+
-      '"it - Italian","lt - Lithuanian","lv - Latvian","nl - Dutch","no - Norwegian","pl - Polish",'+
-      '"pt - Portuguese","ro - Romanian","ru - Russian","sk - Slovak","sl - Slovenian",'+
-      '"sq - Albanian","sr - Serbian","sv - Swedish","tr - Turkish","uk - Ukrainian","zh - Chinese"';
+  defLanguages = '"bg = Bulgarian","cs = Czech","da = Danish","de = German","el = Greek","en = English",'+
+      '"es = Spanish","et = Estonian","fi = Finnish","fr = French","hr = Croatian","hu = Hungarian",'+
+      '"it = Italian","lt = Lithuanian","lv = Latvian","nl = Dutch","no = Norwegian","pl = Polish",'+
+      '"pt = Portuguese","ro = Romanian","ru = Russian","sk = Slovak","sl = Slovenian",'+
+      '"sq = Albanian","sr = Serbian","sv = Swedish","tr = Turkish","uk = Ukrainian","zh = Chinese"';
 
 procedure TfrmTransMain.FormCreate(Sender: TObject);
 var
   IniFile  : TMemIniFile;
   n        : integer;
-  s,sl     : string;
+  s,sl,sn  : string;
+  eg       : TExcludeGroup;
+  dm       : boolean;
+
+  function AddMenuItem (const ACaption,AName : string) : TMenuItem;
+  begin
+    Result:=NewItem(ACaption,0,false,true,DoMaskClick,0,AName);
+    Result.OnDrawItem:=pmiDrawItem;
+    Result.OnMeasureItem:=pmiMeasureItem;
+    pmMask.Items.Add(Result);
+    end;
+
 begin
   TranslateComponent(self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems,imlStat.SVGIconItems]);
+  PixelsPerInchOnCreate:=PixelsPerInch;
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch); // must be called before the screen position is changed
+  imlStat.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
+  AdjustComboBoxes(self,PixelsPerInchOnDesign,PixelsPerInch);
+//  SetOwnerDrawMenu(pmDesign,pmiDrawItem,pmiMeasureItem);
+  AddMenuItem(_('Delphi files'),Format('miMask%u',[0]));
+  AddMenuItem(_('Lazarus files'),Format('miMask%u',[1]));
+  AddMenuItem(_('Cpp Builder files'),Format('miMask%u',[2]));
+  SetOwnerDrawMenu(pmDirectoryList,pmiDrawItem,pmiMeasureItem);
+
   Application.Title:=_('Process GnuGetText translations for Delphi');
   InitPaths(AppPath,UserPath,ProgPath);
   InitVersion(Application.Title,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
   Caption:=ProgVersName;
-  // prepare language combobox
-  s:=AddPath(PrgPath,LangSubdir);
-  s:=AddPath(s,NewExt(LangName,SelectedLanguage));
-  if not FileExists(s) then s:=NewExt(s,'en');
-  with cbLanguage do begin
-    if FileExists(s) then Items.LoadFromFile(s)
-    else Items.CommaText:=defLanguages;
-    TrimEndOfList(Items);
+  Languages:=TLanguageList.Create(PrgPath,LangName);
+  with Languages do begin
+    Menu:=pmiLanguage;
+    LoadLanguageNames(SelectedLanguage);
+    OnLanguageItemClick:=SetLanguageClick;
     end;
+  SetOwnerDrawMenu(pmSettings,pmiDrawItem,pmiMeasureItem);
+  dm:=false;
+  DisplayMode:=LoadDisplayModeFromIni(CfgName,CfgSekt);
+  // prepare language combobox
+  LangListDir:=SetDirName(AddPath(PrgPath,LangSubdir));
+  if CopyFiles(LangListDir,AppPath,TranslateLangName+'.*') then LangListDir:=AppPath;
   IniName:=Erweiter(AppPath,PrgName,IniExt);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
     edLangSubdir.Text:=ReadString(CfgSekt,iniLangDir,'languages');
-    s:=ReadString(CfgSekt,iniLanguage,'');
-    with cbLanguage do begin
-      Items.NameValueSeparator:='-';
-      if not TryStrToInt(s,n) then n:=-1;
-      if (n>=0) and (n<MaxLang) then sl:=LangShortNames[n]  // n is index for old language list
-      else sl:=s;
-      if length(sl)>0 then begin
-        n:=GetIndexOfName(Items,sl);
-        if n>=0 then ItemIndex:=n else ItemIndex:=0;
-        end
-      else ItemIndex:=0;
-      end;
+    s:=ReadString(CfgSekt,iniLanguage,'');  // selected language
+//    sn:=ReadString(CfgSekt,iniLangFile,sn);  // languages file
     LastDir:=ReadString(CfgSekt,IniLast,'');
-    Top:=ReadInteger(CfgSekt,iniTop,Top);
-    Left:=ReadInteger(CfgSekt,iniLeft,Left);
-    ClientWidth:=ReadInteger (CfgSekt,IniWidth,ClientWidth);
-    ClientHeight:=ReadInteger (CfgSekt,IniHeight,ClientHeight);
+    with MainPos do begin
+      Left:=ReadInteger(CfgSekt,iniLeft,Left);
+      Top:=ReadInteger(CfgSekt,iniTop,Top);
+      Width:=ReadInteger(CfgSekt,iniWidth,ClientWidth);
+      Height:=ReadInteger(CfgSekt,iniHeight,ClientHeight);
+      end;
     TextEditor:=ReadString(CfgSekt,IniEditor,'');
     LoadHistory(IniFile,DirSekt,cbProjDir);
     LoadHistory(IniFile,FileSekt,cbFiles);
     Free;
     end;
-  lbLang.Items.NameValueSeparator:='-';
+  LoadLanguageList(SelectedLanguage,s);
+  lbLang.Items.NameValueSeparator:=LanguageSeparator;
   ErrorOutput:=TStringList.Create;
-  XGetText:=nil;
+  XGetText:=nil; ExcludeChg:=false;
+  for eg:=Low(TExcludeGroup) to High(TExcludeGroup) do ExcludeLists[eg]:=TStringList.Create;
+  // set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  if dm then SelectStyle(true)
+  else ChangeDisplayMode(DisplayMode);
   end;
 
-{$IFDEF HDPI}   // scale glyphs and images for High DPI
-procedure TfrmTransMain.AfterConstruction;
+procedure TfrmTransMain.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
 begin
-  inherited;
-  ScaleImageList(ilGlyphs,PixelsPerInchOnDesign,Monitor.PixelsPerInch);
-  ScaleButtonGlyphs(self,PixelsPerInchOnDesign,Monitor.PixelsPerInch);
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
+  imlStat.DPIChanged(Sender,OldDPI,NewDPI);
+  AdjustComboBoxes(self,OldDPI,NewDPI);
   end;
-{$EndIf}
 
 procedure TfrmTransMain.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  try HtmlHelp(0,nil,HH_CLOSE_ALL,0); except end;
-  end;
-
-procedure TfrmTransMain.FormDestroy(Sender: TObject);
 var
   IniFile  : TMemIniFile;
 begin
+  SaveDisplayModeFromIni(CfgName,CfgSekt,DisplayMode);
   IniFile:=TMemIniFile.Create(IniName);
   with IniFile do begin
     WriteString(CfgSekt,iniLangDir,edLangSubdir.Text);
@@ -351,10 +433,21 @@ begin
     WriteString(CfgSekt,IniEditor,TextEditor);
     SaveHistory(IniFile,DirSekt,true,cbProjDir);
     SaveHistory(IniFile,FileSekt,true,cbFiles);
-    UpdateFile;
-    Free;
+    try
+      UpdateFile;
+    finally
+      Free;
+      end;
     end;
-  ErrorOutput.Free;
+  try HtmlHelp(0,nil,HH_CLOSE_ALL,0); except end;
+  end;
+
+procedure TfrmTransMain.FormDestroy(Sender: TObject);
+var
+  eg       : TExcludeGroup;
+begin
+  ErrorOutput.Free; Languages.Free;
+  for eg:=Low(TExcludeGroup) to High(TExcludeGroup) do ExcludeLists[eg].Free;
   end;
 
 procedure TfrmTransMain.FormShow(Sender: TObject);
@@ -362,19 +455,14 @@ var
   i : integer;
   s  : string;
 begin
+  Left:=MainPos.Left;           // if a style was set, settings must be done here
+  Top:=MainPos.Top;
+  ClientWidth:=MainPos.Width;
+  ClientHeight:=MainPos.Height;
   PoStatDialog.LoadFromIni(IniName,StatSekt);
-  with ListSelectDialog do begin
-    Clear; Sorted:=false;
-    AddItem(_('Delphi files'),0);
-    AddItem(_('Lazarus files'),1);
-    AddItem(_('Cpp Builder files'),2);
-    OnSelect:=GetSelectedIndex;
-    end;
   pcOptions.ActivePageIndex:=0;
   with btMerge do begin
-    Glyph:=nil;
-    if cbPoedit.Checked then ilGlyphs.GetBitmap(1,Glyph)
-    else ilGlyphs.GetBitmap(0,Glyph);
+    if cbPoedit.Checked then ImageIndex:=13 else ImageIndex:=12;
     end;
   ShowTextDialog.LoadFromIni(IniName,'ShowErrors');
   if (length(TextEditor)=0) or not FileExists(TextEditor) then begin
@@ -394,6 +482,7 @@ begin
         Free;
         end;
       end;
+    if AnsiContainsText(s,SysRoot) then s:=AnsiReplaceText(s,SysRoot,GetEnvironmentVariable('SystemRoot'));
     if (length(s)>0) and FileExists(s) then TextEditor:=s
     else with OpenDialog do begin
       Title:=_('Select text editor');
@@ -425,27 +514,174 @@ begin
     end;
   end;
 
+procedure TfrmTransMain.ChangeDisplayMode (dm : TDisplayMode);
+begin
+  DisplayMode:=dm;
+  pmiDisplay.Items[integer(DisplayMode)].Checked:=true;
+  SetDisplayMode(DisplayMode);
+  end;
+
+procedure TfrmTransMain.pmiDefaultDesignClick(Sender: TObject);
+begin
+  ChangeDesign(isDefault);
+  end;
+
+procedure TfrmTransMain.pmiDmDarkClick(Sender: TObject);
+begin
+  ChangeDisplayMode(dmDark);
+  end;
+
+procedure TfrmTransMain.pmiDmDefaultClick(Sender: TObject);
+begin
+  ChangeDisplayMode(dmDefault);
+  end;
+
+procedure TfrmTransMain.pmiDmLightClick(Sender: TObject);
+begin
+  ChangeDisplayMode(dmLight);
+  end;
+
+procedure TfrmTransMain.pmiSimpleDesignClick(Sender: TObject);
+begin
+  ChangeDesign(isPlain);
+  end;
+
+procedure TfrmTransMain.pmiDrawItem(Sender: TObject; ACanvas: TCanvas;
+  ARect: TRect; Selected: Boolean);
+var
+  d : integer;
+  ch : boolean;
+begin
+  with ACanvas do begin
+    if Selected then Brush.Color:=GetSysColor(clHighlight) else Brush.Color:=GetSysColor(clMenu);
+    if (Sender as TMenuItem).Caption=cLineCaption then with ARect do begin
+      FillRect(ARect);
+      if StylesEnabled then Pen.Color:=GetSysColor(clInActiveBorder) else Pen.Color:=clActiveBorder;
+      d:=Top+Height div 2;
+      MoveTo(Height,d); LineTo(Width-Height,d);
+      end
+    else begin
+      with Font do begin
+        SizeScale(Size,PixelsPerInchOnCreate,self);
+        if Selected then Color:=GetSysColor(clHighlightText) else Color:=GetSysColor(clMenuText);
+        end;
+      TextRect(ARect,ARect.Height,ARect.Top+MulDiv(ARect.Height,3,22),RemoveCharacters((Sender as TMenuItem).Caption,['&']));
+      with (Sender as TMenuItem) do ch:=(GroupIndex>0) and Checked;
+      if ch then with imlStat do begin
+        d:=(ARect.Height-Height) div 2;
+        PaintTo(ACanvas,0,d,ARect.Top+d,Width,Height);
+        end;
+      if ((Sender as TMenuItem).Count>0) and StylesEnabled then with imlStat do begin
+        d:=(ARect.Height-Height) div 2;
+        PaintTo(ACanvas,0,ARect.Right-Width-d,ARect.Top+d,Width,Height);
+        end;
+      end;
+    end;
+  end;
+
+procedure TfrmTransMain.pmiMeasureItem(Sender: TObject; ACanvas: TCanvas;
+  var Width, Height: Integer);
+begin
+  Width:=SizeScale(Width,PixelsPerInchOnCreate,self); Height:=SizeScale(Height,PixelsPerInchOnCreate,self);
+  end;
+
+procedure TfrmTransMain.DoMaskClick (Sender : TObject);
+var
+  s : string;
+  n : integer;
+begin
+  s:=(Sender as TMenuItem).Name;
+  system.delete (s,1,6);
+  if TryStrToInt(s,n) then EditMask.Text:=Masks[n];
+  end;
+
+procedure TfrmTransMain.LoadLanguageList(const Language,Selected : TLangCodeString);
+var
+  sn : string;
+  sl : TStringList;
+  s  : TLangCodeString;
+  i,n : integer;
+begin
+  sn:=AddPath(LangListDir,NewExt(TranslateLangName,'en'));
+  with cbLanguage do begin
+    if FileExists(sn) then Items.LoadFromFile(sn)  // load English list
+    else Items.CommaText:=defLanguages;            // load default
+    TrimEndOfList(Items);
+    ReplaceInList(Items,' - ',' = ');  // convert from old format (v3 "-" to v4 "=")
+    Items.NameValueSeparator:=LanguageSeparator;
+    sn:=NewExt(sn,copy(Language,1,2));
+    if FileExists(sn) then begin
+      sl:=TStringList.Create;
+      sl.LoadFromFile(sn);   // selected language
+      TrimEndOfList(sl);
+      ReplaceInList(sl,' - ',' = ');  // convert from old format (v3 "-" to v4 "=")
+      sl.NameValueSeparator:=LanguageSeparator;
+      for i:=0 to Items.Count-1 do begin
+        n:=GetIndexOfName(sl,Trim(GetName(sl,i)));
+        if n>=0 then Items[n]:=sl[n];  // replace language name
+        end;
+      sl.Free;
+      end;
+    ItemIndex:=GetIndexOfName(Items,Selected);
+    end;
+  end;
+
+procedure TfrmTransMain.SetLanguageClick(Sender : TObject; const Language : TLangCodeString);
+var
+  sl : TLangCodeString;
+  se : string;
+  n  : integer;
+begin
+  if not AnsiSameStr(SelectedLanguage,Language) then begin
+    sl:=ChangeLanguage(Language);
+    Languages.LoadLanguageNames(sl);
+    SetOwnerDrawMenuItems(pmiLanguage,pmiDrawItem,pmiMeasureItem);
+    Caption:=ProgVersName;
+    SaveGetTextSettings;
+    with cbLanguage do LoadLanguageList(Language,GetName(Items,ItemIndex));
+    LoadGetTextSettings(cbProjDir.Text);
+    end;
+  end;
+
+procedure TfrmTransMain.ChangeDesign (NewStyle : TImageStyle);
+begin
+  with TMemIniFile.Create(CfgName) do begin
+    WriteInteger(CfgSekt,iniStyle,integer(NewStyle));
+    try
+      UpdateFile;
+    finally
+      Free;
+      end;
+    end;
+  InfoDialog(_('The program must be restarted for the design change to take effect!'));
+  end;
+
 procedure TfrmTransMain.cbComboBoxDrawItem(Control: TWinControl; Index: Integer;
   Rect: TRect; State: TOwnerDrawState);
 begin
   with Control as TComboBox,Canvas do begin
-    if (odComboBoxEdit in State) then Font.Color:=clWindowText;
-    with Brush do if (odSelected in State) and not (odComboBoxEdit in State) then Color:=clHighlight
-    else Color:=clWindow;
+    if (odComboBoxEdit in State) then Font.Color:=GetSysColor(clWindowText);
+    with Brush do if (odSelected in State) and not (odComboBoxEdit in State) then Color:=GetSysColor(clHighlight)
+    else Color:=GetSysColor(clWindow);
     FillRect(Rect);
     TextOut(Rect.Left, Rect.Top,' '+Items[Index]);
     end;
   end;
 
-procedure TfrmTransMain.GetSelectedIndex (n : integer);
+procedure TfrmTransMain.ShowTargets;
+var
+  n : integer;
 begin
-  with EditMask do begin
-    case n of
-    1:  Text:=defLazarusMask;
-    2 : Text:=defCppMask;
-    else Text:=defDelphiMask;
-      end;
+  with edTargetDir do begin
+    Hint:=DelimitedTextToLines(TargetDirs,Comma,Quote,n);
+    ShowHint:=n>1;
+    if ShowHint then Text:=TryFormat(_('%u directories'),[n]) else Text:=TargetDirs;
     end;
+  end;
+
+procedure TfrmTransMain.pcOptionsChange(Sender: TObject);
+begin
+  if pcOptions.ActivePage=pcExclude then lbExcludeGroupsClick(Sender);
   end;
 
 procedure TfrmTransMain.pmiClearClick(Sender: TObject);
@@ -507,6 +743,7 @@ procedure TfrmTransMain.LoadGetTextSettings (const ADir : string);
 var
   n,i,nl : integer;
   s,sl : string;
+  eg : TExcludeGroup;
 begin
   // dxgettext.ini einlesen
   with TMemIniFile.Create(IncludeTrailingPathDelimiter(ADir)+DxGetTextIni) do begin
@@ -556,7 +793,7 @@ begin
         if (n>0) and (n<=MaxLang) then sl:=LangShortNames[n-1];  // n-1 is index for old language list
         if length(sl)>0 then begin
           n:=GetIndexOfName(cbLanguage.Items,sl);
-          if n>0 then lbLang.AddItem(cbLanguage.Items[n],pointer(n));
+          if n>=0 then lbLang.AddItem(cbLanguage.Items[n],pointer(n));
           end;
         until length(s)=0;
       end
@@ -567,7 +804,7 @@ begin
           sl:=ReadNxtStr(s,',','');
           if length(sl)>0 then begin
             n:=GetIndexOfName(cbLanguage.Items,sl);
-            if n>0 then lbLang.AddItem(cbLanguage.Items[n],pointer(n+AutoComm*ReadNxtInt(s,',',4)));
+            if n>=0 then lbLang.AddItem(cbLanguage.Items[n],pointer(n+AutoComm*ReadNxtInt(s,',',4)));
             end;
           end;
         end;
@@ -582,9 +819,21 @@ begin
     else rbSingle.Checked:=true;
     udSimLength.Position:=ReadInteger(trSect,iniSimLen,defSimMeasure);
     cbMergeSimilar.Checked:=ReadBool(trSect,iniSimilar,false);
-    edTargetDir.Text:=ReadString(trSect,iniCopyPath,ADir);
+    TargetDirs:=ReadString(trSect,iniCopyPath,ADir);
     Free;
     end;
+  ShowTargets;
+  s:=IncludeTrailingPathDelimiter(ADir)+cExcludeFilename;
+  for eg:=Low(TExcludeGroup) to High(TExcludeGroup) do ExcludeLists[eg].Clear;
+  ExcludeChg:=false;
+  if FileExists(s) then begin
+    with TMemIniFile.Create(s) do begin
+      for eg:=Low(TExcludeGroup) to High(TExcludeGroup) do
+        ReadSectionValues(ExcludeGroups[eg],ExcludeLists[eg]);
+      Free;
+      end;
+    end;
+  lbExcludeGroups.ItemIndex:=0;
 //  btMerge.Enabled:=false;
   with lbLang do for i:=0 to Count-1 do begin
     s:=IncludeTrailingPathDelimiter(ADir)+IncludeTrailingPathDelimiter(GetLangSubDir(i));
@@ -595,13 +844,17 @@ begin
   laProgress.Caption:=_('Settings loaded for this project');
   end;
 
-procedure TfrmTransMain.SaveGetTextSettings;
+function TfrmTransMain.SaveGetTextSettings : boolean;
 var
-  s : string;
+  s,sn : string;
   i,n : integer;
+  eg : TExcludeGroup;
+  sl : TStringList;
 begin
   // dxgettext.ini schreiben
-  with TMemIniFile.Create(IncludeTrailingPathDelimiter(cbProjDir.Text)+DxGetTextIni) do begin
+  sn:=IncludeTrailingPathDelimiter(cbProjDir.Text)+DxGetTextIni;
+  Result:=true;
+  with TMemIniFile.Create(sn) do begin
     WriteBool(ggtSect,iniRecurse,cbRecurse.Checked);
     WriteString(ggtSect,iniExclude,ExcludeDirs.Text);
     WriteBool(ggtSect,iniUseMask,rbMask.checked);
@@ -637,9 +890,28 @@ begin
     WriteBool(trSect,iniMulti,rbMulti.Checked);
     WriteInteger(trSect,iniSimLen,udSimLength.Position);
     WriteBool(trSect,iniSimilar,cbMergeSimilar.Checked);
-    WriteString(trSect,iniCopyPath,edTargetDir.Text);
-    UpdateFile;
+    WriteString(trSect,iniCopyPath,TargetDirs);
+    try
+      UpdateFile;
+    except
+      ErrorDialog(Format(_('Writing the configuration to "%s" failed!'),[sn]));
+      Result:=false;
+      end;
     Free;
+    end;
+  if Result and ExcludeChg then begin  // write exclude file
+    s:=IncludeTrailingPathDelimiter(cbProjDir.Text)+cExcludeFilename;
+    sl:=TStringList.Create;
+    for eg:=Low(TExcludeGroup) to High(TExcludeGroup) do with ExcludeLists[eg] do if Count>0 then begin
+      sl.Add('['+ExcludeGroups[eg]+']');
+      for i:=0 to Count-1 do sl.Add(Strings[i]);
+      sl.Add('');
+      end;
+    with sl do if Count>2 then begin
+      Delete(Count-1);
+      SaveToFile(s);
+      end
+    else if FileExists(s) then DeleteFile(s);
     end;
   end;
 
@@ -651,16 +923,6 @@ const
   iniAuto = 'MergeAutoComments';
   iniHist = 'ObsoleteTranslations';
 
-procedure TfrmTransMain.LoadMergeSettings(const AFilename : string);
-begin
-  with TMemIniFile.Create(NewExt(AFilename,IniExt)) do begin
-//    TemplPath:=ReadString(ggmSect,iniTemplate,NewExt(IncludeTrailingPathDelimiter(cbProjDir.Text)+GetTemplName,PoExt));
-//    TemplPath:=ExtractRelativePath(ExtractFilePath(AFilename),TemplPath);
-    cbBackup.Checked:=ReadBool(ggmSect,iniBackup,true);
-    Free;
-    end;
-  end;
-
 procedure TfrmTransMain.SaveMergeSettings(const AFilename : string; ac,hc,bu : boolean);
 begin
   with TMemIniFile.Create(NewExt(AFilename,IniExt)) do begin
@@ -668,7 +930,11 @@ begin
     WriteBool(ggmSect,iniBackup,bu);
     WriteBool(ggmSect,iniAuto,ac);
     WriteBool(ggmSect,iniHist,hc);
-    UpdateFile;
+    try
+      UpdateFile;
+    except
+      ErrorDialog(Format(_('Writing the configuration to "%s" failed!'),[NewExt(AFilename,IniExt)]));
+      end;
     Free;
     end;
   end;
@@ -700,14 +966,16 @@ procedure TfrmTransMain.ShowLangOptions;
 var
   n : integer;
 begin
-  with lbLang do begin
+  with lbLang do if ItemIndex>=0 then begin
+    Visible:=true;
     laMergeLanguage.Caption:=Items[ItemIndex];
     laSaveLanguage.Caption:=laMergeLanguage.Caption;
-    end;
-  with lbLang do n:=integer(Items.Objects[ItemIndex]);
-  cbMergeAutoComments.Checked:=n and AutoComm <>0;
-  cbMergeHistory.Checked:=n and KeepHist <>0;
-  cbBackup.Checked:=n and MergBack <>0;
+    n:=integer(Items.Objects[ItemIndex]);
+    cbMergeAutoComments.Checked:=n and AutoComm <>0;
+    cbMergeHistory.Checked:=n and KeepHist <>0;
+    cbBackup.Checked:=n and MergBack <>0;
+    end
+  else Visible:=false;
   end;
 
 procedure TfrmTransMain.MergeOptionClick(Sender: TObject);
@@ -728,21 +996,29 @@ var
   rt : boolean;
 begin
   with (Control as TListBox),Canvas do begin
-    rt:=integer(Items.Objects[Index]) and ReqTrans <>0;
+    rt:=integer(Items.Objects[Index]) and ReqTrans<>0;
     if odSelected in State then begin
-      with Brush do if rt then Color:=clSkyblue
-      else Color:=clHighlight;
-      with Font do if rt then Color:=TColors.Red
-      else Color:=clHighlightText;
+      with Brush do if rt then Color:=clSkyBlue
+      else Color:=GetSysColor(clHighlight);
+      with Font do if rt then begin
+        if StylesEnabled  then Color:=TColors.DarkRed else Color:=TColors.Red
+        end
+      else Color:=GetFontColor(sfListItemTextSelected,clHighlightText);
       end
     else begin
-      Brush.Color:=clWindow;
+      Brush.Color:=GetColor(scListBox,clWindow);
       with Font do if rt then Color:=TColors.Orangered
-      else Color:=clWindowText;
+      else Color:=GetFontColor(sfWindowTextNormal,clWindowText);
       end;
     FillRect(Rect);
     TextOut(Rect.Left+5,Rect.Top,Items[Index]);
     end;
+  end;
+
+procedure TfrmTransMain.lbLangMeasureItem(Control: TWinControl; Index: Integer;
+  var Height: Integer);
+begin
+  Height:=PixelScale((Control as TListBox).ItemHeight,self);
   end;
 
 procedure TfrmTransMain.bbAddClick(Sender: TObject);
@@ -942,6 +1218,13 @@ begin
     end;
   end;
 
+procedure TfrmTransMain.btnDesignClick(Sender: TObject);
+begin
+  if GetImageStyle=isDefault then pmiDefaultDesign.Checked:=true
+  else pmiSimpleDesign.Checked:=true;
+  with BottomLeftPos(btCopy) do pmSettings.Popup(x,y);
+  end;
+
 function TfrmTransMain.GetFileFilter : string;
 begin
   Result:=_('Delphi files')+'|'+ReplChars(defDelphiMask,#32,';')+
@@ -952,15 +1235,13 @@ begin
 
 procedure TfrmTransMain.btDefMaskClick(Sender: TObject);
 begin
-  ListSelectDialog.ShowList(BottomLeftPos(btDefMask,0,2));
+  with BottomRightPos(btDefMask) do pmMask.Popup(x,y);
   end;
 
 procedure TfrmTransMain.cbPoEditClick(Sender: TObject);
 begin
   with btMerge do begin
-    Glyph:=nil;
-    if cbPoedit.Checked then ilGlyphs.GetBitmap(1,Glyph)
-    else ilGlyphs.GetBitmap(0,Glyph);
+    if cbPoedit.Checked then ImageIndex:=13 else ImageIndex:=12;
     end;
   end;
 
@@ -983,13 +1264,28 @@ begin
 procedure TfrmTransMain.btCopyDirClick(Sender: TObject);
 var
   s : string;
+  sl : TStringList;
 begin
-  s:=edTargetDir.Text;
-  if length(s)=0 then s:=ExtractFilePath(cbProjDir.Text);
-  if ShellDirDialog.Execute(_('Select program directory of project'),
-      false,true,false,cbProjDir.Text,s) then begin
-    edTargetDir.Text:=s;
+  rbSingle.Enabled:=false;
+  if rbMulti.Checked then begin
+    sl:=TStringList.Create;
+    with sl do begin
+      CommaText:=TargetDirs;
+      if Count>0 then s:=sl[0] else s:=ExtractFilePath(cbProjDir.Text);
+      end;
+    if length(s)=0 then s:=ExtractFilePath(cbProjDir.Text);
+    if EditDirListDialog.Execute(BottomLeftPos(btCopyDir),_('Parent directories'),
+      _('List of directories'),_('Select parent directory'),s,sl) then begin
+      TargetDirs:=sl.CommaText;
+      end;
+    sl.Free;
+    end
+  else begin
+    if ShellDirDialog.Execute(_('Select program directory of project'),
+        false,true,false,cbProjDir.Text,s) then TargetDirs:=s;
     end;
+  ShowTargets;
+  rbSingle.Enabled:=true;
   end;
 
 procedure TfrmTransMain.rbDefaultClick(Sender: TObject);
@@ -1010,11 +1306,21 @@ begin
 procedure TfrmTransMain.rbMultiClick(Sender: TObject);
 begin
   btAssemble.Enabled:=rbSingle.Checked;
-  edTargetDir.EditLabel.Caption:=_('Parent directory holding the project executables:');
+  edTargetDir.EditLabel.Caption:=_('Parent directories holding the project executables:');
   end;
 
 procedure TfrmTransMain.rbSingleClick(Sender: TObject);
 begin
+  if pos(',',TargetDirs)>0 then begin
+    if ConfirmDialog(BottomLeftPos(edTargetDir),
+        _('Multiple directories have been selected.'+sLineBreak+'Are you sure you want to change this setting?')) then begin
+      TargetDirs:=ReadNxtQuotedStr(TargetDirs,Comma,Quote);
+      ShowTargets;
+      end
+    else begin
+      rbMulti.Checked:=true; Exit;
+      end;
+    end;
   btAssemble.Enabled:=rbSingle.Checked;
   edTargetDir.EditLabel.Caption:=_('Directory of project executables:');
   end;
@@ -1093,10 +1399,7 @@ begin
     end
   else begin
     SaveGetTextSettings;
-    with btExtract do begin
-      Glyph:=nil;
-      ilGlyphs.GetBitmap(3,Glyph);
-      end;
+    btExtract.ImageIndex:=11;
     btMerge.Enabled:=false;
     XGetText:=TXGetText.Create;
     meProgress.Clear;
@@ -1147,10 +1450,7 @@ begin
     else Add('Canceled by user');
     laLineNr.Caption:='';
     btMerge.Enabled:=true;
-    with btExtract do begin
-      Glyph:=nil;
-      ilGlyphs.GetBitmap(2,Glyph);
-      end;
+    btExtract.ImageIndex:=10;
     end;
   end;
 
@@ -1228,7 +1528,7 @@ begin
         +sLineBreak+'"%s" reports exitcode %u'),['msgfmt.exe',res]))
     else ErrorDialog(Format(_('Execution of "%s" failed:'),['msgfmt.exe'])
                  +sLineBreak+SystemErrorMessage(abs(res)));
-    meProgress.Lines.Add(Format(_('  *** Error compiling to MO file: %s'),[PoFile]));
+    meProgress.Lines.Add(Format('  *** '+_('Error compiling to MO file: %s'),[PoFile]));
     end;
   Result:=res=0;
   end;
@@ -1237,6 +1537,50 @@ function TfrmTransMain.GetTemplName : string;
 begin
   if rbOther.Checked then Result:=OutputName.Text
   else Result:='default';
+  end;
+
+procedure TfrmTransMain.lbExcludeGroupsClick(Sender: TObject);
+begin
+  lbExcludeValues.Items.Assign(ExcludeLists[TExcludeGroup(lbExcludeGroups.ItemIndex)]);
+  end;
+
+procedure TfrmTransMain.btnEditExcludeClick(Sender: TObject);
+var
+  eg : TExcludeGroup;
+begin
+  with lbExcludeGroups do if ItemIndex>=0 then begin
+    eg:=TExcludeGroup(ItemIndex);
+    ExcludeChg:=EditStringListDialog.EditList(TopRightPos(lbExcludeValues),_('Edit exclude values'),
+      Items[ItemIndex],ExcludeLists[eg],[eoAdd,eoDelete,eoEdit]);
+    if ExcludeChg then
+      lbExcludeValues.Items.Assign(ExcludeLists[TExcludeGroup(lbExcludeGroups.ItemIndex)]);
+    end;
+  end;
+
+procedure TfrmTransMain.btnClearExcludeClick(Sender: TObject);
+begin
+  with lbExcludeGroups do if ItemIndex>=0 then begin
+    if ConfirmDialog(BottomLeftPos(btnClearExclude),_('Do you really want to delete all values in this group?')) then begin
+      ExcludeLists[TExcludeGroup(ItemIndex)].Clear;
+      lbExcludeValues.Clear;
+      ExcludeChg:=true;
+      end;
+    end;
+  end;
+
+procedure TfrmTransMain.btnSvgExcludeClick(Sender: TObject);
+const
+  sSvgImgList = 'TSVGIconImageList';
+  sSvgImgColl = 'TSVGIconImageCollection';
+begin
+  if ConfirmDialog(BottomLeftPos(btnSvgExclude),_('Do you want to add the exclude values required for SVGIconImageList?')) then begin
+    with ExcludeLists[egClasses] do begin
+      if IndexOf(sSvgImgList)<0 then Add(sSvgImgList);
+      if IndexOf(sSvgImgColl)<0 then Add(sSvgImgColl);
+      end;
+    lbExcludeValues.Items.Assign(ExcludeLists[egClasses]);
+    lbExcludeGroups.ItemIndex:=0;
+    end;
   end;
 
 function TfrmTransMain.GetLangId (AIndex : integer) : string;
@@ -1310,7 +1654,6 @@ begin
   st:=GetTemplName;
   MergePath:=IncludeTrailingPathDelimiter(cbProjDir.Text)+IncludeTrailingPathDelimiter(GetLangSubDir(AIndex));
   PoFile:=NewExt(MergePath+st,PoExt);
-//  LoadMergeSettings(MergePath+st);
   with lbLang do begin
     n:=integer(Items.Objects[AIndex]);
     hc:=n and KeepHist <>0;
@@ -1474,36 +1817,42 @@ begin
 { ---------------------------------------------------------------- }
 procedure TfrmTransMain.btCopyClick(Sender: TObject);
 var
-  s    : string;
+  s,sd,st   : string;
   i,n,nf,ne : integer;
 begin
-  if length(edTargetDir.Text)=0 then btCopyDirClick(Sender);
-  if DirectoryExists(edTargetDir.Text) then with lbLang do begin
-    n:=0; nf:=0; ne:=0;
-    s:=GetLangSubDir(ItemIndex);
-    if SelCount=1 then begin
-      CopyMo(ItemIndex,nf,ne);
-      inc(n);
+  if length(TargetDirs)=0 then btCopyDirClick(Sender);
+  st:=TargetDirs;
+  while not st.IsEmpty do begin
+    sd:=ReadNxtQuotedStr(st,Comma,Quote);
+    if DirectoryExists(sd) then with lbLang do begin
+      n:=0; nf:=0; ne:=0;
+      s:=GetLangSubDir(ItemIndex);
+      if SelCount=1 then begin
+        CopyMo(ItemIndex,sd,nf,ne);
+        inc(n);
+        end
+      else for i:=0 to Count-1 do if Selected[i] then begin
+        inc(n);
+        laProgress.Caption:=Format(_('Copying mo file (%u)'),[n]);
+        Application.ProcessMessages;
+        CopyMo(i,sd,nf,ne);
+        Application.ProcessMessages;
+        end;
+      if n>0 then laProgress.Caption:=Format(_('%s processed (%s - %s)'),
+        [GetPluralString('',_('1 file'),_('%u files'),n),
+         GetPluralString(_('No copy'),_('1 copy'),_('%u copies'),nf),
+         GetPluralString(_('No error'),_('1 error'),_('%u errors'),ne)])
+      else laProgress.Caption:=_('No files processed');
       end
-    else for i:=0 to Count-1 do if Selected[i] then begin
-      inc(n);
-      laProgress.Caption:=Format(_('Copying mo file (%u)'),[n]);
-      Application.ProcessMessages;
-      CopyMo(i,nf,ne);
-      Application.ProcessMessages;
-      end;
-    if n>0 then laProgress.Caption:=Format(_('%s processed (%s - %s)'),
-      [GetPluralString('',_('1 file'),_('%u files'),n),
-       GetPluralString(_('No copy'),_('1 copy'),_('%u copies'),nf),
-       GetPluralString(_('No error'),_('1 error'),_('%u errors'),ne)])
-    else laProgress.Caption:=_('No files processed');
-    end
-  else ErrorDialog(Format(_('Folder for executables not found: '),[edTargetDir.Text]));
-  meProgress.Lines.Add('');
+    else
+      meProgress.Lines.Add('  *** '+Format(_('Folder for executables not found: '),[sd]));
+//    ErrorDialog(Format(_('Folder for executables not found: '),[sd]));
+    meProgress.Lines.Add('');
+    end;
   SaveGetTextSettings;
   end;
 
-procedure TfrmTransMain.CopyMo (AIndex : integer; var FCount,ECount : integer);
+procedure TfrmTransMain.CopyMo (AIndex : integer; const Dest : string; var FCount,ECount : integer);
 var
   MergePath,PoFile,
   sm,sd : string;
@@ -1549,9 +1898,9 @@ begin
     meProgress.Lines.Add(Format(_('Copying MO file %s'),[sm]));
     sd:=Format(defCopyDir,[GetLangId(AIndex)]);
     if rbSingle.Checked then begin
-      ForceDirectories(IncludeTrailingPathDelimiter(edTargetDir.Text)+sd);
+      ForceDirectories(IncludeTrailingPathDelimiter(Dest)+sd);
       if FileExists(sm) then begin
-        sd:=IncludeTrailingPathDelimiter(edTargetDir.Text)+sd+ExtractFilename(sm);
+        sd:=IncludeTrailingPathDelimiter(Dest)+sd+ExtractFilename(sm);
         try
           meProgress.Lines.Add('  ==> '+sd);
           CopyFileTS(sm,sd);
@@ -1573,7 +1922,7 @@ begin
         end;
       end
     else begin  // multi copy
-      ok:=CopyToDirs(edTargetDir.Text,sd,sm,FCount,ECount);
+      ok:=CopyToDirs(Dest,sd,sm,FCount,ECount);
       end;
     end;
   if ok then laProgress.Caption:=_('MO file was copied')
@@ -1625,8 +1974,8 @@ var
   AssEng     : TAssembleEngine;
   ok         : boolean;
 begin
-  if DirectoryExists(edTargetDir.Text) then begin
-    AssEng:=TAssembleEngine.Create(edTargetDir.Text);
+  if DirectoryExists(TargetDirs) then begin
+    AssEng:=TAssembleEngine.Create(TargetDirs);
     sl:=TStringList.Create;
     ok:=false;
     with AssEng do begin
@@ -1638,7 +1987,7 @@ begin
         with Filelist do for i:=0 to Count-1 do sl.AddObject(Strings[i],pointer(true));
         if SelectListItemsDialog.Execute(TopRightPos(btAssemble,Point(0,-100)),_('Embed translations'),
             _('Select the translations you want to embed into your executables'),
-            edTargetDir.Text,sl) then begin
+            TargetDirs,sl) then begin
           with sl do for i:=0 to Count-1 do if not boolean(Objects[i]) then SkipFile (Strings[i]);
           ok:=true;
           end;
@@ -1647,7 +1996,7 @@ begin
     n:=-1;
     if ok then begin
       sl.Clear;
-      FindResult:=FindFirst (Erweiter(edTargetDir.Text,'*',''),faAnyFile,DirInfo);
+      FindResult:=FindFirst (Erweiter(TargetDirs,'*',''),faAnyFile,DirInfo);
       while FindResult=0 do with DirInfo do begin
         if NotSpecialDir(Name) then begin
           Ext:=GetExt(Name);
@@ -1659,18 +2008,18 @@ begin
       FindClose(DirInfo);
       if SelectListItemsDialog.Execute(TopRightPos(btAssemble,Point(0,-100)),_('Executable files'),
                   _('Select all executables where you want to embed the translations'),
-                  edTargetDir.Text,sl) then with sl do begin
+                  TargetDirs,sl) then with sl do begin
         n:=0;
         for i:=0 to Count-1 do if boolean(Objects[i]) then begin
           meProgress.Lines.Add(Format(_('Embedding translation in %s'),[Strings[i]]));
           with AssEng do begin
-            exefilename:=IncludeTrailingPathDelimiter(edTargetDir.Text)+Strings[i];
+            exefilename:=IncludeTrailingPathDelimiter(TargetDirs)+Strings[i];
             try
               Execute;
               inc(n);
             except
               on E: Exception do begin
-                meProgress.Lines.Add(_('  *** Error on embedding translations:'));
+                meProgress.Lines.Add('  *** '+_('Error on embedding translations:'));
                 meProgress.Lines.Add('  '+E.Message);
                 end;
               end;
@@ -1684,7 +2033,7 @@ begin
     else laProgress.Caption:=_('No files processed');
     meProgress.Lines.Add('');
     end
-  else ErrorDialog(Format(_('Folder for executables not found: '),[edTargetDir.Text]));
+  else ErrorDialog(Format(_('Folder for executables not found: '),[TargetDirs]));
   end;
 
 end.

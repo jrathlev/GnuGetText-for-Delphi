@@ -20,11 +20,31 @@ unit GgtConsts;
 
 interface
 
+type
+  TExcludeGroup = (egClasses,egProperties,egInstances,egFiles,egDirectories);
+
 const
   DefIniPath  = 'GgtTranslate\';
+  GgtConfigName = 'GgtUtils.cfg';
+  cExcludeFilename = 'ggexclude.cfg';
 
-  CopRgt = '© 2010 - 2024 Dr. J. Rathlev, 24222 Schwentinental';
+  CopRgt = '© 2010 - 2026 Dr. J. Rathlev, 24222 Schwentinental';
   EmailAdr = 'kontakt(a)rathlev-home.de';
+
+  { consts for exclusion of files, directories, properties and classes from extraction: }
+  cExcludeFormInstance = 'exclude-form-instance';
+  cExcludeFormClassProperty = 'exclude-form-class-property';
+  cExcludeFormClass = 'exclude-form-class';
+  cExcludeFile = 'exclude-file';
+  cExcludeDir = 'exclude-dir';
+  ExcludeGroups : array [TExcludeGroup] of string = (cExcludeFormClass,
+    cExcludeFormClassProperty,cExcludeFormInstance,cExcludeFile,cExcludeDir);
+
+// Screen resolution during program development
+  PixelsPerInchOnDesign = 96;
+
+  DarkStyle = 'JR Dark';
+//  DarkStyle = 'Windows10 Dark';
 
 // Code pages
   cpAscii = 20127;
