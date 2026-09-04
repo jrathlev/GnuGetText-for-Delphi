@@ -141,8 +141,6 @@ function TTextEingabe.Execute(const APos : TPoint;
                               var AText,BText   : string;
                               var TSw           : TSwitchMode) : boolean;
 
-var
-  ok : boolean;
 begin
   AdjustFormPosition(Screen,self,APos);
   Caption:=Titel;

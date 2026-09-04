@@ -219,6 +219,7 @@ begin
     if (AHeight=0) or (h<=AHeight) then ClientHeight:=h+(defItemHeight+1) div 3
     else ClientHeight:=AHeight;
     AdjustFormPosition(Screen,self,APos);
+    lbSelect.ItemIndex:=-1;
     Show;
     end;
   end;

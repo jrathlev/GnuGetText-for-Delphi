@@ -327,7 +327,7 @@ object frmTransMain: TfrmTransMain
       Top = 120
       Width = 454
       Height = 216
-      ActivePage = tsLang
+      ActivePage = tsMerge
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
       OnChange = pcOptionsChange
@@ -575,10 +575,6 @@ object frmTransMain: TfrmTransMain
       object tsMerge: TTabSheet
         Caption = 'Merging'
         ImageIndex = 3
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object cbMergeSimilar: TCheckBox
           Left = 15
           Top = 12
@@ -608,10 +604,24 @@ object frmTransMain: TfrmTransMain
             Font.Style = [fsBold]
             ParentFont = False
           end
+          object sbSetAllComments: TJrSpeedButton
+            Left = 390
+            Top = 42
+            Width = 31
+            Height = 31
+            Hint = 'Tick for all languages'
+            Flat = True
+            Images = imlGlyphs
+            ImageIndex = 5
+            Layout = blGlyphLeft
+            ParentShowHint = False
+            ShowHint = True
+            OnClick = sbSetAllCommentsClick
+          end
           object cbMergeAutoComments: TCheckBox
             Left = 35
             Top = 45
-            Width = 356
+            Width = 346
             Height = 17
             Caption = 'Retain automatic comments'
             ParentShowHint = False
@@ -622,7 +632,7 @@ object frmTransMain: TfrmTransMain
           object cbMergeHistory: TCheckBox
             Left = 35
             Top = 70
-            Width = 356
+            Width = 346
             Height = 17
             Caption = 'Retain obsolete translations'
             ParentShowHint = False
@@ -661,10 +671,6 @@ object frmTransMain: TfrmTransMain
       object tsSaveOptions: TTabSheet
         Caption = 'Saving'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object cbOverwrite: TCheckBox
           Left = 20
           Top = 40

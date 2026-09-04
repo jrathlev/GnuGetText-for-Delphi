@@ -19,7 +19,7 @@
    Vers. 2 - Jan. 2025: uses SVG images for buttons and icons
                         https://github.com/EtheaDev/SVGIconImageList
 
-   last modified: July 2025
+   last modified: May 2026
    *)
 
 unit ShowMessageDlg;
@@ -220,6 +220,7 @@ begin
                          end
                        else begin
                          Caption:=SMsgDlgCancel;
+                         Default:=DefaultButton=mbCancel;
                          ImageIndex:=integer(gtCancel);
                          ModalResult:=mrCancel;
                          end;
@@ -236,6 +237,7 @@ begin
                        end;
                      with btClose do begin
                        Caption:=SMsgDlgCancel;
+                       Default:=DefaultButton=mbCancel;
                        ImageIndex:=integer(gtCancel);
                        end;
                      end;
@@ -250,6 +252,7 @@ begin
                        end;
                      with btClose do begin
                        Caption:=SMsgDlgCancel;
+                       Default:=DefaultButton=mbCancel;
                        ImageIndex:=integer(gtCancel);
                        end;
                      end;
@@ -271,6 +274,7 @@ begin
                        end;
                      with btClose do begin
                        Caption:=SMsgDlgCancel;
+                       Default:=DefaultButton=mbCancel;
                        ImageIndex:=integer(gtCancel);
                        end;
                      end;

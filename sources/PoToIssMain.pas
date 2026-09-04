@@ -215,10 +215,14 @@ begin
   end;
 
 procedure TfrmMain.edPoFileCloseUp(Sender: TObject);
+var
+  s : string;
 begin
   with edPoFile do begin
     PoFile:=Items[ItemIndex];
     end;
+  s:=ExtractLastDir(ExtractFilePath(PoFile));
+  if length(s)=2 then edLanguage.Text:=s;
   end;
 
 function TfrmMain.SelectPo : boolean;

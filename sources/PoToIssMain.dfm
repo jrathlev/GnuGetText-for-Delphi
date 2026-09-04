@@ -107,6 +107,7 @@ object frmMain: TfrmMain
     Width = 461
     Height = 21
     Anchors = [akLeft, akTop, akRight]
+    DropDownCount = 15
     TabOrder = 0
     OnCloseUp = edPoFileCloseUp
   end

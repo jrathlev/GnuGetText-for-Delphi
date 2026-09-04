@@ -171,6 +171,7 @@ type
     pmiDmLight: TMenuItem;
     pmiDmDark: TMenuItem;
     Panel1: TPanel;
+    sbSetAllComments: TJrSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -238,6 +239,7 @@ type
     procedure pmiDmDefaultClick(Sender: TObject);
     procedure pmiDmLightClick(Sender: TObject);
     procedure pmiDmDarkClick(Sender: TObject);
+    procedure sbSetAllCommentsClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -944,7 +946,16 @@ var
   i : integer;
 begin
   with lbLang do for i:=0 to Items.Count-1 do
-    Items.Objects[i]:=pointer(integer(Items.Objects[i]) and LangMask or MergBack);
+    Items.Objects[i]:=pointer(integer(Items.Objects[i]) xor MergBack);
+  ShowLangOptions;
+  end;
+
+procedure TfrmTransMain.sbSetAllCommentsClick(Sender: TObject);
+var
+  i : integer;
+begin
+  with lbLang do for i:=0 to Items.Count-1 do
+    Items.Objects[i]:=pointer(integer(Items.Objects[i]) xor AutoComm);
   ShowLangOptions;
   end;
 
