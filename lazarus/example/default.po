@@ -1,0 +1,174 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2026-09-27 12:09+0200\n"
+"PO-Revision-Date: 2026-09-27 12:09+0200\n"
+"Last-Translator: Somebody <your.email@address.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: GgtTranslate 4.0.4\n"
+
+#. HauptForm.Caption
+#: FListMain.lfm:6
+#. Programmer's name for it: rsTitle
+#: FListMain.pas:37
+msgid "Creating file lists"
+msgstr ""
+
+#. HauptForm.paTop.Label1.Caption
+#: FListMain.lfm:55
+msgid "Directory:"
+msgstr ""
+
+#. HauptForm.paTop.Label3.Caption
+#: FListMain.lfm:63
+msgid "Status:"
+msgstr ""
+
+#. HauptForm.paTop.FilterComboBox.Filter
+#: FListMain.lfm:71
+msgid "All files (*.*)|*.*"
+msgstr ""
+
+#. HauptForm.paTop.CopyBtn.Hint
+#: FListMain.lfm:92
+msgid "Copy list to clipbpoard"
+msgstr ""
+
+#. HauptForm.paTop.FilterBtn.Hint
+#: FListMain.lfm:159
+msgid "Edit file filter"
+msgstr ""
+
+#. HauptForm.paTop.QuitBtn.Hint
+#: FListMain.lfm:226
+msgid "Quit program"
+msgstr ""
+
+#. HauptForm.paTop.gbDisplay.Caption
+#: FListMain.lfm:296
+msgid "Show"
+msgstr ""
+
+#. HauptForm.paTop.gbDisplay.Label4.Caption
+#: FListMain.lfm:307
+msgid "Directory levels   (-1 = all)"
+msgstr ""
+
+#. HauptForm.paTop.gbDisplay.cbHidden.Caption
+#: FListMain.lfm:315
+msgid "Hidden files"
+msgstr ""
+
+#. HauptForm.paTop.gbDisplay.cbSystem.Caption
+#: FListMain.lfm:324
+msgid "System files"
+msgstr ""
+
+#. HauptForm.paTop.gbDisplay.SubDirCB.Caption
+#: FListMain.lfm:333
+msgid "Include subdirectories"
+msgstr ""
+
+#. HauptForm.paTop.gbDisplay.cbShowDir.Caption
+#: FListMain.lfm:342
+msgid "Only directories"
+msgstr ""
+
+#. HauptForm.paTop.gbDisplay.cbIndent.Caption
+#: FListMain.lfm:351
+msgid "Indent directories"
+msgstr ""
+
+#. HauptForm.paTop.gbFilelIst.Caption
+#: FListMain.lfm:372
+msgid "File list"
+msgstr ""
+
+#. HauptForm.paTop.gbFilelIst.cbFileSize.Caption
+#: FListMain.lfm:382
+msgid "Show file size"
+msgstr ""
+
+#. HauptForm.paTop.gbFilelIst.cbFileAttr.Caption
+#: FListMain.lfm:391
+msgid "Show file attributes"
+msgstr ""
+
+#. HauptForm.paTop.gbFilelIst.cbFileDate.Caption
+#: FListMain.lfm:400
+msgid "Show file date"
+msgstr ""
+
+#. HauptForm.paTop.gbFilelIst.cbFilename.Caption
+#: FListMain.lfm:409
+msgid "Show filename"
+msgstr ""
+
+#. HauptForm.paTop.StoreBtn.Hint
+#: FListMain.lfm:461
+msgid "Save list as file ..."
+msgstr ""
+
+#. HauptForm.paTop.ShowBtn.Caption
+#: FListMain.lfm:531
+msgid "Update preview"
+msgstr ""
+
+#. HauptForm.paTop.rgSize.Caption
+#: FListMain.lfm:683
+msgid "File size"
+msgstr ""
+
+#. HauptForm.paTop.rgSize.Items.Strings
+#: FListMain.lfm:696
+msgid "Bytes"
+msgstr ""
+
+#. HauptForm.paTop.rgSize.Items.Strings
+#: FListMain.lfm:697
+msgid "Binary"
+msgstr ""
+
+#. HauptForm.paTop.rgSize.Items.Strings
+#: FListMain.lfm:698
+msgid "Decimal"
+msgstr ""
+
+#. HauptForm.SaveDialog.Filter
+#: FListMain.lfm:734
+msgid "Text|*.txt"
+msgstr ""
+
+#. HauptForm.pmSettings.pmiLanguage.Caption
+#: FListMain.lfm:742
+msgid "Desktop language"
+msgstr ""
+
+#. HauptForm.pmSettings.pmiAbout.Caption
+#: FListMain.lfm:745
+msgid "About the program"
+msgstr ""
+
+#. Netzwerkpfad entfernen
+#: FListMain.pas:203
+msgid "all"
+msgstr ""
+
+#: FListMain.pas:322
+#: FListMain.pas:471
+msgid "%u directories were scanned\n"
+"%u matching files found"
+msgstr ""
+
+#: FListMain.pas:350
+msgid "File filter"
+msgstr ""
+

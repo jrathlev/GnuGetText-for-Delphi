@@ -1,0 +1,112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-09-27 12:09+0200\n"
+"PO-Revision-Date: 2026-09-27 12:09+0200\n"
+"Last-Translator: J. Rathlev <kontakt@rathlev-home.de>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: GgtTranslate 4.0.4\n"
+
+msgid "Creating file lists"
+msgstr "Erstellen von Dateilisten"
+
+msgid "Directory:"
+msgstr "Verzeichnis:"
+
+msgid "Status:"
+msgstr "Status:"
+
+msgid "All files (*.*)|*.*"
+msgstr "Alle Dateien (*.*)|*.*"
+
+msgid "Copy list to clipbpoard"
+msgstr "Liste in Zwischenablage kopieren"
+
+msgid "Edit file filter"
+msgstr "Datei-Filter bearbeiten"
+
+msgid "Quit program"
+msgstr "Programm beenden"
+
+msgid "Show"
+msgstr "Anzeigen"
+
+msgid "Directory levels   (-1 = all)"
+msgstr "Verzeichnisebenen (-1 = alle)"
+
+msgid "Hidden files"
+msgstr "Versteckte Dateien"
+
+msgid "System files"
+msgstr "System-Dateien"
+
+msgid "Include subdirectories"
+msgstr "Mit Unterverzeichnissen"
+
+msgid "Only directories"
+msgstr "Nur Verzeichnisse "
+
+msgid "Indent directories"
+msgstr "Verzeichnisse einrücken"
+
+msgid "File list"
+msgstr "Dateiliste"
+
+msgid "Show file size"
+msgstr "mit Dateigröße"
+
+msgid "Show file attributes"
+msgstr "mit Datei-Attributen"
+
+msgid "Show file date"
+msgstr "mit Dateidatum"
+
+msgid "Show filename"
+msgstr "mit Dateinamen"
+
+msgid "Save list as file ..."
+msgstr "Liste als Datei speichern ..."
+
+msgid "Update preview"
+msgstr "Vorschau aktualisieren"
+
+msgid "File size"
+msgstr "Dateigröße"
+
+msgid "Bytes"
+msgstr "Bytes"
+
+msgid "Binary"
+msgstr "Binär"
+
+msgid "Decimal"
+msgstr "Dezimal"
+
+msgid "Text|*.txt"
+msgstr "Text|*.txt"
+
+msgid "Desktop language"
+msgstr "Anzeige-Sprache"
+
+msgid "About the program"
+msgstr "Über das Programm"
+
+msgid "all"
+msgstr "alle"
+
+msgid "%u directories were scanned\n"
+"%u matching files found"
+msgstr "%u Verzeichnisse wurden durchsucht\n"
+"%u passende Dateien gefunden"
+
+msgid "File filter"
+msgstr "Datei-Filter"
+

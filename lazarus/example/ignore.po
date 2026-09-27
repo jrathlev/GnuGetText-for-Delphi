@@ -1,0 +1,26 @@
+#  Seems like a Font.Name extract
+#. HauptForm.Font.Name
+#: FListMain.lfm:12
+msgid "Tahoma"
+msgstr ""
+
+#  Doesn't have any letters
+#. HauptForm.LCLVersion
+#: FListMain.lfm:13
+msgid "4.8.0.0"
+msgstr ""
+
+#  Seems like a Font.Name extract
+#. HauptForm.lbPreview.Font.Name
+#: FListMain.lfm:27
+#. HauptForm.paRuler.Font.Name
+#: FListMain.lfm:716
+msgid "Courier New"
+msgstr ""
+
+#  Looks like a file extension or file mask
+#. HauptForm.SaveDialog.DefaultExt
+#: FListMain.lfm:733
+msgid ".txt"
+msgstr ""
+
