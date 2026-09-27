@@ -1,6 +1,6 @@
 (* Lazarus Unit
-  Subroutines and component for multilinual support with LazGetText
-  =================================================================
+  Subroutines and component for multilingual support with LazGetText
+  ==================================================================
 
   © Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
 
