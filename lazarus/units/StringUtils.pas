@@ -1,5 +1,5 @@
-(* Delphi-Unit
-   collection of routines for string processing
+(* Lazarus unit
+   Collection of routines for string processing
    ============================================
 
    - Character manipulations (e.g. add/remove characters)
@@ -17,14 +17,13 @@
    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
    the specific language governing rights and limitations under the License.
 
-   New compilation - May 2007
-   OEM routines removed - January 2026
-   last modified: January 2026
+   Created for Delphi: May 2007
+   Last modified: September 2026
    *)
 (* @abstract(Collection of routines for string processing)
    @author(© Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de))
    @created(May 2007)
-   @lastmod(January 2026)
+   @lastmod(September 2026)
 *)
 
 unit StringUtils;

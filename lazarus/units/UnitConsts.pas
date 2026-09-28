@@ -1,4 +1,4 @@
-(* Delphi Unit
+(* Lazarus unit
    Resource strings for several units - English
 
    © Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
@@ -11,13 +11,13 @@
    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
    the specific language governing rights and limitations under the License.
 
-   Vers. 1 - Jan. 2016
-   last updated: Feb. 2017
+   Created for Delphi: January 2016
+   last updated: September 2026
    *)
 (* @abstract(Resource strings for several units - English)
    @author(© Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de))
    @created(January 2016)
-   @lastmod(october 2025)
+   @lastmod(September 2026)
 *)
 
 unit UnitConsts;
