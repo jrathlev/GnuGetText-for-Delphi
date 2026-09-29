@@ -15,7 +15,7 @@ _new features:_ enhanced command line options
 - **ggassemble:** Embed po translations into exe file  
 _new features:_ enhanced command line options 
 - **GnuGetText** and **GnuGetTextInit:** GNU gettext translation system for integration 
-  in Delphi and C++ Builder applications  
+  in Delphi, Lazarus and C++ Builder applications  
 _new feature:_ optional embedding as resources
 
 #### Windows GUI programs:
