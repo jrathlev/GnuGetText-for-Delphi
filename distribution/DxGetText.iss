@@ -21,8 +21,8 @@
 [Setup]
 PrivilegesRequired=admin
 AppName={#ProgramName}
-AppVerName={#GgtName}
-AppVersion={#GgtName} {#ApplicationVersion}
+AppVerName={#GgtName} {#ApplicationVersion}
+AppVersion={#ApplicationVersion}
 AppPublisher={#ProgramAuthor}
 AppPublisherURL={#ProgramWebURL}
 AppSupportURL={#ProgramWebURL}
@@ -37,18 +37,22 @@ OutputDir=.
 OutputBaseFilename={#OutputFile}
 SetupIconFile=Translate.ico
 UninstallDisplayIcon={app}\Translate-u.ico
-WizardImageFile=install-left.bmp
-WizardSmallImageFile=..\..\Common\Install-small.bmp
+UninstallDisplayName={#GgtName}
+WizardImageFile=Wizard-Ggt-1.png,Wizard-Ggt-2.png
+WizardSmallImageFile=..\..\Common\Wizard-small-1.png,..\..\Common\Wizard-small-2.png
 WizardStyle=modern dynamic 
 Compression=lzma2
 SolidCompression=yes
 DisableWelcomePage=no
 DisableDirPage=auto
 DisableProgramGroupPage=auto
+UsePreviousLanguage=no
+LanguageDetectionMethod=uilanguage
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile:"..\..\Common\license-en.rtf"; InfoBeforeFile:"..\docs\dxgettext.rtf";
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"; LicenseFile:"..\..\Common\license-de.rtf"; InfoBeforeFile:"..\docs\dxgettext.rtf";
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"; LicenseFile:"..\..\Common\license-it.rtf"; InfoBeforeFile:"..\docs\dxgettext.rtf";
 
 [CustomMessages]
 en.FileAssoc=File associations:
@@ -70,6 +74,16 @@ de.MergeContext=mit Schablone &zusammenführen ..
 de.DecompContext=in PO-Datei &zurückführen ..
 de.EmbedContext=&Übersetzungen integrieren ..
 de.TemplateContext=&Übersetzungs-Schablone erstellen ..
+
+it.FileAssoc=Associazione file:
+it.DescContext=Aggiungi funzione "Delphi GetText" al menu contestuale
+it.ButtonDesign=Selezione design pulsanti per tutti gli utenti:
+it.SimpleButtons=Usa icone semplici
+it.CompileContext=&Compila come file .mo ..
+it.MergeContext=&Unisci con modello ..
+it.DecompContext=&Decompila in file .po ..
+it.EmbedContext=&Traduzioni integrate ..
+it.TemplateContext=&Crea modello traduzione ..
 
 [Tasks]
 Name: "fileassoc"; Description: "{cm:DescContext}"; GroupDescription: "{cm:FileAssoc}"; 
@@ -135,6 +149,7 @@ Source: "GnuGetText\GnuGetTextInit.*"; DestDir: "{app}\GnuGetText"; Flags: ignor
 Source: "GnuGetText\GgtDummy.*"; DestDir: "{app}\GnuGetText"; Flags: ignoreversion
 Source: "GnuGetText\CompCpp.bat"; DestDir: "{app}\GnuGetText"; Flags: ignoreversion
 Source: "GnuGetText\IgnoreObjects.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "LazGetText\LazGetText.*"; DestDir: "{app}\LazGetText"; Flags: ignoreversion
 Source: "..\docs\commandline.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\docs\dxgettext.rtf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\docs\manual.pdf"; DestDir: "{app}"; Flags: ignoreversion

@@ -7,13 +7,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-03-25 11:40+0100\n"
-"PO-Revision-Date: 2026-03-25 11:40+0100\n"
+"POT-Creation-Date: 2026-09-28 13:33+0200\n"
+"PO-Revision-Date: 2026-09-28 13:33+0200\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: GgtTranslate 4.0.0\n"
+"X-Generator: GgtTranslate 4.0.4\n"
 
 #. AccountDialog.pnBottom.btnShow.Hint
 #: AccountDlg.dfm:39
@@ -32,12 +32,14 @@ msgstr ""
 #: AppListDlg.dfm:134
 #. CharTableDialog.CancelBtn.Caption
 #: CharTableDlg.dfm:76
+#. EditDirListDialog.CancelBtn.Caption
+#: EditDirListDlg.dfm:95
 #. EditFileListDialog.CancelBtn.Caption
 #: EditFileListDlg.dfm:95
 #. EditHistListDialog.CancelBtn.Caption
 #: EditHistListDlg.dfm:104
 #. EditStringListDialog.CancelBtn.Caption
-#: EditStringListDlg.dfm:96
+#: EditStringListDlg.dfm:95
 #. FileFilterDialog.CancelBtn.Caption
 #: FileFilterDlg.dfm:96
 #. FileListDialog.paBottom.CancelBtn.Caption
@@ -91,12 +93,14 @@ msgstr ""
 #: AppListDlg.dfm:146
 #. DetailInfoDialog.pnTop.OKBtn.Caption
 #: DetailInfoDlg.dfm:82
+#. EditDirListDialog.OKBtn.Caption
+#: EditDirListDlg.dfm:80
 #. EditFileListDialog.OKBtn.Caption
 #: EditFileListDlg.dfm:80
 #. EditHistListDialog.OKBtn.Caption
 #: EditHistListDlg.dfm:89
 #. EditStringListDialog.OKBtn.Caption
-#: EditStringListDlg.dfm:81
+#: EditStringListDlg.dfm:80
 #. FileFilterDialog.OKBtn.Caption
 #: FileFilterDlg.dfm:82
 #. FileListDialog.paBottom.OKBtn.Caption
@@ -206,10 +210,12 @@ msgstr ""
 
 #. AppListDialog.paButtons.gbxEdit.btnAdd.Caption
 #: AppListDlg.dfm:42
+#. EditDirListDialog.btnAdd.Caption
+#: EditDirListDlg.dfm:136
 #. EditFileListDialog.btnAdd.Caption
 #: EditFileListDlg.dfm:136
 #. EditStringListDialog.btnAdd.Caption
-#: EditStringListDlg.dfm:137
+#: EditStringListDlg.dfm:136
 #. SelectFromListDialog.paEdit.gbxEdit.btnInsert.Caption
 #: SelectFromListDlg.dfm:51
 msgid "Add"
@@ -217,12 +223,14 @@ msgstr ""
 
 #. AppListDialog.paButtons.gbxEdit.btnDelete.Caption
 #: AppListDlg.dfm:55
+#. EditDirListDialog.btnDelete.Caption
+#: EditDirListDlg.dfm:108
 #. EditFileListDialog.btnDelete.Caption
 #: EditFileListDlg.dfm:108
 #. EditHistListDialog.btnDelete.Caption
 #: EditHistListDlg.dfm:118
 #. EditStringListDialog.btnDelete.Caption
-#: EditStringListDlg.dfm:109
+#: EditStringListDlg.dfm:108
 #. SelectFromListDialog.paEdit.gbxEdit.btnDelete.Caption
 #: SelectFromListDlg.dfm:68
 msgid "Remove"
@@ -250,7 +258,7 @@ msgstr ""
 #. EditHistListDialog.gbxMove.UpBtn.Hint
 #: EditHistListDlg.dfm:51
 #. EditStringListDialog.gbxMove.UpBtn.Hint
-#: EditStringListDlg.dfm:51
+#: EditStringListDlg.dfm:50
 #. SelectFromListDialog.paEdit.gbxMove.UpBtn.Hint
 #: SelectFromListDlg.dfm:142
 msgid "Move item up"
@@ -261,7 +269,7 @@ msgstr ""
 #. EditHistListDialog.gbxMove.DownBtn.Hint
 #: EditHistListDlg.dfm:65
 #. EditStringListDialog.gbxMove.DownBtn.Hint
-#: EditStringListDlg.dfm:65
+#: EditStringListDlg.dfm:64
 #. SelectFromListDialog.paEdit.gbxMove.DownBtn.Hint
 #: SelectFromListDlg.dfm:156
 msgid "Move item down"
@@ -309,6 +317,8 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
+#. EditDirListDialog.Caption
+#: EditDirListDlg.dfm:5
 #. EditFileListDialog.Caption
 #: EditFileListDlg.dfm:5
 #. EditStringListDialog.Caption
@@ -316,15 +326,19 @@ msgstr ""
 msgid "Edit items from list"
 msgstr ""
 
+#. EditDirListDialog.gbxMove.Caption
+#: EditDirListDlg.dfm:43
 #. EditFileListDialog.gbxMove.Caption
 #: EditFileListDlg.dfm:43
 #. EditStringListDialog.gbxMove.Caption
-#: EditStringListDlg.dfm:44
+#: EditStringListDlg.dfm:43
 #. SelectFromListDialog.paEdit.gbxMove.Caption
 #: SelectFromListDlg.dfm:135
 msgid "Move item"
 msgstr ""
 
+#. EditDirListDialog.gbxMove.UpBtn.Hint
+#: EditDirListDlg.dfm:50
 #. EditFileListDialog.gbxMove.UpBtn.Hint
 #: EditFileListDlg.dfm:50
 #. FileListDialog.paCenter.UpBtn.Hint
@@ -332,6 +346,8 @@ msgstr ""
 msgid "Move file up"
 msgstr ""
 
+#. EditDirListDialog.gbxMove.DownBtn.Hint
+#: EditDirListDlg.dfm:64
 #. EditFileListDialog.gbxMove.DownBtn.Hint
 #: EditFileListDlg.dfm:64
 #. FileListDialog.paCenter.DownBtn.Hint
@@ -339,15 +355,19 @@ msgstr ""
 msgid "Move file down"
 msgstr ""
 
+#. EditDirListDialog.btnEdit.Caption
+#: EditDirListDlg.dfm:122
 #. EditFileListDialog.btnEdit.Caption
 #: EditFileListDlg.dfm:122
 #. EditHistListDialog.btnEdit.Caption
 #: EditHistListDlg.dfm:133
 #. EditStringListDialog.btnEdit.Caption
-#: EditStringListDlg.dfm:123
+#: EditStringListDlg.dfm:122
 msgid "Edit"
 msgstr ""
 
+#. EditDirListDialog.BitBtn1.Caption
+#: EditDirListDlg.dfm:150
 #. EditFileListDialog.BitBtn1.Caption
 #: EditFileListDlg.dfm:150
 #. SelectFromListDialog.paEdit.gbxEdit.btnDelAll.Caption
@@ -375,6 +395,7 @@ msgstr ""
 #. SelectFromListDialog.paEdit.gbxEdit.btnEdit.Hint
 #: SelectFromListDlg.dfm:83
 #: EditHistListDlg.pas:147
+#: EditStringListDlg.pas:124
 #: SelectFromListDlg.pas:202
 #: SelectFromListDlg.pas:225
 msgid "Edit item"
@@ -731,7 +752,7 @@ msgstr ""
 
 #. PasswordDialog.gbEncrypt.rbEncAuto.Caption
 #: PwdDlg.dfm:52
-#: ShowMemo.pas:948
+#: ShowMemo.pas:1010
 msgid "Automatic"
 msgstr ""
 
@@ -769,6 +790,7 @@ msgstr ""
 #: SelectFromListDlg.dfm:4
 #. SelectFromListDialog.paEdit.gbxEdit.btnInsert.Hint
 #: SelectFromListDlg.dfm:49
+#: EditStringListDlg.pas:100
 #: SelectFromListDlg.pas:162
 msgid "Add item"
 msgstr ""
@@ -1083,10 +1105,12 @@ msgstr ""
 msgid "Remove application: \"%s\"?"
 msgstr ""
 
+#: EditDirListDlg.pas:105
 #: EditFileListDlg.pas:106
 msgid "Add %s"
 msgstr ""
 
+#: EditDirListDlg.pas:135
 #: EditFileListDlg.pas:137
 msgid "Replace %s"
 msgstr ""
@@ -1191,16 +1215,19 @@ msgid "Default: "
 msgstr ""
 
 #: ShellDirDlg.pas:425
+#: ShellFileDlg.pas:279
 #: ShowFilesDlg.pas:129
 msgid "Directory not found:\n"
 "%s!"
 msgstr ""
 
 #: ShellDirDlg.pas:446
+#: ShellFileDlg.pas:350
 msgid "New subdirectory:"
 msgstr ""
 
 #: ShellDirDlg.pas:449
+#: ShellFileDlg.pas:353
 msgid "Could not create directory:\n"
 "%s!"
 msgstr ""
@@ -1231,6 +1258,7 @@ msgid "%s moved to Recycle Bin!"
 msgstr ""
 
 #: ShellDirDlg.pas:531
+#: ShellFileDlg.pas:367
 msgid "Error deleting directory:\n"
 "%s!"
 msgstr ""
@@ -1239,75 +1267,94 @@ msgstr ""
 msgid " free of "
 msgstr ""
 
-#: ShowMemo.pas:375
+#: ShellFileDlg.pas:364
+msgid "Directory is not empty, delete anyway?"
+msgstr ""
+
+#: ShowMemo.pas:380
 #. if LineNr=Lines.Count then SelLength:=0 else SelLength:=Perform(EM_LINEINDEX,LineNr+1,0)-SelStart;
-#: ShowMemo.pas:395
+#: ShowMemo.pas:400
+#: ShowText.pas:215
+#: ShowText.pas:234
 msgid " Line: %u of %u"
 msgstr ""
 
-#: ShowMemo.pas:401
+#: ShowMemo.pas:406
 msgid "Error loading file: \"%s\""
 msgstr ""
 
 #. if (Shift=[]) and (Key=VK_F3) then FindDialogFind(Sender);
-#: ShowMemo.pas:423
-#: ShowMemo.pas:621
+#: ShowMemo.pas:428
+#: ShowMemo.pas:631
 msgid "Delete selected text?"
 msgstr ""
 
 #. Kopfzeile erzeugen
-#: ShowMemo.pas:467
+#: ShowMemo.pas:472
 msgid "Page: %u"
 msgstr ""
 
 #. textout(PrinterSettings.Margins.Left,y,StripPath(Caption,72));
-#: ShowMemo.pas:472
-#: ShowMemo.pas:956
+#: ShowMemo.pas:477
+#: ShowMemo.pas:1018
 msgid "File: "
 msgstr ""
 
-#: ShowMemo.pas:578
+#: ShowMemo.pas:583
+#: ShowText.pas:303
 msgid "Print selected lines?"
 msgstr ""
 
-#: ShowMemo.pas:591
+#: ShowMemo.pas:601
 msgid "Save text file as zip archive"
 msgstr ""
 
-#: ShowMemo.pas:593
+#: ShowMemo.pas:603
 msgid "Zip archives"
 msgstr ""
 
-#: ShowMemo.pas:631
+#: ShowMemo.pas:641
+#: ShowText.pas:372
 msgid "Delete file \"%s\"?"
 msgstr ""
 
-#: ShowMemo.pas:654
-#: ShowMemo.pas:956
+#: ShowMemo.pas:669
+#: ShowMemo.pas:1018
+#: ShowText.pas:388
 msgid "\"%s\" not found!"
 msgstr ""
 
-#: ShowMemo.pas:691
-#: ShowMemo.pas:707
+#: ShowMemo.pas:709
+#: ShowMemo.pas:725
 msgid "No further sections!"
 msgstr ""
 
-#. remove zero bytes
-#: ShowMemo.pas:747
+#. Size:=TEncoding.GetBufferEncoding(Buffer,Enc,DefaultEncoding);
+#: ShowMemo.pas:807
 msgid "Invalid code page - Windows default is "
 "used!"
 msgstr ""
 
-#: ShowMemo.pas:788
-#: ShowMemo.pas:803
+#: ShowMemo.pas:849
+#: ShowMemo.pas:864
 msgid "No further errors!"
 msgstr ""
 
-#: Textdlg.pas:255
-#: Textdlg.pas:286
-#: Textdlg.pas:296
-#: Textdlg.pas:326
-#: Textdlg.pas:332
+#. Kopfzeile erzeugen
+#: ShowText.pas:290
+msgid "Page: "
+msgstr ""
+
+#: ShowText.pas:409
+#: ShowText.pas:473
+msgid "File: \"%s\" not found!"
+msgstr ""
+
+#: Textdlg.pas:253
+#: Textdlg.pas:284
+#: Textdlg.pas:294
+#: Textdlg.pas:324
+#: Textdlg.pas:330
 msgid "Invalid input"
 msgstr ""
 

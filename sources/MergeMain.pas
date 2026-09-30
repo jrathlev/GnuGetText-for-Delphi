@@ -22,6 +22,8 @@
                  uses always internal merge function (instead of msgmerge)
    Vers. 3.2   - October 2024: optional merging of AutoComments and HistComments
                                optional merging with similat msgids
+   Vers. 3.3   - January 2026: Icons replaced by scalable SVG graphics
+                               Adapted for monitors with high resolution
 
    Command line:
    -------------
@@ -39,7 +41,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Buttons, Vcl.ComCtrls;
+  Vcl.Buttons, Vcl.ComCtrls, JrButtons, System.ImageList, Vcl.ImgList,
+  SVGIconImageListBase, SVGIconImageList;
 
 type
   TfrmMerge = class(TForm)
@@ -48,22 +51,25 @@ type
     cbCreateBackup: TCheckBox;
     cbSaveSettings: TCheckBox;
     laVersion: TLabel;
-    ButtonChooseTemplate: TSpeedButton;
-    ButtonChooseTranslation: TSpeedButton;
-    btnMerge: TBitBtn;
     OpenDialog: TOpenDialog;
-    btnClose: TBitBtn;
     cbCodePage: TComboBox;
     gbEncoding: TGroupBox;
     rbUtf: TRadioButton;
     rbOther: TRadioButton;
-    btnHelp: TBitBtn;
-    btnManual: TBitBtn;
     cbMergeAutoComments: TCheckBox;
     cbMergeHistory: TCheckBox;
     cbMergeSimilar: TCheckBox;
     edSimLength: TEdit;
     udSimLength: TUpDown;
+    ButtonChooseTemplate: TJrSpeedButton;
+    ButtonChooseTranslation: TJrSpeedButton;
+    imlGlyphs: TSVGIconImageList;
+    btnMerge: TJrButton;
+    btnClose: TJrButton;
+    btnHelp: TJrButton;
+    btnManual: TJrButton;
+    laProg: TLabel;
+    Panel1: TPanel;
     procedure btnMergeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -77,8 +83,11 @@ type
     procedure btnManualClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
   private
     { Private declarations }
+    PixelsPerInchOnCreate : integer;
     wx,wy : integer;
     ErrorOutput       : TStringList;
     CodePage          : cardinal;
@@ -99,7 +108,7 @@ implementation
 
 uses
   Winapi.shellapi, System.IniFiles, System.StrUtils, gnugettext, poparser,
-  GgtConsts, GgtUtils, FileCopy;
+  GgtConsts, GgtUtils, WinUtils, FileCopy, InitProg, ImageLoader, StyleUtils;
 
 {$R *.dfm}
 
@@ -117,17 +126,18 @@ const
   IniExt = '.ini';
 
 { ---------------------------------------------------------------- }
-procedure TfrmMerge.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  try HtmlHelp(0,nil,HH_CLOSE_ALL,0); except end;
-  end;
-
 procedure TfrmMerge.FormCreate(Sender: TObject);
 var
   i  : integer;
   sn : string;
 begin
   TranslateComponent (self);
+  ImageLoader.LoadImages([imlGlyphs.SVGIconItems]);
+  PixelsPerInchOnCreate:=PixelsPerInch;
+  imlGlyphs.DPIChanged(self,PixelsPerInchOnDesign,PixelsPerInch);
+// set style for Windows dark mode
+  SetDefaultStyles(DarkStyle);
+  SetDisplayMode(LoadDisplayModeFromIni(CfgName,CfgSekt));
   noedit:=false;
   for i:=1 to ParamCount do begin
     sn:=ParamStr(i);
@@ -137,9 +147,9 @@ begin
       end
     else EditTranslation.Text:=ExpandFileName(sn); // file to be merged
     end;
-  laVersion.Caption:=GetProgVersion;
+  laProg.Caption:='ggmerge';
+  laVersion.Caption:='Version: '+GetProgVersion;
   FormResize (self);
-  Caption:=Caption+' (ggmerge)';
   wx:=Left; wy:=Top+Height+10;
   ErrorOutput:=TStringList.Create;
   end;
@@ -191,6 +201,17 @@ begin
   else Close;
   end;
 
+procedure TfrmMerge.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  imlGlyphs.DPIChanged(Sender,OldDPI,NewDPI);
+  end;
+
+procedure TfrmMerge.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  try HtmlHelp(0,nil,HH_CLOSE_ALL,0); except end;
+  end;
+
 procedure TfrmMerge.LoadFromIni (const IniName : string);
 begin
   cbSaveSettings.Checked:=FileExists(ininame);
@@ -218,7 +239,7 @@ begin
     else InitialDir:='';
     FileName:=EditTranslation.Text;
     DefaultExt:='po';
-    Filter:=_('Translation files (*.po)|*.po|All files (*.*)|*.*');
+    Filter:=_('Translation files')+'|*.po|'+_('All files')+'|*.*';
     Result:=Execute;
     if Result then EditTranslation.Text:=FileName;
     end;
@@ -257,7 +278,7 @@ begin
     else InitialDir:='';
     FileName:=ExtractFileName(EditTemplate.Text);
     DefaultExt:='po';
-    Filter:=_('Template files (*.po;*.pot)|*.po;*.pot|All files (*.*)|*.*');
+    Filter:=_('Template files')+'|*.po;*.pot|'+_('All files')+'|*.*';
     if Execute then EditTemplate.Text:=FileName;
     end;
   end;

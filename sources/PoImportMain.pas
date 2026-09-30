@@ -179,7 +179,7 @@ begin
     InitialDir:=GetExistingParentPath(ExtractFilePath(EdFile),UserPath);
     Filename:='';
     Title:=_('Select po file to be edited');
-    Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
+    Filter:=Format(_('po files')+'|*.%s',[PoExt])+'|'+_('All files')+'|*.*';
     if Execute then begin
       EdFile:=FileName;
       AddToHistoryList(cbEdit,Filename);
@@ -199,7 +199,7 @@ begin
     InitialDir:=GetExistingParentPath(sd,UserPath);
     Filename:='';
     Title:=_('Select po file from where to import');
-    Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
+    Filter:=Format(_('po files')+'|*.%s',[PoExt])+'|'+_('All files')+'|*.*';
     if Execute then begin
       ImportFile:=Filename;
       AddToHistoryList(cbTrans,Filename);
@@ -269,7 +269,9 @@ begin
       if ne>0 then ErrorDialog(Format(_('Error in line %u of file "%s"!'),[ne,fn]))
       else Result:=true;
     except
-      ErrorDialog(Format(_('Error reading from file "%s"!'),[fn]));
+      on E:Exception do
+        ErrorDialog(_('Error reading po file:')+sLineBreak
+                  +'"'+fn+'"'+sLineBreak+E.Message);
       end;
     end
   else ErrorDialog(Format(_('File not found: "%s"!'),[fn]));

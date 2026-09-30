@@ -167,7 +167,7 @@ begin
     Filename:='';
     DefaultExt:=IssExt;
     Title:=_('Select iss file');
-    Filter:=Format(_('iss files|*.%s|all|*.*'),[IssExt]);
+    Filter:=Format(_('iss files')+'|*.%s',[IssExt])+'|'+_('All files')+'|*.*';
     Result:=Execute;
     if Result then begin
       IssName:=Filename;

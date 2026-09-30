@@ -676,7 +676,7 @@ begin
     else InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file to be edited');
-    Filter:=Format(_('po files|*.%s'),[PoExt])+'|all|*.*';
+    Filter:=Format(_('po files')+'|*.%s',[PoExt])+'|'+_('All files')+'|*.*';
     Options:=Options-[ofAllowMultiSelect];
     if Execute then begin
       EdFile:=Filename;
@@ -696,7 +696,7 @@ begin
     InitialDir:=edDir.Text;
     Filename:='';
     Title:=_('Select Pascal sources');
-    Filter:=Format(_('Pascal files|*.%s'),[PasExt])+'|all|*.*';
+    Filter:=Format(_('Pascal files')+'|*.%s',[PasExt])+'|'+_('All files')+'|*.*';
     Options:=Options+[ofAllowMultiSelect];
     if Execute then begin
       s:=ExtractFilePath(Files.Strings[0]);
@@ -715,8 +715,8 @@ procedure TfrmMain.btDirClick(Sender: TObject);
 var
   s : string;
 begin
-  s:=PasDir;
-  if ShellDirDialog.Execute(_('Select directory with pas sources'),false,true,true,'',s) then begin
+  s:=GetExistingParentPath(PasDir,UserPath);
+  if ShellDirDialog.Execute(_('Select directory with pas sources'),false,true,true,UserPath,s) then begin
     AddToHistory(edDir,s);
     PasDir:=s;
     end;
@@ -745,7 +745,15 @@ begin
 function TfrmMain.LoadEditFile : boolean;
 begin
   Result:=false;
-  if FileExists(EdFile) then EdList.LoadFromFile(EdFile)
+  if FileExists(EdFile) then begin
+    try
+      EdList.LoadFromFile(EdFile);
+    except
+      on E:Exception do
+        ErrorDialog(_('Error reading po file:')+sLineBreak
+                  +'"'+EdFile+'"'+sLineBreak+E.Message);
+      end;
+    end
   else InfoDialog(Format(_('File not found: %s'),[EdFile]));
   end;
 

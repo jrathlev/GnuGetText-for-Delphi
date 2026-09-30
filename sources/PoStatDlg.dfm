@@ -45,9 +45,9 @@ object PoStatDialog: TPoStatDialog
   end
   object gbStat: TGroupBox
     Left = 5
-    Top = 290
+    Top = 270
     Width = 431
-    Height = 136
+    Height = 156
     Anchors = [akLeft, akRight, akBottom]
     Caption = 'Statistics'
     TabOrder = 1
@@ -81,7 +81,7 @@ object PoStatDialog: TPoStatDialog
     end
     object Label7: TLabel
       Left = 15
-      Top = 100
+      Top = 120
       Width = 108
       Height = 13
       Caption = 'Number of characters:'
@@ -116,17 +116,43 @@ object PoStatDialog: TPoStatDialog
     end
     object laNumChars: TLabel
       Left = 160
+      Top = 120
+      Width = 18
+      Height = 13
+      Caption = 'xxx'
+    end
+    object laDupDesc: TLabel
+      Left = 15
+      Top = 100
+      Width = 67
+      Height = 13
+      Caption = 'Duplicate IDs:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object laDuplicates: TLabel
+      Left = 160
       Top = 100
       Width = 18
       Height = 13
       Caption = 'xxx'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
     end
   end
   object lvHeader: TListView
     Left = 5
     Top = 45
     Width = 431
-    Height = 236
+    Height = 216
     Anchors = [akLeft, akTop, akRight, akBottom]
     Columns = <
       item

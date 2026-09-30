@@ -2,7 +2,7 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'frmMain'
-  ClientHeight = 471
+  ClientHeight = 459
   ClientWidth = 441
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object frmMain: TfrmMain
   OnShow = FormShow
   DesignSize = (
     441
-    471)
+    459)
   PixelsPerInch = 96
   TextHeight = 13
   object Label2: TLabel
@@ -53,9 +53,9 @@ object frmMain: TfrmMain
   end
   object gbStat: TGroupBox
     Left = 5
-    Top = 295
+    Top = 265
     Width = 431
-    Height = 136
+    Height = 156
     Anchors = [akLeft, akRight, akBottom]
     Caption = 'Statistics'
     TabOrder = 5
@@ -89,7 +89,7 @@ object frmMain: TfrmMain
     end
     object Label7: TLabel
       Left = 15
-      Top = 100
+      Top = 120
       Width = 108
       Height = 13
       Caption = 'Number of characters:'
@@ -124,17 +124,43 @@ object frmMain: TfrmMain
     end
     object laNumChars: TLabel
       Left = 160
+      Top = 120
+      Width = 18
+      Height = 13
+      Caption = 'xxx'
+    end
+    object laDupDesc: TLabel
+      Left = 15
+      Top = 100
+      Width = 67
+      Height = 13
+      Caption = 'Duplicate IDs:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object laDuplicates: TLabel
+      Left = 160
       Top = 100
       Width = 18
       Height = 13
       Caption = 'xxx'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
     end
   end
   object lvHeader: TListView
     Left = 5
     Top = 70
     Width = 431
-    Height = 221
+    Height = 186
     Anchors = [akLeft, akTop, akRight, akBottom]
     Columns = <
       item
@@ -160,7 +186,7 @@ object frmMain: TfrmMain
   end
   object bbInfo: TJrButton
     Left = 370
-    Top = 435
+    Top = 425
     Width = 31
     Height = 31
     Hint = 'About the program'
@@ -175,7 +201,7 @@ object frmMain: TfrmMain
   end
   object bbExit: TJrButton
     Left = 405
-    Top = 435
+    Top = 425
     Width = 31
     Height = 31
     Hint = 'Quit program'
@@ -190,7 +216,7 @@ object frmMain: TfrmMain
   end
   object btnHelp: TJrButton
     Left = 335
-    Top = 435
+    Top = 425
     Width = 31
     Height = 31
     Hint = 'Show program help'
@@ -205,7 +231,7 @@ object frmMain: TfrmMain
   end
   object btnReload: TJrButton
     Left = 300
-    Top = 435
+    Top = 425
     Width = 31
     Height = 31
     Hint = 'Reload po file'

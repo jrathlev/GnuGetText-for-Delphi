@@ -211,6 +211,7 @@ begin
     end;
   WordPos:=0; TransStr:='';
   PoList:=TPoEntryList.Create;
+  PoList.IgnoreDuplicates:=true;
   SpellCheck:=TSpellCheck.Create(self);
   with SpellCheck do begin
     UseUserDictionary:=true;
@@ -361,7 +362,7 @@ begin
     else InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file for spell checking');
-    Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
+    Filter:=Format(_('po files')+'|*.%s',[PoExt])+'|'+_('All files')+'|*.*';
     if Execute then begin
       PoFile:=Filename;
       Text:=Filename; AddToHistory(edTranslation,Filename);
@@ -378,7 +379,7 @@ begin
     else InitialDir:=AddPath(PrgPath,'Dict');
     Filename:='';
     Title:=_('Select dictionary file');
-    Filter:=_('dictionaries|*.'+DicExt+'|all|*.*');
+    Filter:=Format(_('Dictionaries')+'|*.%s',[DicExt])+'|'+_('All files')+'|*.*';
     if Execute then begin
       DicFile:=Filename;
       Text:=Filename; AddToHistory(edDictionary,Filename);

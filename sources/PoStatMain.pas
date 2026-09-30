@@ -53,6 +53,8 @@ type
     btnHelp: TJrButton;
     btnReload: TJrButton;
     bbOpenPoFile: TJrSpeedButton;
+    laDupDesc: TLabel;
+    laDuplicates: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure bbOpenPoFileClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -131,6 +133,7 @@ begin
     end;
   AddToHistory(edTranslation,PoFile);
   PoList:=TPoEntryList.Create;
+  PoList.IgnoreDuplicates:=true;
   end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
@@ -217,6 +220,7 @@ begin
   laNumTrans.Caption:='';
   laNumNoTrans.Caption:='';
   laNumFuzzy.Caption:='';
+  laDuplicates.Caption:='';
   laNumChars.Caption:='';
   end;
 
@@ -245,6 +249,13 @@ begin
       laNumTrans.Caption:=IntToStr(nt)+' ('+IntToStr(round(100*nt/ne))+'%)';
       laNumNoTrans.Caption:=IntToStr(nu)+' ('+IntToStr(round(100*nu/ne))+'%)';
       laNumFuzzy.Caption:=IntToStr(nf);
+      if Duplicates=0 then begin
+        laDupDesc.Hide; laDuplicates.Hide;
+        end
+      else begin
+        laDupDesc.Show; laDuplicates.Show;
+        laDuplicates.Caption:=IntToStr(Duplicates);
+        end;
       laNumChars.Caption:=_('Template = ')+IntToStr(cs)+sLineBreak+_('Translation = ')+IntToStr(ct);
       lvHeader.Clear;
       for id:=Low(TPoHeaderIds) to High(TPoHeaderIds) do begin
@@ -274,7 +285,9 @@ begin
       ErrorDialog(TopLeftPos(gbStat),Format(_('Error in line %u of po file!'),[ne]))
     else ShowStat;
   except
-    ErrorDialog(TopLeftPos(gbStat),_('Error reading po file!'));
+    on E:Exception do
+      ErrorDialog(TopLeftPos(gbStat),_('Error reading po file:')+sLineBreak
+                +'"'+edTranslation.Text+'"'+sLineBreak+E.Message);
     end;
   end;
 
@@ -285,7 +298,7 @@ begin
     else InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file');
-    Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
+    Filter:=Format(_('po files')+'|*.%s',[PoExt])+'|'+_('All files')+'|*.*';
     if Execute then begin
       PoFile:=Filename;
       AddToHistory(edTranslation,PoFile);

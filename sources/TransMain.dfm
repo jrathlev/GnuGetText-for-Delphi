@@ -150,10 +150,6 @@ object frmTransMain: TfrmTransMain
           Caption = 'tsFiles'
           ImageIndex = 1
           TabVisible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Label2: TLabel
             Left = 0
             Top = 10
@@ -671,6 +667,10 @@ object frmTransMain: TfrmTransMain
       object tsSaveOptions: TTabSheet
         Caption = 'Saving'
         ImageIndex = 2
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object cbOverwrite: TCheckBox
           Left = 20
           Top = 40
@@ -735,10 +735,6 @@ object frmTransMain: TfrmTransMain
       object pcExclude: TTabSheet
         Caption = 'Exclude conditions'
         ImageIndex = 4
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         DesignSize = (
           446
           188)
@@ -925,9 +921,9 @@ object frmTransMain: TfrmTransMain
         Caption = 'Edit translation'
         TabOrder = 2
         object btEdit: TJrButton
-          Left = 119
+          Left = 109
           Top = 20
-          Width = 82
+          Width = 92
           Height = 36
           Hint = 'Edit translation in text editor'
           Caption = 'As text'
@@ -957,7 +953,7 @@ object frmTransMain: TfrmTransMain
         object btPoEdit: TJrButton
           Left = 5
           Top = 20
-          Width = 111
+          Width = 101
           Height = 36
           Hint = 'Edit translation (po file)'
           Caption = 'Po editor'
@@ -2591,11 +2587,11 @@ object frmTransMain: TfrmTransMain
   object pmMask: TPopupMenu
     AutoHotkeys = maManual
     OwnerDraw = True
-    Left = 738
-    Top = 141
+    Left = 718
+    Top = 126
   end
   object pmSettings: TPopupMenu
-    Left = 780
+    Left = 755
     Top = 130
     object pmiLanguage: TMenuItem
       Caption = 'Desktop language'

@@ -1,0 +1,703 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Dialogs\n"
+"POT-Creation-Date: 2026-09-28 13:33+0200\n"
+"PO-Revision-Date: 2026-09-28 14:24+0200\n"
+"Last-Translator: J. Rathlev <kontakt@rathlev-home.de>\n"
+"Language-Team: bovirus <bovirus@gmail.com>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid "Show password"
+msgstr "Visualizza password"
+
+msgid "Cancel"
+msgstr "Annulla"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Repeat password:"
+msgstr "Ripeti password:"
+
+msgid "Confirm password"
+msgstr "Conferma password"
+
+msgid "Name:"
+msgstr "Nome:"
+
+msgid "User name"
+msgstr "Nome utente"
+
+msgid "Password:"
+msgstr "Password:"
+
+msgid "Password"
+msgstr "Password"
+
+msgid "Edit application list"
+msgstr "Modifica elenco applicazioni"
+
+msgid "Application"
+msgstr "Applicazione"
+
+msgid "Add"
+msgstr "Aggiungi"
+
+msgid "Remove"
+msgstr "Rimuovi"
+
+msgid "Change"
+msgstr "Modifica"
+
+msgid "Rename"
+msgstr "Rinomina"
+
+msgid "Change order"
+msgstr "Modifica ordine"
+
+msgid "Move item up"
+msgstr "Sposta elemento su"
+
+msgid "Move item down"
+msgstr "Sposta elemento giù"
+
+msgid "Path:"
+msgstr "Percorso:"
+
+msgid "Programs|*.exe|all|*.*"
+msgstr "Programmi|*.exe|Tutti i file|*.*"
+
+msgid "Select application"
+msgstr "Seleziona applicazione"
+
+msgid "Character table"
+msgstr "Tabella caratteri"
+
+msgid "Hex value:"
+msgstr "Valore esadecimale:"
+
+msgid "Select"
+msgstr "Seleziona"
+
+msgid "Information"
+msgstr "Informazioni"
+
+msgid "Details"
+msgstr "Dettagli"
+
+msgid "Edit items from list"
+msgstr "Modifica elementi nell'elenco"
+
+msgid "Move item"
+msgstr "Sposta elemento"
+
+msgid "Move file up"
+msgstr "Sposta file su"
+
+msgid "Move file down"
+msgstr "Sposta file giù"
+
+msgid "Edit"
+msgstr "Modifica"
+
+msgid "Remove all"
+msgstr "Rimuovi tutti"
+
+msgid "Edit list entries"
+msgstr "Modifica elenco elementi"
+
+msgid "Move entry"
+msgstr "Sposta elemento"
+
+msgid "Remove item"
+msgstr "Rimuovi elemento"
+
+msgid "Edit item"
+msgstr "Modifica elemento"
+
+msgid "Description:"
+msgstr "Descrizione:"
+
+msgid "Filter:"
+msgstr "Filtro:"
+
+msgid "Move one line up"
+msgstr "Sposta una linea su"
+
+msgid "Move one line down"
+msgstr "Sposta una linea giù"
+
+msgid "Remove from list"
+msgstr "Rimuovi dall'elenco"
+
+msgid "Add to list"
+msgstr "Aggiungi all'elenco"
+
+msgid "Replace in list"
+msgstr "Sostituisci nell'elenco"
+
+msgid "List of files:"
+msgstr "Elenco file:"
+
+msgid "Common path:"
+msgstr "Percorso comune:"
+
+msgid "Save list as new file"
+msgstr "Salva elenco come nuovo file"
+
+msgid "Remove file"
+msgstr "Rimuovi file"
+
+msgid "Add files"
+msgstr "Aggiungi file"
+
+msgid "Text filter dialog"
+msgstr "Finestra filtro testo"
+
+msgid "All matching"
+msgstr "Tutti uguali"
+
+msgid "All not matching"
+msgstr "Nessuno uguale"
+
+msgid "All"
+msgstr "Tutto"
+
+msgid "Filter expressions:"
+msgstr "Espressioni filtro:"
+
+msgid "Evaluate multiple expressions by"
+msgstr "Valuta più espressioni per"
+
+msgid "OR operation"
+msgstr "Operazione OR"
+
+msgid "AND operation"
+msgstr "Operazione AND"
+
+msgid "Edit expressions"
+msgstr "Modifica espressioni"
+
+msgid "Use regular expressions"
+msgstr "Usa espressioni regolari"
+
+msgid "Select FTP subdirectory"
+msgstr "Seleziona sottocartella FTP"
+
+msgid "Subdirectories:"
+msgstr "Sottocartella:"
+
+msgid "Root directory on FTP server"
+msgstr "Cartella radice server FTP"
+
+msgid "Selected subdirectory:"
+msgstr "Seleziona sotto cartella:"
+
+msgid "One directory up"
+msgstr "Cartella superiore"
+
+msgid "FTP proxy server options"
+msgstr "Opzioni server proxy FTP"
+
+msgid "Connection method"
+msgstr "Metodo connessione"
+
+msgid "Send command USER user@hostname"
+msgstr "Invia comando USER user@hostname"
+
+msgid "Send command SITE (with logon)"
+msgstr "Invia comando SITE (con autentificazione)"
+
+msgid "Send command OPEN"
+msgstr "Invia comando OPEN"
+
+msgid "USER user@firewalluser@hostname"
+msgstr "USER user@firewalluser@hostname"
+
+msgid "Transparent"
+msgstr "Trasparente"
+
+msgid "USER hostuserID@hostname firewallUsername"
+msgstr "USER hostuserID@hostname firewallUsername"
+
+msgid "Server name:"
+msgstr "Nome server:"
+
+msgid "Server name"
+msgstr "Nome server"
+
+msgid "User name:"
+msgstr "Nome utente:"
+
+msgid "Port:"
+msgstr "Porta:"
+
+msgid "Port"
+msgstr "Porta"
+
+msgid "Edit text"
+msgstr "Modifica testo"
+
+msgid "Connect to"
+msgstr "Connetti a"
+
+msgid "Logon"
+msgstr "Accesso"
+
+msgid "&Skip"
+msgstr "&Salta"
+
+msgid "Mail settings"
+msgstr "Impostazioni mail"
+
+msgid "Recipients:"
+msgstr "Destinatari:"
+
+msgid "Subject:"
+msgstr "Oggetto:"
+
+msgid "Add recipient"
+msgstr "Aggiungi destinatari"
+
+msgid "Remove recipient"
+msgstr "Elimina destinatari"
+
+msgid "Edit recipient"
+msgstr "Modifica destinatario"
+
+msgid "Sender:"
+msgstr "Mittente:"
+
+msgid "Reply-To:"
+msgstr "Rispondi a:"
+
+msgid "SMTP server:"
+msgstr "Server SMTP:"
+
+msgid "Click button to enter password"
+msgstr "Per inserire la password fai clic sul pulsante"
+
+msgid "Enable mail delivery"
+msgstr "Attiva invio mail"
+
+msgid "Use secure data connection"
+msgstr "Usa connessione sicura"
+
+msgid "If available (explicit)"
+msgstr "Se disponibile (esplicito)"
+
+msgid "None"
+msgstr "Nessuno"
+
+msgid "Require (explicit)"
+msgstr "Richiedi (esplicito)"
+
+msgid "Always (implicit)"
+msgstr "Sempre (implicito)"
+
+msgid "Write communication log to file"
+msgstr "Scrivi registro di comunicazione nel file"
+
+msgid "Enter password:"
+msgstr "Inserisci password:"
+
+msgid "Quality:"
+msgstr "Qualità:"
+
+msgid "AES encryption depth:"
+msgstr "Livello crittografia AES:"
+
+msgid "128 bit"
+msgstr "128 bit"
+
+msgid "256 bit"
+msgstr "256 bit"
+
+msgid "Automatic"
+msgstr "Automatico"
+
+msgid "Paste from clipboard"
+msgstr "Incolla dagli Appunti"
+
+msgid "Skip"
+msgstr "Salta"
+
+msgid "Select files"
+msgstr "Seleziona file"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Size"
+msgstr "Dimensioni"
+
+msgid "Add item"
+msgstr "Aggiungi elemento"
+
+msgid "Select item from list"
+msgstr "Seleziona elemento nell'elenco"
+
+msgid "Edit items"
+msgstr "Modifica elementi"
+
+msgid "Remove selected items"
+msgstr "Rimuovi elementi selezionati"
+
+msgid "Reset to default values"
+msgstr "Ripristina ai valori predefiniti"
+
+msgid "Default"
+msgstr "Predefinito"
+
+msgid "Remove all items"
+msgstr "Rimuovi tutti gli articoli"
+
+msgid "Prompt"
+msgstr "Prompt"
+
+msgid "Select items"
+msgstr "Seleziona elementi"
+
+msgid "Select all"
+msgstr "Seleziona tutto"
+
+msgid "Select none"
+msgstr "Deseleziona tutto"
+
+msgid "Select directory"
+msgstr "Seleziona cartella"
+
+msgid "Network"
+msgstr "Rete"
+
+msgid "Computer"
+msgstr "Computer"
+
+msgid "Desktop"
+msgstr "Desktop"
+
+msgid "Documents"
+msgstr "Documenti"
+
+msgid "Directory:"
+msgstr "Cartella:"
+
+msgid "Go to default folder"
+msgstr "Vai alla cartella predefinita"
+
+msgid "One folder up"
+msgstr "Cartella superiore"
+
+msgid "Create new folder"
+msgstr "Crea nuova cartella"
+
+msgid "Show files"
+msgstr "Visualizza file"
+
+msgid "Directory"
+msgstr "Cartella"
+
+msgid "Create folder"
+msgstr "Crea cartella"
+
+msgid "Delete folder"
+msgstr "Elimina cartella"
+
+msgid "Update"
+msgstr "Aggiorna"
+
+msgid "My Documents"
+msgstr "Documenti"
+
+msgid "Go to last folder displayed"
+msgstr "Vai all'ultima cartella visualizzata"
+
+msgid "Filename:"
+msgstr "Nome file:"
+
+msgid "File type:"
+msgstr "Tipo file:"
+
+msgid "All files (*.*)|*.*"
+msgstr "Tutti file (*.*)|*.*"
+
+msgid "Show text"
+msgstr "Visualizza testo"
+
+msgid "Close"
+msgstr "Chiudi"
+
+msgid "&Delete"
+msgstr "&Elimina"
+
+msgid "&Print"
+msgstr "Stam&pa"
+
+msgid "&Open"
+msgstr "&Apri"
+
+msgid "&Search"
+msgstr "&Cerca"
+
+msgid "Go to previous error"
+msgstr "Vai all'errore precedente"
+
+msgid "Go to previous section"
+msgstr "Vai alla sezione precedente"
+
+msgid "Go to next error"
+msgstr "Vai all'errore successivo"
+
+msgid "Go to next section"
+msgstr "Vai alla sezione successiva"
+
+msgid "Select font"
+msgstr "Seleziona font"
+
+msgid "Select codepage"
+msgstr "Seleziona pagina codice"
+
+msgid "Save as zip"
+msgstr "Salva come zip"
+
+msgid "&Yes"
+msgstr "&Si"
+
+msgid "No"
+msgstr "No"
+
+msgid "&Erase"
+msgstr "&Cancella"
+
+msgid "&Copy"
+msgstr "&Copia"
+
+msgid "Status"
+msgstr "Stato"
+
+msgid "Download file"
+msgstr "Download file"
+
+msgid "Download from URL:"
+msgstr "URL download:"
+
+msgid "Save as:"
+msgstr "Salva come:"
+
+msgid "Minimum length of password is %u characters"
+msgstr "La lunghezza minima della password è di %u caratteri"
+
+msgid "Passwords do not match!"
+msgstr "La password non corrisponde!"
+
+msgid "Application (%s)"
+msgstr "Applicazione (%s)"
+
+msgid "Remove application: \"%s\"?"
+msgstr "Vuoi rimuovere l'applicazione: \"%s\"?"
+
+msgid "Add %s"
+msgstr "Aggiungi %s"
+
+msgid "Replace %s"
+msgstr "Sostituisci %s"
+
+msgid "Item \"%s\" already exists!"
+msgstr "L'elemento \"%s\" esiste già!"
+
+msgid "File filter dialog"
+msgstr "Finestra file filtro"
+
+msgid "Description"
+msgstr "Descrizione"
+
+msgid "Filter"
+msgstr "Filtro"
+
+msgid ""
+"Invalid filter mask!\n"
+"Should resemble %s or %s"
+msgstr ""
+"Maschera filtro non valida!\n"
+"Dovrebbe assomigliare a %s oppure %s"
+
+msgid "FTP connection"
+msgstr "Connessione FTP"
+
+msgid "Searching for directories"
+msgstr "Cerca per cartella"
+
+msgid ""
+"Connection to FTP server: %s:%u\n"
+"for user: %s\n"
+"requires a password!"
+msgstr ""
+"La connessione al server FTP: %s:%u\n"
+"per l'utente: %s\n"
+"richiede la password!"
+
+msgid "Trying to connect to FTP server"
+msgstr "Tentativo di connessione al server FTP"
+
+msgid "Connection to FTP server failed"
+msgstr "Connessione al server FTP fallita"
+
+msgid "Invalid port number (%s)"
+msgstr "Numero porta non valido (%s)"
+
+msgid "Please specify an SMTP server!"
+msgstr "Specifica un server SMTP!"
+
+msgid "Please specify at least one recipient!"
+msgstr "Specifica almeno un destinatario!"
+
+msgid "New mail recipient"
+msgstr "Nuova destinatario email"
+
+msgid "Address:"
+msgstr "Indirizzo:"
+
+msgid ""
+"Remove recipient:\n"
+"%s\n"
+"from list?"
+msgstr ""
+"Vuoi rimuovere il destinatario:\n"
+"%s\n"
+"dall'elenco?"
+
+msgid "Edit mail recipient"
+msgstr "Modifica destinatario mail"
+
+msgid "Invalid entry: \"%s\""
+msgstr "Voce non valida: \"%s\""
+
+msgid "Clear whole list"
+msgstr "Cancella intero elenco"
+
+msgid "Remove all selected items?"
+msgstr "Vuoi rimuovere gli elementi selezionati?"
+
+msgid "Remove item: \"%s\"?"
+msgstr "Vuoi rimuovere l'elemento: \"%s\"?"
+
+msgid "Default: "
+msgstr "Predefinita: "
+
+msgid ""
+"Directory not found:\n"
+"%s!"
+msgstr ""
+"Cartella non trovata:\n"
+"%s!"
+
+msgid "New subdirectory:"
+msgstr "Nuova sotto cartella:"
+
+msgid ""
+"Could not create directory:\n"
+"%s!"
+msgstr ""
+"Impossibile creare la cartella:\n"
+"%s!"
+
+msgid "Delete directory"
+msgstr "Elimina cartella"
+
+msgid "Delete \"%s\""
+msgstr "Elimina \"%s\""
+
+msgid "Definitely"
+msgstr "Definitivamente"
+
+msgid "To recycle bin"
+msgstr "Nel Cestino"
+
+msgid "%u directories with %u files deleted!"
+msgstr "Eliminate %u cartelle con %u file!"
+
+msgid "%s moved to Recycle Bin!"
+msgstr "%s spostato nel Cestino!"
+
+msgid ""
+"Error deleting directory:\n"
+"%s!"
+msgstr ""
+"Errore nell'eliminazione della cartella:\n"
+"%s!"
+
+msgid " free of "
+msgstr " liberi su "
+
+msgid "Directory is not empty, delete anyway?"
+msgstr "Cartella non vuota, cancellare ugualmente?"
+
+msgid " Line: %u of %u"
+msgstr " Linea: %u di %u"
+
+msgid "Error loading file: \"%s\""
+msgstr "Errore caricamento file: \"%s\""
+
+msgid "Delete selected text?"
+msgstr "Vuoi eliminare il testo selezionato?"
+
+msgid "Page: %u"
+msgstr "Pagina: %u"
+
+msgid "File: "
+msgstr "File: "
+
+msgid "Print selected lines?"
+msgstr "Vuoi stampare le linee selezionate?"
+
+msgid "Save text file as zip archive"
+msgstr "Salvare un file di testo come archivio zip"
+
+msgid "Zip archives"
+msgstr "Archivi zip"
+
+msgid "Delete file \"%s\"?"
+msgstr "Vuoi eliminare il file \"%s\"?"
+
+msgid "\"%s\" not found!"
+msgstr "\"%s\" non trovato!"
+
+msgid "No further sections!"
+msgstr "Non ci sono ulteriori sezioni!"
+
+msgid "Invalid code page - Windows default is used!"
+msgstr ""
+"Pagina codice non valida: verrà usato il valore predefinito di "
+"Windows!"
+
+msgid "No further errors!"
+msgstr "Non ci sono ulteriori errori!"
+
+msgid "Page: "
+msgstr "Pagina: "
+
+#: ShowText.pas:409 ShowText.pas:473
+msgid "File: \"%s\" not found!"
+msgstr "File: \"%s\" non trovato!"
+
+msgid "Invalid input"
+msgstr "Input non valido"
+
+msgid "%s verification failed!"
+msgstr "Verifica %s non riuscita!"
+
+msgid "%s hash file not found!"
+msgstr "Nessun file hash %s trovato!"

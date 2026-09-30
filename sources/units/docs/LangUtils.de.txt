@@ -1,0 +1,132 @@
+Hilfsroutinen für mehrsprachige Anwendungen mit GnuGetText
+========================================================== 
+
+  1. Initialisirierung der Übersetzung mit GnuGetText
+  2. Auswahl der Sprache über ein automatisch erzeugtes Menü
+  3. Änderung der Sprache im laufenden Programm
+
+
+Hinweise zur Verwendung von LangUtils:
+======================================
+  
+  1. in der Projekt-Datei (*.dpr):
+     -----------------------------
+    ...
+    uses
+      GnuGetText in '<relative path>\Units\GnuGetText.pas',
+      LangUtils in '<relative path>Bibliotheken\Units\LangUtils.pas',
+      ...
+    begin
+      TP_GlobalIgnoreClass(TFont);
+      TP_GlobalIgnoreClassProperty(TMdiForm,'Caption');
+      // ... mögliche weitere "ignores"
+      // Subdirectory in AppData for user configuration files and supported languages
+      InitTranslation('CfgDir','CfgName',['Delphi10','more domains..']);
+      ...
+
+    dabei sind:  CfgDir  - Unterverzeichnis für die Konfigurations-Dateien (ini,cfg)
+                           in "Anwendungsdaten" oder absolutes Verzeichnis
+                 CfgName - Name der Cfg-Datei zum Speichern der Spracheinstellung
+                           (leer: Name der Anwendung)
+  2. im Haupt-Formular:
+     ------------------
+    interface
+    uses ..., LangUtils, ...
+    ...
+    type
+      TMainForm = class(TForm)
+        ...
+      private
+        ...
+        Languages        : TLanguageList;
+        procedure SetLanguageClick(Sender : TObject; const Language : TLangCodeString);
+        ...
+      end;
+      ...
+    implementation
+    ...
+    procedure TMainForm.FormCreate(Sender: TObject);
+    begin
+      ...
+      InitPaths (AppPath,UserPath);
+      InitVersion(Progname,Vers,CopRgt,3,3,ProgVersName,ProgVersDate);
+      ...
+      Languages:=TLanguageList.Create(PrgPath,LangName);
+      with Languages do begin
+        Menu:=itmLang;
+        LoadLanguageNames(SelectedLanguage);  // siehe auch 3.
+        OnLanguageItemClick:=SetLanguageClick;
+        end;
+      ...
+
+    { ------------------------------------------------------------------- }
+    procedure TMainForm.SetLanguageClick(Sender : TObject; const Language : TLangCodeString);
+    begin
+      if not AnsiSameStr(SelectedLanguage,Language) then begin
+        Languages.LoadLanguageNames(ChangeLanguage(Language));
+        ...
+        end;
+      end;
+    ...
+
+    dabei sind: TLangCodeString - Länder-Code (2 Buchstaben)
+                itmLang         - Menü-Item im Haupt- oder Popupmenü
+                                  Die Sprachauswahlliste wird automatisch als
+                                  Untermenü angehängt
+
+  3. Erforderliche Dateien
+     ---------------------
+  3.1 Liste der zu verwendenden Sprachen in Englisch
+      ----------------------------------------------
+      Im Verzeichnis der exe-Datei:
+      Datei:  language.cfg 
+      Inhalt: # Language codes
+              #bg=Bulgarian
+              #cs=Czech
+              #da=Danish
+              de=German
+              #el=Greek
+              en=English
+              #es=Spanish
+              it=Italian
+              ...
+      Es werden nur die zu unterstützenden Sprachen (ohne führendes #) installiert.
+      
+  3.2 Listen mit den benötigten Übersetzungen
+      ---------------------------------------
+      Jeweils in den Unterverzeichnissen "locale\xx\LC_MESSAGES\" des Verz. der 
+      exe-Datei:
+      Datei:  language.cfg 
+      Inhalt: # International language codes - German
+              bg=Bulgarisch
+              cs=Tschechisch
+              da=Dänisch
+              de=Deutsch
+              el=Griechisch
+              en=Englisch
+              es=Spanisch
+              it=Italienisch
+              ...
+      Für andere unterstützte Sprachen müssen entsprechende Dateien bereit 
+      gestellt werden. Die Liste kann beliebige Sprachennamen, auch z.Zt. noch
+      unterstützte, enthalten. Wichig ist die jeweilige Übereinstimmung des 
+      Sprachcodes (z.B. "de") mit der englischen Basisliste (3.1). 
+
+  4. Integration als Ressourcen
+     --------------------------
+  4.1 Liste der zu verwendenden Sprachen in Englisch
+      ----------------------------------------------
+      Diese ist, wie unter 3.1. beschrieben, bereit zu stellen.
+
+  4.2 Übersetzungen
+      -------------
+      Die Übersetzungen der Sprachbezeichnungen müssen als mo-Dateien vorliegen. 
+      Das Einbinden als Ressourcen erfolgt mit der Datei "languages.rc":
+      
+      IDR_LANGUAGES RCDATA "languages\\language.cfg"
+      IDR_TRANS_DE_LANGUAGES RCDATA "languages\\de\\languages.mo"
+      IDR_TRANS_IT_LANGUAGES RCDATA "languages\\it\\languages.mo"
+      ...      
+
+J. Rathlev, September 2026
+ 

@@ -230,7 +230,7 @@ begin
     else InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file');
-    Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
+    Filter:=Format(_('po files')+'|*.%s',[PoExt])+'|'+_('All files')+'|*.*';
     if Execute then begin
       PoFile:=FileName;
       AddToHistory(edPoFile,PoFile);
@@ -246,12 +246,18 @@ var
 begin
   Result:=false;
   if FileExists(PoFile) then begin
-    ne:=PoList.LoadFromFile(PoFile);
-    if ne>0 then
-      ErrorDialog(Format(_('Error in line %u of po file!'),[ne]))
-    else begin
-      s:=ExtractLastDir(ExtractFilePath(PoFile));
-      with edLang do if length(s)>0 then Text:=s else Text:='temp';
+    try
+      ne:=PoList.LoadFromFile(PoFile);
+      if ne>0 then
+        ErrorDialog(Format(_('Error in line %u of po file!'),[ne]))
+      else begin
+        s:=ExtractLastDir(ExtractFilePath(PoFile));
+        with edLang do if length(s)>0 then Text:=s else Text:='temp';
+        end;
+    except
+      on E:Exception do
+        ErrorDialog(_('Error reading po file:')+sLineBreak
+                  +'"'+PoFile+'"'+sLineBreak+E.Message);
       end;
     end
   else InfoDialog(Format(_('File not found: %s'),[PoFile]));

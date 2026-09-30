@@ -21,8 +21,8 @@
 [Setup]
 PrivilegesRequired=admin
 AppName={#ProgramName}
-AppVerName={#GgtName}
-AppVersion={#GgtName} {#ApplicationVersion}
+AppVerName={#GgtName} {#ApplicationVersion}
+AppVersion={#ApplicationVersion}
 AppPublisher={#ProgramAuthor}
 AppPublisherURL={#ProgramWebURL}
 AppSupportURL={#ProgramWebURL}
@@ -35,20 +35,23 @@ DefaultGroupName={#GgtName}
 AllowNoIcons=yes
 OutputDir=.
 OutputBaseFilename={#OutputFile}
-SetupIconFile=Translate.ico
 UninstallDisplayIcon={app}\Translate-u.ico
-WizardImageFile=install-left.bmp
-WizardSmallImageFile=..\..\Common\Install-small.bmp
+UninstallDisplayName={#GgtName}
+WizardImageFile=Wizard-Ggt-1.png,Wizard-Ggt-2.png
+WizardSmallImageFile=..\..\Common\Wizard-small-1.png,..\..\Common\Wizard-small-2.png
 WizardStyle=modern dynamic 
 Compression=lzma2
 SolidCompression=yes
 DisableWelcomePage=no
 DisableDirPage=auto
 DisableProgramGroupPage=auto
+UsePreviousLanguage=no
+LanguageDetectionMethod=uilanguage
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile:"..\..\Common\license-en.rtf"; InfoBeforeFile:"..\docs\translate.rtf";
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"; LicenseFile:"..\..\Common\license-de.rtf"; InfoBeforeFile:"..\docs\translate.rtf";
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"; LicenseFile:"..\..\Common\license-it.rtf"; InfoBeforeFile:"..\docs\translate.rtf";
 
 [CustomMessages]
 en.FileAssoc=File associations:
@@ -72,7 +75,7 @@ de.FileAssoc=Dateizuordnungen:
 de.DescContext=Füge "Delphi GetText"-Funktionen zu den Kontext-Menüs hinzu
 de.ButtonDesign=Design der Schaltflächen f+r alle Benutzer:
 de.SimpleButtons=Einfache Icons verwenden
-de.PoTools=Po-Werkzeuge
+de.PoTools=&Po-Werkzeuge
 de.CompileContext=in MO-Datei &übersetzen ..
 de.MergeContext=mit Schablone &zusammenführen ..
 de.DecompContext=in PO-Datei &zurückführen ..
@@ -84,6 +87,23 @@ de.PoCompContext=&Vergleichen ..
 de.ImportContext=&Importieren ..
 de.ConvertMessages=CustomMessages nach Pascal &konvertieren
 de.IssContext=Für &InnoSetup-Skript konvertieren
+
+it.FileAssoc=Associazione file:
+it.DescContext=Aggiungi funzione "Delphi GetText" al menu contestuale
+it.ButtonDesign=Selezione design pulsanti per tutti gli utenti:
+it.SimpleButtons=Usa icone semplici
+it.PoTools=Strumenti &po
+it.CompileContext=&Compila come file .mo ..
+it.MergeContext=&Unisci con modello ..
+it.DecompContext=&Decompila in file .po ..
+it.EmbedContext=&Traduzioni integrate ..
+it.TemplateContext=&Crea modello traduzione ..
+it.ShowStatContext=Visualizza &statistiche ..
+it.SpellCheckContext=Controllo orto&grafico ..
+it.PoCompContext=&Confronta ..
+it.ImportContext=&Importa ..
+it.ConvertMessages=&Converti CustomMessages in Pascal ..
+it.IssContext=Converti per script &Inno Setup
 
 [Tasks]
 Name: "fileassoc"; Description: "{cm:DescContext}"; GroupDescription: "{cm:FileAssoc}"; 
@@ -195,6 +215,7 @@ Source: "GnuGetText\GnuGetTextInit.*"; DestDir: "{app}\GnuGetText"; Flags: ignor
 Source: "GnuGetText\GgtDummy.*"; DestDir: "{app}\GnuGetText"; Flags: ignoreversion
 Source: "GnuGetText\CompCpp.bat"; DestDir: "{app}\GnuGetText"; Flags: ignoreversion
 Source: "GnuGetText\IgnoreObjects.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "LazGetText\LazGetText.*"; DestDir: "{app}\LazGetText"; Flags: ignoreversion
 Source: "Dict\de_DE_frami.*"; DestDir: "{app}\Dict"; Flags: ignoreversion
 Source: "..\docs\commandline.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\docs\translate.rtf"; DestDir: "{app}"; Flags: ignoreversion

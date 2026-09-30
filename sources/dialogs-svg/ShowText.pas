@@ -212,7 +212,7 @@ var
   y : integer;
 begin
   y:=Memo.CaretPos.y;
-  StatusBar.SimpleText:=Format(dgettext('dialogs',' Line: %u of %u'),[y+1,Memo.Lines.Count]);
+  StatusBar.SimpleText:=Format(dgettext('dialogs-svg',' Line: %u of %u'),[y+1,Memo.Lines.Count]);
   end;
 
 procedure TShowtextDialog.FormShow(Sender: TObject);
@@ -231,7 +231,7 @@ begin
     SelStart:=Perform(EM_LINEINDEX,LineNr,0);
     Perform(EM_SCROLLCARET,0,0);
     SelLength:=0;
-    StatusBar.SimpleText:=Format(dgettext('dialogs',' Line: %u of %u'),[LineNr+1,Memo.Lines.Count]);
+    StatusBar.SimpleText:=Format(dgettext('dialogs-svg',' Line: %u of %u'),[LineNr+1,Memo.Lines.Count]);
     end;
   end;
 
@@ -287,7 +287,7 @@ var
         end;
       if y=obererRand then begin   // Kopfzeile erzeugen
         font.style := [fsbold];
-        txt:=dgettext('dialogs','Page: ')+IntToStr(pagenumber);
+        txt:=dgettext('dialogs-svg','Page: ')+IntToStr(pagenumber);
         textout(linkerRand,y,StripPath(Caption,72));
         textout(hp-TextWidth(txt),y,txt);
         inc(y,texthoehe+3);
@@ -300,7 +300,7 @@ var
 
 begin
   if not Printer.Printing then begin
-    if Memo.SelLength>0 then sel:=ConfirmDialog(dgettext('dialogs','Print selected lines?'))
+    if Memo.SelLength>0 then sel:=ConfirmDialog(dgettext('dialogs-svg','Print selected lines?'))
     else sel:=false;
     if PrintDialog.Execute then begin
       Screen.Cursor:=crHourglass;
@@ -369,7 +369,7 @@ begin
 { ------------------------------------------------------------------- }
 procedure TShowtextDialog.DeleteBtnClick(Sender: TObject);
 begin
-  if ConfirmDialog (Point(Left+200,Top+100),Format(dgettext('dialogs','Delete file "%s"?'),[FName])) then begin
+  if ConfirmDialog (Point(Left+200,Top+100),Format(dgettext('dialogs-svg','Delete file "%s"?'),[FName])) then begin
     DeleteFile(Caption);
     Memo.Clear;
     end;
@@ -385,7 +385,7 @@ procedure TShowtextDialog.FindDialogFind(Sender: TObject);
 begin
   with FindDialog do
     if not SearchMemo(Memo,false,FindText,Options) then
-      ErrorDialog(Format(dgettext('dialogs','"%s" not found!'),[FindText]))
+      ErrorDialog(Format(dgettext('dialogs-svg','"%s" not found!'),[FindText]))
     else MemoChange(Sender);
   end;
 
@@ -406,7 +406,7 @@ begin
     Perform(EM_SCROLLCARET,0,0);
     SetFocus;
     end
-  else ErrorDialog (Format(dgettext('dialogs','File: "%s" not found!'),[FName]));
+  else ErrorDialog (Format(dgettext('dialogs-svg','File: "%s" not found!'),[FName]));
   end;
 
 procedure TShowtextDialog.CopyBtnClick(Sender: TObject);
@@ -449,8 +449,8 @@ begin
       ReadOnly:=not DeleteBtn.Visible;
       end;
     CopyBtn.Left:=x;
-//    with EndeBtn do if DlgType=stShow then Caption:=dgettext('dialogs',' &Back')
-//    else Caption:=dgettext('dialogs',' &Close');
+//    with EndeBtn do if DlgType=stShow then Caption:=dgettext('dialogs-svg',' &Back')
+//    else Caption:=dgettext('dialogs-svg',' &Close');
     if DlgType=stShowModal then ShowModal else Show;
     end;
   end;
@@ -470,7 +470,7 @@ begin
     Execute(APos,TextFile,TextFile,sl,Line,DlgType,Buttons);
     sl.Free;
     end
-  else ErrorDialog (Format(dgettext('dialogs','File: "%s" not found!'),[TextFile]));
+  else ErrorDialog (Format(dgettext('dialogs-svg','File: "%s" not found!'),[TextFile]));
   end;
 
 procedure ShowTextFile (APos            : TPoint;

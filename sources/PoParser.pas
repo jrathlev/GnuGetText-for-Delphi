@@ -19,7 +19,8 @@
 // Added: TPoHeader - new record containing the po file header infos
 //        Optional saving of file entries in original order
 //        Find algorithm using SoundEx to find similar translations
-// last modified: October 2024
+//        Supports "msgctxt" field
+// last modified: September 2026
 
 unit PoParser;
 
@@ -68,6 +69,7 @@ type
       IdEntry,IdLine  : integer;       // original number of entry, linenumber JR
       MsgId  : string;                 // singular and plural are separated by #0, if plural form is present
       MsgStr : string;                 // plural forms are separated by #0, if present
+      MsgCTxt : string;                // context string (optional)
       Merged,                          // Entry was merged
       Fuzzy  : boolean;                // If true, msgstr is not the translation, but just a proposal for a translation
       constructor Create;
@@ -82,9 +84,11 @@ type
       list : TStringList;    // Strings are searchkeys, objects are TList of TPoEntries
       SoundList,             // list SopundEx expressions
       CiList : TStringList;  // case insensitive list
+      fDupl,
       FSimMeasure : integer;
       FHeader : TPoHeader;
       FLoaded,
+      fIgnore,
       HdChanged : boolean;  // header was changed
       function GetSearchKey (const MsgId : string) : string;
       function GetCount : integer;   // JR
@@ -103,13 +107,15 @@ type
       function FindNoCaseEntry (const MsgId : string) : TPoEntry;
       function FindSoundEntry (const MsgId : string) : TPoEntry;
 //      function DeleteEntry (MsgId : string) : boolean;  // True if found and deleted, false if not found
-      procedure AddEntry (entry : TPoEntry); // Will fail if MsgId exists. Entry is copied.
+      function AddEntry (entry : TPoEntry) : boolean;
       procedure UpdateHeader (pe : TPoEntry);
 
       // Iterate through all items. When nil is returned, no more elements are there.
       function FindFirst : TPoEntry;
       function FindNext (po : TPoEntry) : TPoEntry;
       property Loaded : boolean read FLoaded;
+      property Duplicates : integer read fDupl;
+      property IgnoreDuplicates : boolean write fIgnore;
       property TotalEntries : integer read GetCount;  // JR
       property SimMeasure : integer read FSimMeasure write FSimMeasure;
       property Header[Index : TPoHeaderIds] : string read GetHeader write SetHeader;
@@ -373,6 +379,11 @@ begin
       if copy(line,1,1)='#' then
         entry.AutoCommentList.Add(line)
       else begin
+        if uppercase(copy(line,1,7))='MSGCTXT' then begin
+          delete (line,1,7);
+          line:=trim(line);
+          entry.MsgCTxt:=line;
+        end;
         if uppercase(copy(line,1,12))='MSGID_PLURAL' then begin
           IsMsgId:=True;
           delete (line,1,12);
@@ -474,6 +485,7 @@ begin
   IdLine:=po.IdLine;
   MsgId:=po.MsgId;
   MsgStr:=po.MsgStr;
+  MsgCTxt:=po.MsgCTxt;
   Fuzzy:=po.Fuzzy;
   Merged:=po.Merged;
   end;
@@ -485,6 +497,7 @@ begin
   HistCommentList.Clear;
   MsgId:='';
   MsgStr:='';
+  MsgCTxt:='';
   IdEntry:=-1;
   IdLine:=0;
   Fuzzy:=False;
@@ -574,6 +587,7 @@ begin
     // Write msgid and msgstr
     p:=pos(#0,MsgId);
     isplural:=p<>0;
+    if length(MsgCTxt)>0 then WritePart ('msgctxt',MsgCTxt);
     if not isplural then
       WritePart ('msgid',MsgId)
     else begin
@@ -623,6 +637,7 @@ begin
     Sorted:=true;
     end;
   HdChanged:=false; FLoaded:=false; FSimMeasure:=defSimMeasure;
+  fDupl:=0; fIgnore:=false;
   end;
 
 procedure TPoEntryList.Clear;
@@ -635,7 +650,7 @@ begin
     for j:=0 to l.count-1 do TObject(l.Items[j]).Free;
     l.Free;
     end;
-  list.Clear; CiList.Clear;
+  list.Clear; CiList.Clear; fDupl:=0;
   end;
 
 destructor TPoEntryList.Destroy;
@@ -669,7 +684,7 @@ begin
   FHeader.GetFromString(hs);
   end;
 
-procedure TPoEntryList.AddEntry (entry: TPoEntry);
+function TPoEntryList.AddEntry (entry: TPoEntry) : boolean;
 var
   p:Integer;
   l : TList;
@@ -677,6 +692,7 @@ var
   po : TPoEntry;
   searchkey : string;
 begin
+  Result:=true;
   with entry do if IdEntry<0 then IdEntry:=TotalEntries+1;
   searchkey:=GetSearchKey(entry.MsgId);
   if searchkey.IsEmpty then BuildHeader(entry.MsgStr);
@@ -684,8 +700,10 @@ begin
     l:=list.Objects[idx] as TList;
     for p:=0 to l.count-1 do begin
       po:=TObject(l.Items[p]) as TPoEntry;
-      if po.MsgId=entry.MsgId then
-        raise Exception.Create (Format(_('This list of translations cannot handle MsgId duplicates. Please remove the duplicate of "%s".'),[po.MsgId]));
+      if po.MsgId=entry.MsgId then begin
+        Result:=false; Exit; // duplicate
+        end;
+//        raise Exception.Create (Format(_('This list of translations cannot handle MsgId duplicates. Please remove the duplicate of "%s".'),[po.MsgId]));
       end;
     end
   else begin
@@ -873,7 +891,11 @@ begin
           end;
         if pe=nil then break;
         pe.IdEntry:=ne;
-        AddEntry (pe);
+        if not AddEntry (pe) then begin
+          if fIgnore then inc(fDupl)
+          else raise Exception.Create (Format(_('This list of translations cannot handle MsgId duplicates.'
+                                              +sLineBreak+'Please remove the duplicate of "%s".'),[pe.MsgId]));
+          end;
         inc(ne);
         end;
     finally

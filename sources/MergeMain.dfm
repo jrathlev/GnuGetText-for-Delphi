@@ -197,7 +197,6 @@ object frmMerge: TfrmMerge
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 10
-    ExplicitTop = 320
     DesignSize = (
       456
       41)

@@ -84,6 +84,7 @@ type
     bbUndo: TJrButton;
     bbCopyAndNext: TJrButton;
     bbHeader: TJrButton;
+    bbExchange: TJrButton;
     procedure FormCreate(Sender: TObject);
     procedure bbExitClick(Sender: TObject);
     procedure bbInfoClick(Sender: TObject);
@@ -122,6 +123,7 @@ type
       Height: Integer);
     procedure pmiDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect;
       Selected: Boolean);
+    procedure bbExchangeClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ProgVersName,
@@ -378,6 +380,23 @@ begin
   LoadFiles(true);
   end;
 
+procedure TfrmMain.bbExchangeClick(Sender: TObject);
+var
+  s : string;
+begin
+  SaveChangedFile;
+  s:=EditFile; EditFile:=CompFile; CompFile:=s;
+  with cbEdit do begin
+    if Items.IndexOf(EditFile)>=0 then AddToHistory(cbEdit,EditFile)
+    else begin
+      Items.InsertObject(0,EditFile,TText.Create(''));
+      ItemIndex:=0;
+      end;
+    end;
+  cbComp.Text:=CompFile;
+  LoadFiles(false);
+  end;
+
 procedure TfrmMain.bbExitClick(Sender: TObject);
 begin
   Close;
@@ -411,7 +430,7 @@ begin
     if not DirectoryExists(InitialDir) then InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file used for comparison with '+EditFile);
-    Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
+    Filter:=Format(_('po files')+'|*.%s',[PoExt])+'|'+_('All files')+'|*.*';
     if Execute then begin
       CompFile:=Filename;
       Text:=Filename; AddToHistory(cbComp,Filename);
@@ -424,7 +443,7 @@ begin
 
 procedure TfrmMain.bbEditFileClick(Sender: TObject);
 begin
-  if Changed and ConfirmDialog(BottomLeftPos(cbEdit,0,10),_('Save changed po file?')) then bbSaveClick(Sender);
+  SaveChangedFile;
   EditFile:=cbEdit.Text;
   if SelectEdit then LoadFiles(true);
   end;
@@ -436,7 +455,7 @@ begin
     else InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file to be edited');
-    Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
+    Filter:=Format(_('po files')+'|*.%s',[PoExt])+'|'+_('All files')+'|*.*';
     if Execute then with cbEdit do begin
       EditFile:=FileName;
       if Items.IndexOf(EditFile)>=0 then AddToHistory(cbEdit,EditFile)
@@ -748,9 +767,17 @@ begin
 procedure TfrmMain.SaveFile;
 var
   sn,s   : string;
+  pe     : TPoEntry;
 begin
   sn:=EditFile+'.tmp';
-  RefList.SaveToFile(sn,true);
+  with RefList do begin
+    pe:=FindEntry('');
+    if pe<>nil then begin
+      Header[hiRevisionDate]:=CurrentTimestamp;
+      UpdateHeader(pe);
+      end;
+    SaveToFile(sn,true);
+    end;
   s:=EditFile+'.bak';
   if FileExists(s) then DeleteFile(s);
   RenameFile(EditFile,s);

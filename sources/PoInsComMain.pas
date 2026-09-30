@@ -192,7 +192,7 @@ begin
     else InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file for comments');
-    Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
+    Filter:=Format(_('po files')+'|*.%s',[PoExt])+'|'+_('All files')+'|*.*';
     if Execute then begin
       RefFile:=FileName;
       AddToHistory(edRef,Filename);
@@ -209,7 +209,7 @@ begin
     else InitialDir:=UserPath;
     Filename:='';
     Title:=_('Select po file to be edited');
-    Filter:=Format(_('po files|*.%s|all|*.*'),[PoExt]);
+    Filter:=Format(_('po files')+'|*.%s',[PoExt])+'|'+_('All files')+'|*.*';
     if Execute then begin
       EdFile:=Filename;
       AddToHistory(edEdit,Filename);
@@ -236,9 +236,15 @@ begin
   IdList.Clear;
   Result:=false;
   if FileExists(RefFile) then begin
-    ne:=RefList.LoadFromFile(RefFile);
-    if ne>0 then
-      ErrorDialog(Format(_('Error in line %u of file "%s"'),[ne,RefFile]));
+    try
+      ne:=RefList.LoadFromFile(RefFile);
+      if ne>0 then
+        ErrorDialog(Format(_('Error in line %u of file "%s"'),[ne,RefFile]));
+    except
+      on E:Exception do
+        ErrorDialog(_('Error reading po file:')+sLineBreak
+                  +'"'+RefFile+'"'+sLineBreak+E.Message);
+      end;
     end
   else InfoDialog(Format(_('File not found: %s'),[RefFile]));
   laStatus.Caption:='';
@@ -262,8 +268,7 @@ procedure TfrmMain.bbSaveClick(Sender: TObject);
 var
   pr,pe  : TPoEntry;
   sn,s   : string;
-  ok     : boolean;
-  i,n    : integer;
+  n      : integer;
 
   function Convert (msg : string) : string;
   var
@@ -281,7 +286,7 @@ var
 
 begin
   with EdList do begin
-    pe:=FindFirst;
+    pe:=FindFirst; n:=0;
     while pe<>nil do begin
       s:=pe.MsgId;
       if length(s)>0 then begin

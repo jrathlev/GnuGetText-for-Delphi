@@ -276,7 +276,7 @@ begin
 procedure TShellFileDialog.spbHomeClick(Sender: TObject);
 begin
   if not DirectoryExists(FDefaultDir) then begin
-    ErrorDialog('',Format(dgettext('dialogs','Directory not found:'+sLineBreak+'%s!'),[FDefaultDir]));
+    ErrorDialog('',Format(dgettext('dialogs-svg','Directory not found:'+sLineBreak+'%s!'),[FDefaultDir]));
     DeleteHistory(FDefaultDir);
     end
   else with ShellComboBox do begin
@@ -347,10 +347,10 @@ var
   s : string;
 begin
   s:='';
-  if InputQuery (ShellComboBox.Path,dgettext('dialogs','New subdirectory:'),s) then begin
+  if InputQuery (ShellComboBox.Path,dgettext('dialogs-svg','New subdirectory:'),s) then begin
     s:=IncludeTrailingPathDelimiter(ShellComboBox.Path)+s;
     if not ForceDirectories(s) then
-      ErrorDialog('',Format(dgettext('dialogs','Could not create directory:'+sLineBreak+'%s!'),[s]))
+      ErrorDialog('',Format(dgettext('dialogs-svg','Could not create directory:'+sLineBreak+'%s!'),[s]))
     else ShellListView.Refresh;
     end;
   end;
@@ -361,10 +361,10 @@ var
 begin
   s:=ShellComboBox.Path;
   if (DirFiles(s,true)>0) and
-    not ConfirmDialog('',dgettext('dialogs','Directory is not empty, delete anyway?')) then Exit;
+    not ConfirmDialog('',dgettext('dialogs-svg','Directory is not empty, delete anyway?')) then Exit;
   spbUpClick(Sender);
   if not DeleteDirectory(s,true) then
-    ErrorDialog('',Format(dgettext('dialogs','Error deleting directory:'+sLineBreak+'%s!'),[s]));
+    ErrorDialog('',Format(dgettext('dialogs-svg','Error deleting directory:'+sLineBreak+'%s!'),[s]));
   end;
 
 procedure TShellFileDialog.cbFilterChange(Sender: TObject);

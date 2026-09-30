@@ -97,7 +97,7 @@ var
 begin
   with lbxStringList do begin
     s:='';
-    if InputText(BottomRightPos(btnEdit),dgettext('dialogs','Add item'),lbDesc.Caption,false,'',nil,false,s) then begin
+    if InputText(BottomRightPos(btnEdit),dgettext('dialogs-svg','Add item'),lbDesc.Caption,false,'',nil,false,s) then begin
       Items.Add(s);
       end;
     end;
@@ -121,7 +121,7 @@ var
 begin
   with lbxStringList do if ItemIndex>=0 then begin
     s:=Items[ItemIndex];
-    if InputText(BottomRightPos(btnEdit),dgettext('dialogs','Edit item'),lbDesc.Caption,false,'',nil,false,s) then begin
+    if InputText(BottomRightPos(btnEdit),dgettext('dialogs-svg','Edit item'),lbDesc.Caption,false,'',nil,false,s) then begin
       Items[ItemIndex]:=s
       end;
     end;

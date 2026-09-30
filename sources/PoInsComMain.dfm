@@ -151,8 +151,8 @@ object frmMain: TfrmMain
     OnClick = btnHelpClick
   end
   object OpenDialog: TOpenDialog
-    Left = 10
-    Top = 110
+    Left = 180
+    Top = 60
   end
   object imlGlyphs: TSVGIconImageList
     Size = 24
