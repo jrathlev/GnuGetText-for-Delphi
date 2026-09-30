@@ -43,7 +43,7 @@ _new feature:_ optional embedding as resources
 - **ImageLoader:** Loading an alternative set of SVG icons when the program starts 
 - **StyleUtils:** Support for loading and changing the display style (e.g. *light* or *dark*)
 
-[Download of Windows executable package](https://www.rathlev-home.de/tools/download/ggt-translate-setup.exe)
+[Download of Windows executable package](https://www.rathlev-home.de/tools/download/ggt-translate-setup-4.exe)
 
 [English homepage](https://www.rathlev-home.de/index-e.html?tools/prog-e.html#gettext) / 
 [German homepage](https://www.rathlev-home.de/tools/progtools.html#language)
