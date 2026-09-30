@@ -1,0 +1,1307 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: GnuGetText Translate 4.0\n"
+"POT-Creation-Date: 2026-09-29 11:38+0200\n"
+"PO-Revision-Date: 2026-09-29 11:39+0200\n"
+"Last-Translator: J. Rathlev <kontakt@rathlev-home.de>\n"
+"Language-Team: \n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+
+msgid "Embed translations in executable"
+msgstr "Incorpora traduzioni nell'eseguibile"
+
+msgid "The following translations will be embedded into the executable file:"
+msgstr "Le seguenti traduzioni verranno incorporate nel file eseguibile:"
+
+msgid "Executable file:"
+msgstr "File eseguibile:"
+
+msgid "Close"
+msgstr "Chiudi"
+
+msgid "Start"
+msgstr "Avvia"
+
+msgid "Show program help"
+msgstr "Visualizza guida in linea del programma"
+
+msgid "Show DxGetText manual"
+msgstr "Visualizza manuale DxGetText"
+
+msgid "exe files|*.exe"
+msgstr "file exe|*.exe"
+
+msgid "Configuration for template creation"
+msgstr "Configurazione per la creazione del modello"
+
+msgid "Here you can specify which files you want to scan."
+msgstr "Qui puoi specificare quali file vuoi scansionare."
+
+msgid "File masks:"
+msgstr "Maschere file:"
+
+msgid "Also search subdirectories"
+msgstr "Cerca anche nelle sottocartelle"
+
+msgid "Basic directory:"
+msgstr "Cartella base:"
+
+msgid "Save settings as ini file in this basic directory"
+msgstr "Salva impostazioni come file ini in questa cartella di base"
+
+msgid "Remember settings"
+msgstr "Ricorda impostazioni"
+
+msgid ""
+"Create a new ignore.po file or add likely ignores to existing ignore.po file "
+"(default domain)"
+msgstr ""
+"Crea un nuovo file ignore.po o aggiungi probabili ignoramenti al file "
+"ignore.po esistente (dominio predefinito)"
+
+msgid "Add likely ignores to ignore.po file"
+msgstr "Aggiungi probabilmente ignora al file ignore.po"
+
+msgid "Don't store items to the template that are present in ignore.po"
+msgstr "Non archiviare elementi nel modello presenti in ignore.po"
+
+msgid "Remove items from template present in ignore.po file"
+msgstr "Rimuovi elementi dal modello presente nel file ignore.po"
+
+msgid "Text domain"
+msgstr "Dominio testo"
+
+msgid "default"
+msgstr "predefinito"
+
+msgid "other"
+msgstr "altro"
+
+msgid "Name:"
+msgstr "Nome:"
+
+msgid "Exclude subdirectories (comma separated):"
+msgstr "Escludi sottocartelle (separate da virgole):"
+
+msgid "Always overwrite template file"
+msgstr "Sovrascrivi sempre il file modello"
+
+msgid "Sort entries by original strings (msgid)"
+msgstr "Ordina le voci in base alle stringhe originali (msgid)"
+
+msgid "Encoding of source files:"
+msgstr "Codifica dei file sorgente:"
+
+msgid "US-ASCII"
+msgstr "US-ASCII"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Cancel"
+msgstr "Annulla"
+
+msgid "Extract strings and create template"
+msgstr "Estrai stringhe e crea modello"
+
+msgid "Initializing..."
+msgstr "Inizializzazione..."
+
+msgid "Extract from iss script:"
+msgstr "Estratto dallo script iss:"
+
+msgid "Language prefix"
+msgstr "Prefisso lingua"
+
+msgid ""
+"Convert CustomMessages from Inno Setup script to Pascal resource strings"
+msgstr ""
+"Converti CustomMessages dallo script Inno Setup in stringhe risorse Pascal"
+
+msgid "Select iss file"
+msgstr "Seleziona file iss"
+
+msgid "Open po file"
+msgstr "Apri il file po"
+
+msgid "Output file:"
+msgstr "File destinazione:"
+
+msgid "Extract strings from InnoSetup script and save"
+msgstr "Estrai stringhe dallo script Inno Setup e salva"
+
+msgid "Extract strings"
+msgstr "Estrai stringhe"
+
+msgid "About the program"
+msgstr "Informazioni sul programma"
+
+msgid "Quit program"
+msgstr "Esci dal programma"
+
+msgid "Merge translation with new translation template"
+msgstr "Unisci la traduzione con il nuovo modello traduzione"
+
+msgid "Translation file:"
+msgstr "File traduzione:"
+
+msgid "Translation template:"
+msgstr "Modello traduzione:"
+
+msgid "Create backup file of old translation (recommended)"
+msgstr "Crea file di backup della vecchia traduzione (consigliato)"
+
+msgid "Encoding of template"
+msgstr "Codifica del modello"
+
+msgid "UTF-8 (default)"
+msgstr "UTF-8 (predefinito)"
+
+msgid "Other"
+msgstr "Altro"
+
+msgid "Retain automatic comments"
+msgstr "Conserva commenti automatici"
+
+msgid "Retain obsolete translations"
+msgstr "Conserva traduzioni obsolete"
+
+msgid "Accept similar strings and mark as Fuzzy"
+msgstr "Accetta stringhe simili e contrassegnale come Fuzzy"
+
+msgid "Similarity measure"
+msgstr "Misure simili"
+
+msgid "Merge"
+msgstr "Unisci"
+
+msgid "ID:"
+msgstr "ID:"
+
+msgid "Translation:"
+msgstr "Traduzione:"
+
+msgid "po file to be edited:"
+msgstr "file po da modificare:"
+
+msgid "po file with changed translations:"
+msgstr "file po con traduzioni modificate:"
+
+msgid "List of po files to be edited"
+msgstr "Elenco dei file po da modificare"
+
+msgid "List of po files with changed translations"
+msgstr "Elenco dei file po con traduzioni modificate"
+
+msgid "Copy filepath to right"
+msgstr "Copia percorso file a destra"
+
+msgid "Save changes"
+msgstr "Salva modifiche"
+
+msgid "Copy all different strings"
+msgstr "Copia tutte le stringhe diverse"
+
+msgid "Copy selected entry"
+msgstr "Copia voce selezionata"
+
+msgid "Next entry"
+msgstr "Voce successiva"
+
+msgid "First entry"
+msgstr "Prima voce"
+
+msgid "Last entry"
+msgstr "Ultima voce"
+
+msgid "Previous entry"
+msgstr "Voce precedente"
+
+msgid "10 entries back"
+msgstr "10 voci indietro"
+
+msgid "10 entries forward"
+msgstr "10 voci in avanti"
+
+msgid "Undo last change"
+msgstr "Annulla l'ultima modifica"
+
+msgid "Copy selected entry and go to next"
+msgstr "Copia voce selezionata e vai alla successiva"
+
+msgid "Copy header data"
+msgstr "Copia dati intestazione"
+
+msgid "Save edited file"
+msgstr "Salva file modificato"
+
+msgid "Reload files"
+msgstr "Ricarica file"
+
+msgid "Edit po file"
+msgstr "Modifica il file po"
+
+msgid "Exchange po files"
+msgstr "Scambio di file po"
+
+msgid "Edit list"
+msgstr "Modifica elenco"
+
+msgid "Clear list"
+msgstr "Cancella elenco"
+
+msgid "Directory with translated Pascal sources"
+msgstr "Cartella con sorgenti Pascal tradotte"
+
+msgid "Selected source files"
+msgstr "File sorgenti selezionati"
+
+msgid "Select Pascal sources"
+msgstr "Seleziona sorgenti Pascal"
+
+msgid "Insert translations into po file"
+msgstr "Inserisci le traduzioni nel file po"
+
+msgid "Copy directory"
+msgstr "Copia cartella"
+
+msgid "Overwrite existing translations"
+msgstr "Sovrascrivi traduzioni esistenti"
+
+msgid "Copy translated strings as comments"
+msgstr "Copia stringhe tradotte come commenti"
+
+msgid "Insert translations and save"
+msgstr "Inserisci le traduzioni e salva"
+
+msgid "Import translations from po file"
+msgstr "Importa traduzioni dal file po"
+
+msgid "po file with translations to be imported:"
+msgstr "file po con traduzioni da importare:"
+
+msgid "Replace also entries marked as \"fuzzy\""
+msgstr "Sostituisci anche le voci contrassegnate come \"fuzzy\""
+
+msgid "Import translations and save edited file"
+msgstr "Importa traduzioni e salva il file modificato"
+
+msgid "Copy translated strings from"
+msgstr "Copia stringhe tradotte da"
+
+msgid "as comments into"
+msgstr "come commenti in"
+
+msgid "Insert comments and save"
+msgstr "Inserisci commenti e salva"
+
+msgid "Select po file"
+msgstr "Seleziona file po"
+
+msgid "po file with translations  as ID"
+msgstr "file po traduzioni come ID"
+
+msgid "Spell checking of po translations"
+msgstr "Controllo ortografico delle traduzioni po"
+
+msgid "Show suggestions"
+msgstr "Visualizza suggerimenti"
+
+msgid "Mispelled or unknown word:"
+msgstr "Parola errata o sconosciuta:"
+
+msgid "Reload po file"
+msgstr "Ricarica file po"
+
+msgid "Reload"
+msgstr "Ricarica"
+
+msgid "Save po file"
+msgstr "Salva file po"
+
+msgid "Save"
+msgstr "Salva"
+
+msgid "Add word to dictionary"
+msgstr "Aggiungi parola al dizionario"
+
+msgid "Add to dictionary and goto next"
+msgstr "Aggiungi al dizionario e vai a successivo"
+
+msgid "Find next misspelled word"
+msgstr "Trova la parola errata successiva"
+
+msgid "Next word"
+msgstr "Parola successiva"
+
+msgid "Replace this word"
+msgstr "Sostituisci questa parola"
+
+msgid "Replace word"
+msgstr "Sostituisci parola"
+
+msgid "Select dictionary"
+msgstr "Seleziona dizionario"
+
+msgid "po file to be checked:"
+msgstr "file po da controllare:"
+
+msgid "Dictionary file:"
+msgstr "File dizionario:"
+
+msgid "Translation (msgstr)"
+msgstr "Traduzione (msgstr)"
+
+msgid "Show statistics of po file"
+msgstr "Visualizza statistiche file po"
+
+msgid "Header:"
+msgstr "Intestazione:"
+
+msgid "Statistics"
+msgstr "Statistiche"
+
+msgid "Number of entries:"
+msgstr "Numero di voci:"
+
+msgid "Translated:"
+msgstr "Tradotto:"
+
+msgid "Not translated:"
+msgstr "Non tradotto:"
+
+msgid "Needs revision:"
+msgstr "Necessita revisione:"
+
+msgid "Number of characters:"
+msgstr "Numero di caratteri:"
+
+msgid "Duplicate IDs:"
+msgstr "ID duplicati:"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Value"
+msgstr "Valore"
+
+msgid "po file to be examined:"
+msgstr "file po da esaminare:"
+
+msgid "Read translations from "
+msgstr "Leggi le traduzioni da "
+
+msgid "Unit to be translated:"
+msgstr "Unità da tradurre:"
+
+msgid "Strings found in unit (D = dfm, P = source)"
+msgstr "Stringhe trovate nell'unità (D = dfm, P = sorgente)"
+
+msgid "Language"
+msgstr "Lingua"
+
+msgid "Template"
+msgstr "Modello"
+
+msgid "Translation"
+msgstr "Traduzione"
+
+msgid "Replace selected strings and save in subdirectory"
+msgstr "Sostituisci le stringhe selezionate e salva nella sottocartella"
+
+msgid "Replace strings"
+msgstr "Sostituisci stringhe"
+
+msgid "Read from po file:"
+msgstr "Leggi dal file po:"
+
+msgid "Convert po strings to CustomMessages used in Inno Setup"
+msgstr "Converti stringhe po in CustomMessage usati in Inno Setup"
+
+msgid "Convert po strings and save"
+msgstr "Converti stringhe po e salva"
+
+msgid "Convert strings"
+msgstr "Converti stringhe"
+
+msgid "po file to be translated:"
+msgstr "file po da tradurre:"
+
+msgid "Source text"
+msgstr "Testo sorgente"
+
+msgid "Translate item"
+msgstr "Traduci elemento"
+
+msgid "Process GnuGetText translations for Delphi"
+msgstr "Elabora traduzioni GnuGetText per Delphi"
+
+msgid "Project directory:"
+msgstr "Cartella progetto:"
+
+msgid "Select project directory"
+msgstr "Seleziona cartella progetto"
+
+msgid "All files matching to mask"
+msgstr "Tutti i file corrispondenti maschera"
+
+msgid "Only the following files"
+msgstr "Solo i seguenti file"
+
+msgid "Also scan subdirectories"
+msgstr "Esegui la scansione anche delle sottocartelle"
+
+msgid "Filemask:"
+msgstr "Maschera file:"
+
+msgid "*.pas *.dfm *.inc *.rc *.xfm *.dpr"
+msgstr "*.pas *.dfm *.inc *.rc *.xfm *.dpr"
+
+msgid "Files to be scanned:"
+msgstr "File da scansionare:"
+
+msgid "Insert filenames separated by commas"
+msgstr "Inserisci i nomi dei file separati da virgole"
+
+msgid "Create new file list"
+msgstr "Crea nuovo elenco file"
+
+msgid "Edit file list"
+msgstr "Modifica elenco file"
+
+msgid "Project name and version:"
+msgstr "Nome e versione progetto:"
+
+msgid "Copy mo file to \"locale\\..\\LC_MESSAGES\\\""
+msgstr "Copia file mo in \"locale\\..\\LC_MESSAGES\\\""
+
+msgid "Folders of project executables:"
+msgstr "Cartelle eseguibili del progetto:"
+
+msgid "In multiple directories"
+msgstr "In più cartelle"
+
+msgid "In single directory"
+msgstr "In un'unica cartella"
+
+msgid "Languages"
+msgstr "Lingue"
+
+msgid "Available languages:"
+msgstr "Lingue disponibili:"
+
+msgid "Translations subdirectory:"
+msgstr "Sottocartella traduzioni:"
+
+msgid "Deselect all"
+msgstr "Deseleziona tutto"
+
+msgid "Select all"
+msgstr "Seleziona tutto"
+
+msgid "Add selected language to list"
+msgstr "Aggiungi la lingua selezionata all'elenco"
+
+msgid "Add to list"
+msgstr "Aggiungi all'elenco"
+
+msgid "Remove selected language from list"
+msgstr "Rimuovi lingua selezionata dall'elenco"
+
+msgid "Move item up"
+msgstr "Sposta l'elemento in su"
+
+msgid "Move item down"
+msgstr "Sposta l'elemento in giù"
+
+msgid "Show statitstics of selected translation"
+msgstr "Visualizza statistiche della traduzione selezionata"
+
+msgid "Check for incomplete translations"
+msgstr "Verifica la presenza di traduzioni incomplete"
+
+msgid "Import language list from another project"
+msgstr "Importa l'elenco lingue da un altro progetto"
+
+msgid "Processing"
+msgstr "Elaborazione"
+
+msgid "Don't store items from text domain that are present in ignore.po"
+msgstr "Non archiviare elementi dal dominio di testo presenti in ignore.po"
+
+msgid "Remove items from text domain present in ignore.po file"
+msgstr "Rimuovi elementi dal dominio di testo presente nel file ignore.po"
+
+msgid "Open the merged file with the assigned po editor"
+msgstr "Apri il file unito con l'editor po assegnato"
+
+msgid "Edit translation immediately after merging"
+msgstr "Modifica la traduzione immediatamente dopo l'unione"
+
+msgid "Merging"
+msgstr "Unione"
+
+msgid "Language-dependent settings"
+msgstr "Impostazioni dipendenti dalla lingua"
+
+msgid "Tick for all languages"
+msgstr "Seleziona tutte le lingue"
+
+msgid "Saving"
+msgstr "Salvataggio"
+
+msgid "Overwrite template file"
+msgstr "Sovrascrivi file modello"
+
+msgid "Create backup file of old translation"
+msgstr "Crea file di backup della vecchia traduzione"
+
+msgid "Exclude conditions"
+msgstr "Escludi condizioni"
+
+msgid "Values:"
+msgstr "Valori:"
+
+msgid "Exclusion groups:"
+msgstr "Gruppi esclusione:"
+
+msgid "Edit exclude values"
+msgstr "Modifica valori esclusione"
+
+msgid "Delete all values in this group"
+msgstr "Elimina tutti i valori in questo gruppo"
+
+msgid "Add values for SVGIconImageList"
+msgstr "Aggiungi valori per SVGIconImageList"
+
+msgid "Classes within forms"
+msgstr "Classi all'interno dei moduli"
+
+msgid "Class properties within forms"
+msgstr "Proprietà delle classi all'interno dei moduli"
+
+msgid "Objects within selected forms"
+msgstr "Oggetti all'interno dei moduli selezionati"
+
+msgid "Files"
+msgstr "File"
+
+msgid "Directories"
+msgstr "Cartella"
+
+msgid "Embed translations in executables"
+msgstr "Incorpora traduzioni negli eseguibili"
+
+msgid "Copy mo files to binary folder of project"
+msgstr "Copia file mo nella cartella binaria del progetto"
+
+msgid "Create template from project sources"
+msgstr "Crea modello dai sorgenti del progetto"
+
+msgid "Merge translation with template"
+msgstr "Unisci la traduzione con il modello"
+
+msgid "Edit translation"
+msgstr "Modifica traduzione"
+
+msgid "Edit translation in text editor"
+msgstr "Modifica la traduzione nell'editor di testo"
+
+msgid "As text"
+msgstr "Come testo"
+
+msgid "Edit ignore.po"
+msgstr "Modifica ignore.po"
+
+msgid "Ignores"
+msgstr "Ignora"
+
+msgid "Edit translation (po file)"
+msgstr "Modifica traduzione (file po)"
+
+msgid "Po editor"
+msgstr "Editor po"
+
+msgid "Copy log to clipboard"
+msgstr "Copia registro negli appunti"
+
+msgid "Settings for language and design"
+msgstr "Impostazioni per la lingua e il design"
+
+msgid "Desktop language"
+msgstr "Lingua desktop"
+
+msgid "Button design"
+msgstr "Design pulsanti"
+
+msgid "Colored icons"
+msgstr "Icone colorate"
+
+msgid "Simple icons"
+msgstr "Icone semplici"
+
+msgid "Display mode"
+msgstr "Modalità visualizzazione"
+
+msgid "Default"
+msgstr "Predefinito"
+
+msgid "Light"
+msgstr "Chiaro"
+
+msgid "Dark"
+msgstr "Scuro"
+
+msgid ""
+"This program needs one parameter, which must be a directory path or a file "
+"name"
+msgstr ""
+"Questo programma necessita di un parametro, che deve essere un percorso "
+"cartella o un nome di file"
+
+msgid "Convert translation"
+msgstr "Converti traduzione"
+
+msgid "Execution of \"%s\" failed: "
+msgstr "L'esecuzione di \"%s\" non è riuscita: "
+
+msgid " reports some errors, no processing has been done!"
+msgstr " segnala alcuni errori, non è stata effettuata alcuna elaborazione!"
+
+msgid "Show errors"
+msgstr "Visualizza errori"
+
+msgid "Error report from \"%s\""
+msgstr "Rapporto errori da \"%s\""
+
+msgid "Binary file was converted to \"%s\"!"
+msgstr "Il file binario è stato convertito in \"%s\"!"
+
+msgid "Binary file \"%s\" was generated!"
+msgstr "È stato generato il file binario \"%s\"!"
+
+msgid "No file specified!"
+msgstr "Nessun file specificato!"
+
+msgid "Error loading Hunspell library!"
+msgstr "Errore durante il caricamento della libreria Hunspell!"
+
+msgid "Error when writing to stream"
+msgstr "Errore durante la scrittura nello stream"
+
+msgid "No .exe filename specified"
+msgstr "Nessun nome file .exe specificato"
+
+msgid ""
+"Patch code \"%s\" was not found in .exe file.\n"
+"Are you sure the .exe file has been compiled with the correct libraries?"
+msgstr ""
+"Il codice patch \"%s\" non è stato trovato nel file .exe.\n"
+"Confermi che il file .exe sia stato compilato con le librerie corrette?"
+
+msgid "No patch code has been specified"
+msgstr "Non è stato specificato alcun codice patch"
+
+msgid "This file has already been modified. Please recompile this .exe file"
+msgstr "Questo file è già stato modificato. Ricompila questo file .exe"
+
+msgid "Select the exe file in which you want to embed the translations"
+msgstr "Seleziona il file exe in cui vuoi incorporare le traduzioni"
+
+msgid "Filenames with Unicode characters are not supported"
+msgstr "I nomi file con caratteri Unicode non sono supportati"
+
+msgid "File not found: \"%s\""
+msgstr "File non trovato: \"%s\""
+
+msgid "No translations (.mo files) found"
+msgstr "Nessuna traduzione (file .mo) trovata"
+
+msgid "Translations were embedded in \"%s\""
+msgstr "Le traduzioni sono state incorporate in \"%s\""
+
+msgid "Delphi files"
+msgstr "File Delphi"
+
+msgid "Lazarus files"
+msgstr "File Lazarus"
+
+msgid "Cpp Builder files"
+msgstr "File generatore Cpp"
+
+msgid "Select basic directory"
+msgstr "Seleziona cartella base"
+
+msgid "Select"
+msgstr "Seleziona"
+
+msgid "Select subdirectories to be excluded"
+msgstr "Seleziona le sottocartelle da escludere"
+
+msgid "Do you want to overwrite \"%s\"?"
+msgstr "Vuoi sovrascrivere \"%s\"?"
+
+msgid "Line: %u"
+msgstr "Riga: %u"
+
+msgid "Last line read: %s"
+msgstr "Ultima riga letta: %s"
+
+msgid "Writing the configuration to \"%s\" failed!"
+msgstr "La scrittura della configurazione in \"%s\" non è riuscita!"
+
+msgid "No warnings or errors"
+msgstr "Nessun avviso o errore"
+
+msgid "Finished"
+msgstr "Completato"
+
+msgid "\"%s\" reports some errors, no processing has been done!"
+msgstr ""
+"\"%s\" segnala alcuni errori, non è stata eseguita alcuna elaborazione!"
+
+msgid "Translate-e.chm"
+msgstr "Translate-e.chm"
+
+msgid "Help is not available on this system!"
+msgstr "In questo sistema la guida non è disponibile!"
+
+msgid "Manual not found: %s"
+msgstr "Manuale non trovato: %s"
+
+msgid "Convert CustomMessages from iss to pas"
+msgstr "Converti messaggi personalizzati da iss a pas"
+
+msgid "iss files"
+msgstr "File iss"
+
+msgid "All files"
+msgstr "Tutti i file"
+
+msgid "%u strings written to \"%s\""
+msgstr "%u stringhe scritte in \"%s\""
+
+msgid "No messages found for ID: \"%s\""
+msgstr "Nessun messaggio trovato per l'ID: \"%s\""
+
+msgid "No code pages available"
+msgstr "Nessuna pagina codici disponibile"
+
+msgid "Select po file to be merged"
+msgstr "Seleziona file po da unire"
+
+msgid "Translation files"
+msgstr "File traduzione"
+
+msgid "Select template file"
+msgstr "Seleziona file modello"
+
+msgid "Template files"
+msgstr "File modello"
+
+msgid "Error in line %u of file \"%s\""
+msgstr "Errore nella riga %u del file \"%s\""
+
+msgid "The specified template file does not exist."
+msgstr "Il file modello specificato non esiste."
+
+msgid "Cannot rename %s to %s"
+msgstr "Impossibile rinominare %s in %s"
+
+msgid ""
+"The template was merged into the translation file.\n"
+"Do you want to open the translation file now?\n"
+"(This requires you to have a .po file editor installed)"
+msgstr ""
+"Il modello è stato unito al file traduzione.\n"
+"Vuoi aprire il file di traduzione?\n"
+"(Ciò richiede che sia installato un editor di file .po)"
+
+msgid "Compare and merge translations in two po files"
+msgstr "Confronta e unisci le traduzioni in due file po"
+
+msgid "Save changed po file?"
+msgstr "Vuoi salvare il file po modificato?"
+
+msgid "Select po file used for comparison with "
+msgstr "Seleziona file po usato per il confronto con "
+
+msgid "po files"
+msgstr "File po"
+
+msgid "Select po file to be edited"
+msgstr "Seleziona file po da modificare"
+
+msgid "No file for comparison specified!"
+msgstr "Nessun file per il confronto specificato!"
+
+msgid "%s - Language: %s"
+msgstr "%s - Lingua: %s"
+
+msgid "Entry %u of %u different strings"
+msgstr "Voce %u di %u stringhe diverse"
+
+msgid "Line number: "
+msgstr "Numero riga: "
+
+msgid "File not found: %s"
+msgstr "File non trovato: %s"
+
+msgid "Error in line %u of edit file!"
+msgstr "Errore nella riga %u del file di modifica!"
+
+msgid "Error in line %u of comparison file!"
+msgstr "Errore nella riga %u del file di confronto!"
+
+msgid "No different strings found!"
+msgstr "Nessuna stringa diversa trovata!"
+
+msgid "Error reading po files!"
+msgstr "Errore durante la lettura dei file po!"
+
+msgid "%u strings"
+msgstr "%u stringhe"
+
+msgid "Insert translated strings from pas files"
+msgstr "Inserisci stringhe tradotte da file pas"
+
+msgid "Pascal files"
+msgstr "File Pascal"
+
+msgid "Select directory with pas sources"
+msgstr "Seleziona cartella con sorgenti pas"
+
+msgid "Error reading po file:"
+msgstr "Errore durante la lettura del file po:"
+
+msgid "strings"
+msgstr "stringhe"
+
+msgid "%u strings replaced"
+msgstr "%u stringhe sostituite"
+
+msgid "Select po file from where to import"
+msgstr "Seleziona file po da cui importare"
+
+msgid "Error in line %u of file \"%s\"!"
+msgstr "Errore nella riga %u del file \"%s\"!"
+
+msgid "File not found: \"%s\"!"
+msgstr "File non trovato: \"%s\"!"
+
+msgid "No strings found to import!"
+msgstr "Nessuna stringa trovata da importare!"
+
+msgid "%u strings were imported"
+msgstr "Sono state importate %u stringhe"
+
+msgid "The po files belong to different languages: \"%s\" <=> \"%s\"!"
+msgstr "I file po appartengono a lingue diverse: \"%s\" <=> \"%s\"!"
+
+msgid "No import possible!"
+msgstr "Nessuna importazione possibile!"
+
+msgid "Select po file for comments"
+msgstr "Seleziona file po per i commenti"
+
+msgid "%u comments inserted"
+msgstr "%u commenti inseriti"
+
+msgid "Insert translations"
+msgstr "Inserisci traduzioni"
+
+msgid "Select po file used for comparison"
+msgstr "Seleziona file po usato per il confronto"
+
+msgid "Error when writing to stream."
+msgstr "Errore durante la scrittura nello stream."
+
+msgid "Illegal line: %s"
+msgstr "Linea non valida: %s"
+
+msgid ""
+"Exception %s in line %d:\n"
+"%s"
+msgstr ""
+"Eccezione %s nella riga %d:\n"
+"%s"
+
+msgid ""
+"Internal error in TPoEntryList data structure. Sublist for searchkey was "
+"empty."
+msgstr ""
+"Errore interno nella struttura dati TPoEntryList. La sottolista per la "
+"chiave di ricerca era vuota."
+
+msgid "Error: Specified TPoEntry was not found in list."
+msgstr "Errore: il TPoEntry specificato non è stato trovato nell'elenco."
+
+msgid ""
+"This list of translations cannot handle MsgId duplicates.\n"
+"Please remove the duplicate of \"%s\"."
+msgstr ""
+"Questo elenco di traduzioni non può gestire i duplicati di MsgId.\n"
+"Rmuovi il duplicato di \"%s\"."
+
+msgid "Select po file for spell checking"
+msgstr "Seleziona file po per il controllo ortografico"
+
+msgid "Select dictionary file"
+msgstr "Seleziona file dizionario"
+
+msgid "Dictionaries"
+msgstr "Dizionari"
+
+msgid "Error in line %u of po file!"
+msgstr "Errore nella riga %u del file po!"
+
+msgid "po file loaded!"
+msgstr "file po caricato!"
+
+msgid "Error reading po file: %s"
+msgstr "Errore durante la lettura del file PO: %s"
+
+msgid "Error reading dictionary file!"
+msgstr "Errore durante la lettura del file del dizionario!"
+
+msgid "No more words found!"
+msgstr "Non sono state altre trovate parole!"
+
+msgid "No misspelled words found!"
+msgstr "Nessuna parola con errori di ortografia trovata!"
+
+msgid "Template = "
+msgstr "Modello = "
+
+msgid "Translation = "
+msgstr "Traduzione = "
+
+msgid "No entries found"
+msgstr "Nessuna voce trovata"
+
+msgid "Statistics of po file"
+msgstr "Statistiche del file po"
+
+msgid "This application only allows dropping of %s files!"
+msgstr "Questa applicazione consente solo l'eliminazione di %s file!"
+
+msgid "Copy translated strings from po file to Pascal unit"
+msgstr "Copia stringhe tradotte dal file po all'unità Pascal"
+
+msgid "Select unit"
+msgstr "Seleziona unità"
+
+msgid "pas files|*."
+msgstr "file pas|*."
+
+msgid "File: \"%s\" processed"
+msgstr "File: \"%s\" elaborato"
+
+msgid "File: \"%s\" not found"
+msgstr "File: \"%s\" non trovato"
+
+msgid "%u strings replaced by translation"
+msgstr "%u stringhe sostituite dalla traduzione"
+
+msgid "Convert strings from po to iss"
+msgstr "Converti stringhe da po a iss"
+
+msgid "Select po file with translation"
+msgstr "Seleziona file po con la traduzione"
+
+msgid "Translate PO file"
+msgstr "Traduci file PO"
+
+msgid "Error reading po file!"
+msgstr "Errore durante la lettura del file po!"
+
+msgid "Select text editor"
+msgstr "Seleziona editor testo"
+
+msgid "Programs"
+msgstr "Programmi"
+
+msgid "all"
+msgstr "tutti"
+
+msgid "The program must be restarted for the design change to take effect!"
+msgstr ""
+"Affinché la modifica del design abbia effetto il programma deve essere "
+"riavviato!"
+
+msgid "%u directories"
+msgstr "%u directory"
+
+msgid "Project directories"
+msgstr "Cartella progetto"
+
+msgid "Settings loaded for this project"
+msgstr "Impostazioni caricate per questo progetto"
+
+msgid "Merge translations with template"
+msgstr "Unisci le traduzioni con il modello"
+
+msgid "Copy MO file to binary folder of project"
+msgstr "Copia file MO nella cartella binaria del progetto"
+
+msgid "Copy MO files to binary folder of project"
+msgstr "Copia file MO nella cartella binaria del progetto"
+
+msgid "Select project directory for the import"
+msgstr "Seleziona cartella progetto per l'importazione"
+
+msgid "Select project source directory"
+msgstr "Seleziona la cartella sorgente del progetto"
+
+msgid "Parent directories"
+msgstr "Cartelle principali"
+
+msgid "List of directories"
+msgstr "Elenco delle cartelle"
+
+msgid "Select parent directory"
+msgstr "Seleziona cartella principale"
+
+msgid "Select program directory of project"
+msgstr "Seleziona la cartella del programma del progetto"
+
+msgid "Parent directories holding the project executables:"
+msgstr "Cartelle principali che contengono gli eseguibili del progetto:"
+
+msgid ""
+"Multiple directories have been selected.\n"
+"Are you sure you want to change this setting?"
+msgstr ""
+"Sono state selezionate più cartelle.\n"
+"Sei sicuro di voler modificare questa impostazione?"
+
+msgid "Directory of project executables:"
+msgstr "Cartella eseguibili del progetto:"
+
+msgid "Line:"
+msgstr "Riga:"
+
+msgid "Do you want to overwrite the file named %s?"
+msgstr "Vuoi sovrascrivere il file denominato %s?"
+
+msgid "%u warnings or errors"
+msgstr "%u avvisi o errori"
+
+msgid "Template was created"
+msgstr "Il modello è stato creato"
+
+msgid "The former translations are merged with the current template"
+msgstr "Le traduzioni precedenti verranno unite al modello attuale"
+
+msgid "Merging with template was successful"
+msgstr "Unione con il modello completata"
+
+msgid "Merging with template failed"
+msgstr "Unione con il modello non è riuscita"
+
+msgid "%u translations were successfully merged with template"
+msgstr "%u traduzioni sono state unite correttamente al modello"
+
+msgid "Compiled to MO file: %s"
+msgstr "Compilato come file MO: %s"
+
+msgid ""
+"Compiling to MO file failed:\n"
+"\"%s\" reports exitcode %u"
+msgstr ""
+"Compilazione come file MO non riuscita:\n"
+"\"%s\" riporta il codice di uscita %u"
+
+msgid "Execution of \"%s\" failed:"
+msgstr "L'esecuzione di \"%s\" non è riuscita:"
+
+msgid "Error compiling to MO file: %s"
+msgstr "Errore durante la compilazione nel file MO: %s"
+
+msgid "Do you really want to delete all values in this group?"
+msgstr "Vuoi eliminare tutti i valori in questo gruppo?"
+
+msgid "Do you want to add the exclude values required for SVGIconImageList?"
+msgstr "Vuoi aggiungere i valori di esclusione richiesti per SVGIconImageList?"
+
+msgid "Merging with %s template"
+msgstr "Unione con il modello %s"
+
+msgid "Cannot delete %s"
+msgstr "Impossibile eliminare %s"
+
+msgid "Copying mo file (%u)"
+msgstr "Copia file mo (%u)"
+
+msgid "%s processed (%s - %s)"
+msgstr "%s elaborati (%s - %s)"
+
+msgid "1 file"
+msgstr "1 file"
+
+msgid "%u files"
+msgstr "%u file"
+
+msgid "No copy"
+msgstr "Nessuna copia"
+
+msgid "1 copy"
+msgstr "1 copia"
+
+msgid "%u copies"
+msgstr "%u copie"
+
+msgid "No error"
+msgstr "Nessun errore"
+
+msgid "1 error"
+msgstr "1 errore"
+
+msgid "%u errors"
+msgstr "%u errori"
+
+msgid "No files processed"
+msgstr "Nessun file elaborato"
+
+msgid "Folder for executables not found: "
+msgstr "Cartella eseguibili non trovata: "
+
+msgid "  *** Error copying file:"
+msgstr "  *** Errore durante la copia del file:"
+
+msgid "Copying MO file %s"
+msgstr "Copia file MO %s"
+
+msgid "  *** Error file not found:"
+msgstr "  *** File di errore non trovato:"
+
+msgid "MO file was copied"
+msgstr "Il file MO è stato copiato"
+
+msgid "Copying of MO file failed"
+msgstr "La copia del file MO non è riuscita"
+
+msgid "Embed translations"
+msgstr "Incorpora traduzioni"
+
+msgid "Select the translations you want to embed into your executables"
+msgstr "Seleziona le traduzioni che vuoi negli eseguibili"
+
+msgid "Executable files"
+msgstr "File eseguibili"
+
+msgid "Select all executables where you want to embed the translations"
+msgstr "Seleziona tutti gli eseguibili in cui vuoi incorporare le traduzioni"
+
+msgid "Embedding translation in %s"
+msgstr "Incorporazione traduzione in %s"
+
+msgid "Error on embedding translations:"
+msgstr "Errore nell'incorporazione delle traduzioni:"
+
+msgid "%u files processed"
+msgstr "%u file elaborati"
+
+msgid "This line is not connected with the previous line using a plus (+)"
+msgstr ""
+"Questa linea non è collegata alla linea precedente usando un segno più (+)"
+
+msgid "resourcestring does not end in semicolon"
+msgstr "la stringa risorsa non termina con il punto e virgola"
+
+msgid "Missing comma after first parameter"
+msgstr "Virgola mancante dopo il primo parametro"
+
+msgid "$gnugettext: end directive is missing !"
+msgstr "$gnugettext: manca la direttiva end!"
+
+msgid "Reading %s"
+msgstr "Lettura di %s"
+
+msgid "Error on execution"
+msgstr "Errore durante l'esecuzione"
+
+msgid "Illegal msgid_plural value: It containes empty strings"
+msgstr "Valore plurale msgid illegale: contiene stringhe vuote"
+
+msgid "msgid contains non-ascii characters: \"%s\""
+msgstr "msgid contiene caratteri non ASCII: \"%s\""
+
+msgid "Overwrite %s aborted"
+msgstr "Sovrascrittura %s interrotta"
+
+msgid "Writing %s"
+msgstr "Scrittura di %s"
+
+msgid "WARNING: Unknown file extension % - reading file as being pascal source"
+msgstr ""
+"ATTENZIONE: estensione file sconosciuta % - lettura del file come sorgente "
+"pascal"
+
+msgid "Extract strings from C/CPP files:"
+msgstr "Estrai stringhe da file C/CPP:"
+
+msgid "XGetText.exe not found!"
+msgstr "XGetText.exe non trovato!"
+
+msgid "Updating %s"
+msgstr "Aggiornamento di %s"
+
+msgid "gnugettext: error in the domain name definition"
+msgstr "gnugettext: errore nella definizione del nome di dominio"
+
+msgid "gnugettext: reset found without scan-all"
+msgstr "gnugettext: trovato reset senza scan-all"
+
+msgid "gnugettext: Unknown option"
+msgstr "gnugettext: opzione sconosciuta"
+
+msgid "Read exclude file: %s"
+msgstr "Leggi file esclusione: %s"
+
+msgid "Line %d: Unknown section"
+msgstr "Riga %d: sezione sconosciuta"
+
+msgid "Line %d: Looks like a section but has no closing square brackets"
+msgstr "Riga %d: sembra una sezione ma non ha parentesi quadre di chiusura"
+
+msgid "Line %d: %s"
+msgstr "Riga %d: %s"
+
+msgid "Directory %s doesn't exist"
+msgstr "La cartella %s non esiste"
+
+msgid "Wrong section: %s is a property name and not a class"
+msgstr "Sezione errata: %s è un nome di proprietà e non una classe"
+
+msgid "Wrong section: %s seems to be a class and not a property name"
+msgstr "Sezione errata: %s sembra essere una classe e non un nome di proprietà"
+
+msgid "No file found for \"%s.*\""
+msgstr "Nessun file trovato per \"%s.*\""
+
+msgid "File \"%s\" doesn't exist"
+msgstr "Il file \"%s\" non esiste"
+
+msgid "Wrong syntax: No \":\" found in %s"
+msgstr "Sintassi errata: nessun \":\" trovato in %s"
+
+msgid "Wrong syntax: \":\" is at the end of the line of %s"
+msgstr "Sintassi errata: \":\" è alla fine della riga di %s"
+
+msgid "Cannot convert ansistring to string with specified codepage"
+msgstr ""
+"Impossibile convertire ansistring in stringa con la pagina codici specificata"
+
+msgid "StreamReadln requires the stream to be not nil"
+msgstr "StreamReadln richiede che il flusso non sia nullo"
