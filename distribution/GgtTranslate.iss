@@ -1,6 +1,6 @@
 ; Setup script for Gnu Gettext Translate
 ; ======================================
-;  © Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
+;  Â© Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
 
 ;  The contents of this file may be used under the terms of the
 ;  Mozilla Public License ("MPL") or
@@ -27,7 +27,7 @@ AppPublisher={#ProgramAuthor}
 AppPublisherURL={#ProgramWebURL}
 AppSupportURL={#ProgramWebURL}
 AppUpdatesURL={#ProgramWebURL}
-AppCopyright=© 2014-{#Year} {#ProgramAuthor}
+AppCopyright=Â© 2014-{#Year} {#ProgramAuthor}
 VersionInfoVersion={#ApplicationVersion}
 VersionInfoDescription={#GgtName} Setup
 DefaultDirName={autopf}\Delphi GetText
@@ -53,6 +53,9 @@ Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile:"..\..\Common\lice
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"; LicenseFile:"..\..\Common\license-de.rtf"; InfoBeforeFile:"..\docs\translate.rtf";
 Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"; LicenseFile:"..\..\Common\license-it.rtf"; InfoBeforeFile:"..\docs\translate.rtf";
 
+[Messages]
+it.SetupWindowTitle=Installazione di {#ProgramName} {#ApplicationVersion}
+
 [CustomMessages]
 en.FileAssoc=File associations:
 en.DescContext=Add "Delphi GetText" functions in context menus
@@ -72,21 +75,21 @@ en.ConvertMessages=&Convert CustomMessages to Pascal ..
 en.IssContext=Convert for &InnoSetup script
 
 de.FileAssoc=Dateizuordnungen:
-de.DescContext=Füge "Delphi GetText"-Funktionen zu den Kontext-Menüs hinzu
-de.ButtonDesign=Design der Schaltflächen f+r alle Benutzer:
+de.DescContext=FÃ¼ge "Delphi GetText"-Funktionen zu den Kontext-MenÃ¼s hinzu
+de.ButtonDesign=Design der SchaltflÃ¤chen f+r alle Benutzer:
 de.SimpleButtons=Einfache Icons verwenden
 de.PoTools=&Po-Werkzeuge
-de.CompileContext=in MO-Datei &übersetzen ..
-de.MergeContext=mit Schablone &zusammenführen ..
-de.DecompContext=in PO-Datei &zurückführen ..
-de.EmbedContext=&Übersetzungen integrieren ..
-de.TemplateContext=&Übersetzungs-Schablone erstellen ..
+de.CompileContext=in MO-Datei &Ã¼bersetzen ..
+de.MergeContext=mit Schablone &zusammenfÃ¼hren ..
+de.DecompContext=in PO-Datei &zurÃ¼ckfÃ¼hren ..
+de.EmbedContext=&Ãœbersetzungen integrieren ..
+de.TemplateContext=&Ãœbersetzungs-Schablone erstellen ..
 de.ShowStatContext=&Statistik anzeigen ..
-de.SpellCheckContext=&Rechtschreibprüfung ..
+de.SpellCheckContext=&RechtschreibprÃ¼fung ..
 de.PoCompContext=&Vergleichen ..
 de.ImportContext=&Importieren ..
 de.ConvertMessages=CustomMessages nach Pascal &konvertieren
-de.IssContext=Für &InnoSetup-Skript konvertieren
+de.IssContext=FÃ¼r &InnoSetup-Skript konvertieren
 
 it.FileAssoc=Associazione file:
 it.DescContext=Aggiungi funzione "Delphi GetText" al menu contestuale
@@ -104,6 +107,13 @@ it.PoCompContext=&Confronta ..
 it.ImportContext=&Importa ..
 it.ConvertMessages=&Converti CustomMessages in Pascal ..
 it.IssContext=Converti per script &Inno Setup
+it.NameAndVersion={#ProgramName} {#ApplicationVersion}
+it.LaunchProgram=Esegui {#ProgramName}
+it.AdditionalIcons=Collegamenti:
+it.CreateDesktopIcon=Crea collegamento programma sul &desktop
+it.CreateQuickLaunchIcon=Crea collegamento programma nella &barra 'Avvio veloce'
+it.AssocFileExtension=&Associa i file con estensione '%2' a '%1'
+it.AssocingFileExtension=Associazione file con estensione '%2' a '%1'..
 
 [Tasks]
 Name: "fileassoc"; Description: "{cm:DescContext}"; GroupDescription: "{cm:FileAssoc}"; 
