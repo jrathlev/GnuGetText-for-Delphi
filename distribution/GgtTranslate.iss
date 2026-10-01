@@ -32,7 +32,7 @@ AppCopyright=© 2014-{#Year} {#ProgramAuthor}
 VersionInfoVersion={#ApplicationVersion}
 VersionInfoDescription={#GgtName} Setup
 VersionInfoProductName={#ProgramName}
-DefaultDirName={autopf}\Delphi GetText
+DefaultDirName={autopf}\GetText
 DefaultGroupName={#GgtName}
 AllowNoIcons=yes
 OutputDir=.
@@ -56,18 +56,7 @@ Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile:"..\..\Common\lice
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"; LicenseFile:"..\..\Common\license-de.rtf"; InfoBeforeFile:"..\docs\translate.rtf";
 Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"; LicenseFile:"..\..\Common\license-it.rtf"; InfoBeforeFile:"..\docs\translate.rtf";
 
-[Messages]
-en.SetupWindowTitle=Installation of %1
-en.WelcomeLabel1=Welcome to the installation of%n[name]
-en.WelcomeLabel2=This will install [name/ver] on your computer.
-
-de.SetupWindowTitle=Installation der %1
-de.WelcomeLabel1=Willkommen zur Installation der%n[name]
-de.WelcomeLabel2=Dieser Assistent wird jetzt die [name/ver] auf Ihrem Computer installieren.
-
-it.SetupWindowTitle=Installazione di %1
-it.WelcomeLabel1=Installazione di%n[name]
-it.WelcomeLabel2=[name/ver] sarà installato sul computer.
+#include "IsMessages.txt"
 
 [CustomMessages]
 en.ProgName=GnuGettext Translation Tools Version %1
