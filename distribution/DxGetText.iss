@@ -1,4 +1,4 @@
-; Setup script for Gnu Gettext for Delphi
+﻿; Setup script for Gnu Gettext for Delphi
 ; =======================================
 ;  © Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
 
@@ -20,8 +20,9 @@
 
 [Setup]
 PrivilegesRequired=admin
-AppName={#ProgramName}
-AppVerName={#GgtName} {#ApplicationVersion}
+AppId={#ProgramName}
+AppName={cm:ProgName,4}
+AppVerName={cm:ProgName,{#ApplicationVersion}}
 AppVersion={#ApplicationVersion}
 AppPublisher={#ProgramAuthor}
 AppPublisherURL={#ProgramWebURL}
@@ -30,6 +31,7 @@ AppUpdatesURL={#ProgramWebURL}
 AppCopyright=© 2014-{#Year} {#ProgramAuthor}
 VersionInfoVersion={#ApplicationVersion}
 VersionInfoDescription={#GgtName} Setup
+VersionInfoProductName={#ProgramName}
 DefaultDirName={autopf}\Delphi GetText
 DefaultGroupName={#GgtName}
 AllowNoIcons=yes
@@ -54,9 +56,10 @@ Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile:"..\..\Common\lice
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"; LicenseFile:"..\..\Common\license-de.rtf"; InfoBeforeFile:"..\docs\dxgettext.rtf";
 Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"; LicenseFile:"..\..\Common\license-it.rtf"; InfoBeforeFile:"..\docs\dxgettext.rtf";
 
-it.SetupWindowTitle=Installazione di {#ProgramName} {#ApplicationVersion}
+#include "IsMessages.txt"
 
 [CustomMessages]
+en.ProgName=GnuGettext Basic Version %1
 en.FileAssoc=File associations:
 en.DescContext=Add "Delphi GetText" functions in context menus
 en.ButtonDesign=Select button design for all users:
@@ -67,6 +70,7 @@ en.DecompContext=&Decompile to po file ..
 en.EmbedContext=Embed &translations ..
 en.TemplateContext=&Create translation template ..
 
+de.ProgName=GnuGettext Basisversion %1
 de.FileAssoc=Dateizuordnungen:
 de.DescContext=Füge "Delphi GetText"-Funktionen zu den Kontext-Menüs hinzu
 de.ButtonDesign=Design der Schaltflächen für alle Benutzer:
@@ -77,6 +81,7 @@ de.DecompContext=in PO-Datei &zurückführen ..
 de.EmbedContext=&Übersetzungen integrieren ..
 de.TemplateContext=&Übersetzungs-Schablone erstellen ..
 
+it.ProgName=GnuGettext - Versione base %1
 it.FileAssoc=Associazione file:
 it.DescContext=Aggiungi funzione "Delphi GetText" al menu contestuale
 it.ButtonDesign=Selezione design pulsanti per tutti gli utenti:
