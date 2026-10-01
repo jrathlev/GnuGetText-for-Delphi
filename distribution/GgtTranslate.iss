@@ -1,6 +1,6 @@
-; Setup script for Gnu Gettext Translate
+ï»¿; Setup script for Gnu Gettext Translate
 ; ======================================
-;  © Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
+;  Â© Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
 
 ;  The contents of this file may be used under the terms of the
 ;  Mozilla Public License ("MPL") or
@@ -12,7 +12,7 @@
 
 #define ApplicationVersion GetVersionNumbersString('..\Release\Win32\GgtTranslate.exe')
 #define Year GetDateTimeString('yyyy','','')
-#define GgtName "Gnu Gettext for Delphi"
+#define GgtName "Gnu Gettext Translation Tools"
 #define ProgramName "GgtTranslate"
 #define ProgramAuthor "Dr. J. Rathlev, 24222 Schwentinental, Germany"
 #define ProgramWebURL "http://www.rathlev-home.de/?tools/progtools.html"
@@ -20,21 +20,24 @@
 
 [Setup]
 PrivilegesRequired=admin
-AppName={#ProgramName}
-AppVerName={#GgtName} {#ApplicationVersion}
+AppId={#ProgramName}
+AppName={cm:ProgName,4}
+AppVerName={cm:ProgName,{#ApplicationVersion}}
 AppVersion={#ApplicationVersion}
 AppPublisher={#ProgramAuthor}
 AppPublisherURL={#ProgramWebURL}
 AppSupportURL={#ProgramWebURL}
 AppUpdatesURL={#ProgramWebURL}
-AppCopyright=© 2014-{#Year} {#ProgramAuthor}
+AppCopyright=Â© 2014-{#Year} {#ProgramAuthor}
 VersionInfoVersion={#ApplicationVersion}
 VersionInfoDescription={#GgtName} Setup
+VersionInfoProductName={#ProgramName}
 DefaultDirName={autopf}\Delphi GetText
 DefaultGroupName={#GgtName}
 AllowNoIcons=yes
 OutputDir=.
 OutputBaseFilename={#OutputFile}
+SetupIconFile=Translate.ico
 UninstallDisplayIcon={app}\Translate-u.ico
 UninstallDisplayName={#GgtName}
 WizardImageFile=Wizard-Ggt-1.png,Wizard-Ggt-2.png
@@ -53,7 +56,21 @@ Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile:"..\..\Common\lice
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"; LicenseFile:"..\..\Common\license-de.rtf"; InfoBeforeFile:"..\docs\translate.rtf";
 Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"; LicenseFile:"..\..\Common\license-it.rtf"; InfoBeforeFile:"..\docs\translate.rtf";
 
+[Messages]
+en.SetupWindowTitle=Installation of %1
+en.WelcomeLabel1=Welcome to the installation of%n[name]
+en.WelcomeLabel2=This will install [name/ver] on your computer.
+
+de.SetupWindowTitle=Installation der %1
+de.WelcomeLabel1=Willkommen zur Installation der%n[name]
+de.WelcomeLabel2=Dieser Assistent wird jetzt die [name/ver] auf Ihrem Computer installieren.
+
+it.SetupWindowTitle=Installazione di %1
+it.WelcomeLabel1=Installazione di%n[name]
+it.WelcomeLabel2=[name/ver] sarÃ  installato sul computer.
+
 [CustomMessages]
+en.ProgName=GnuGettext Translation Tools Version %1
 en.FileAssoc=File associations:
 en.DescContext=Add "Delphi GetText" functions in context menus
 en.ButtonDesign=Select button design for all users:
@@ -71,23 +88,25 @@ en.ImportContext=&Import ..
 en.ConvertMessages=&Convert CustomMessages to Pascal ..
 en.IssContext=Convert for &InnoSetup script
 
+de.ProgName=GnuGettext-Ãœbersetzungswerkzeuge Version %1
 de.FileAssoc=Dateizuordnungen:
-de.DescContext=Füge "Delphi GetText"-Funktionen zu den Kontext-Menüs hinzu
-de.ButtonDesign=Design der Schaltflächen f+r alle Benutzer:
+de.DescContext=FÃ¼ge "Delphi GetText"-Funktionen zu den Kontext-MenÃ¼s hinzu
+de.ButtonDesign=Design der SchaltflÃ¤chen f+r alle Benutzer:
 de.SimpleButtons=Einfache Icons verwenden
 de.PoTools=&Po-Werkzeuge
-de.CompileContext=in MO-Datei &übersetzen ..
-de.MergeContext=mit Schablone &zusammenführen ..
-de.DecompContext=in PO-Datei &zurückführen ..
-de.EmbedContext=&Übersetzungen integrieren ..
-de.TemplateContext=&Übersetzungs-Schablone erstellen ..
+de.CompileContext=in MO-Datei &Ã¼bersetzen ..
+de.MergeContext=mit Schablone &zusammenfÃ¼hren ..
+de.DecompContext=in PO-Datei &zurÃ¼ckfÃ¼hren ..
+de.EmbedContext=&Ãœbersetzungen integrieren ..
+de.TemplateContext=&Ãœbersetzungs-Schablone erstellen ..
 de.ShowStatContext=&Statistik anzeigen ..
-de.SpellCheckContext=&Rechtschreibprüfung ..
+de.SpellCheckContext=&RechtschreibprÃ¼fung ..
 de.PoCompContext=&Vergleichen ..
 de.ImportContext=&Importieren ..
 de.ConvertMessages=CustomMessages nach Pascal &konvertieren
-de.IssContext=Für &InnoSetup-Skript konvertieren
+de.IssContext=FÃ¼r &InnoSetup-Skript konvertieren
 
+it.ProgName=GnuGettext strumenti di traduzione versione %1
 it.FileAssoc=Associazione file:
 it.DescContext=Aggiungi funzione "Delphi GetText" al menu contestuale
 it.ButtonDesign=Selezione design pulsanti per tutti gli utenti:

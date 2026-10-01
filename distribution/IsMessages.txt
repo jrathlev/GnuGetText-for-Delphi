@@ -1,0 +1,12 @@
+[Messages]
+en.SetupWindowTitle=Installation of %1
+en.WelcomeLabel1=Welcome to the installation of%n[name]
+en.WelcomeLabel2=This will install [name/ver] on your computer.
+
+de.SetupWindowTitle=Installation der %1
+de.WelcomeLabel1=Willkommen zur Installation der%n[name]
+de.WelcomeLabel2=Dieser Assistent wird jetzt die [name/ver] auf Ihrem Computer installieren.
+
+it.SetupWindowTitle=Installazione di %1
+it.WelcomeLabel1=Installazione di%n[name]
+it.WelcomeLabel2=[name/ver] sarà installato sul computer.
