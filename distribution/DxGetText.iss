@@ -1,6 +1,6 @@
 ; Setup script for Gnu Gettext for Delphi
 ; =======================================
-;  © Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
+;  Â© Dr. J. Rathlev, D-24222 Schwentinental (kontakt(a)rathlev-home.de)
 
 ;  The contents of this file may be used under the terms of the
 ;  Mozilla Public License ("MPL") or
@@ -27,7 +27,7 @@ AppPublisher={#ProgramAuthor}
 AppPublisherURL={#ProgramWebURL}
 AppSupportURL={#ProgramWebURL}
 AppUpdatesURL={#ProgramWebURL}
-AppCopyright=© 2014-{#Year} {#ProgramAuthor}
+AppCopyright=Â© 2014-{#Year} {#ProgramAuthor}
 VersionInfoVersion={#ApplicationVersion}
 VersionInfoDescription={#GgtName} Setup
 DefaultDirName={autopf}\Delphi GetText
@@ -54,6 +54,8 @@ Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile:"..\..\Common\lice
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"; LicenseFile:"..\..\Common\license-de.rtf"; InfoBeforeFile:"..\docs\dxgettext.rtf";
 Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"; LicenseFile:"..\..\Common\license-it.rtf"; InfoBeforeFile:"..\docs\dxgettext.rtf";
 
+it.SetupWindowTitle=Installazione di {#ProgramName} {#ApplicationVersion}
+
 [CustomMessages]
 en.FileAssoc=File associations:
 en.DescContext=Add "Delphi GetText" functions in context menus
@@ -66,14 +68,14 @@ en.EmbedContext=Embed &translations ..
 en.TemplateContext=&Create translation template ..
 
 de.FileAssoc=Dateizuordnungen:
-de.DescContext=Füge "Delphi GetText"-Funktionen zu den Kontext-Menüs hinzu
-de.ButtonDesign=Design der Schaltflächen für alle Benutzer:
+de.DescContext=FÃ¼ge "Delphi GetText"-Funktionen zu den Kontext-MenÃ¼s hinzu
+de.ButtonDesign=Design der SchaltflÃ¤chen fÃ¼r alle Benutzer:
 de.SimpleButtons=Einfache Icons verwenden
-de.CompileContext=in MO-Datei &übersetzen ..
-de.MergeContext=mit Schablone &zusammenführen ..
-de.DecompContext=in PO-Datei &zurückführen ..
-de.EmbedContext=&Übersetzungen integrieren ..
-de.TemplateContext=&Übersetzungs-Schablone erstellen ..
+de.CompileContext=in MO-Datei &Ã¼bersetzen ..
+de.MergeContext=mit Schablone &zusammenfÃ¼hren ..
+de.DecompContext=in PO-Datei &zurÃ¼ckfÃ¼hren ..
+de.EmbedContext=&Ãœbersetzungen integrieren ..
+de.TemplateContext=&Ãœbersetzungs-Schablone erstellen ..
 
 it.FileAssoc=Associazione file:
 it.DescContext=Aggiungi funzione "Delphi GetText" al menu contestuale
@@ -84,6 +86,13 @@ it.MergeContext=&Unisci con modello ..
 it.DecompContext=&Decompila in file .po ..
 it.EmbedContext=&Traduzioni integrate ..
 it.TemplateContext=&Crea modello traduzione ..
+it.NameAndVersion={#ProgramName} {#ApplicationVersion}
+it.LaunchProgram=Esegui {#ProgramName}
+it.AdditionalIcons=Collegamenti:
+it.CreateDesktopIcon=Crea collegamento programma sul &desktop
+it.CreateQuickLaunchIcon=Crea collegamento programma nella &barra 'Avvio veloce'
+it.AssocFileExtension=&Associa i file con estensione '%2' a '%1'
+it.AssocingFileExtension=Associazione file con estensione '%2' a '%1'..
 
 [Tasks]
 Name: "fileassoc"; Description: "{cm:DescContext}"; GroupDescription: "{cm:FileAssoc}"; 
